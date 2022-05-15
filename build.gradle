@@ -10,6 +10,9 @@ buildscript {
         hilt_compiler_version = '1.0.0'
         nav_version = '2.4.2'
         coil_version = '2.0.0'
+        room_version = '2.4.2'
+        paging_version = '3.1.1'
+        datastore_version = '1.0.0'
         timber_version = '5.0.1'
         constraintlayout_compose_version = '1.0.0'
     }

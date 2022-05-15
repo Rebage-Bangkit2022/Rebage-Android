@@ -78,6 +78,18 @@ dependencies {
     // Coil
     implementation "io.coil-kt:coil-compose:$coil_version"
 
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.room:room-paging:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    // Paging
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+
+    // DataStore
+    implementation "androidx.datastore:datastore-preferences:$datastore_version"
+
     // Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
 
