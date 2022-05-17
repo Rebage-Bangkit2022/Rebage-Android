@@ -1,7 +1,9 @@
 package trashissue.rebage.presentation.navhost
 
+import androidx.compose.material.Text
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import trashissue.rebage.presentation.signin.SignInScreen
 
 sealed class Route(
     protected val route: String
@@ -20,7 +22,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-
+            SignInScreen(LocalNavController.current)
         }
 
         operator fun invoke() = route
@@ -40,7 +42,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-
+            Text(text = "Home")
         }
 
         operator fun invoke() = route

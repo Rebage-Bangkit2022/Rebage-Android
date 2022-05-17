@@ -2,7 +2,9 @@ package trashissue.rebage.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val ForestGreen200 = Color(0xFF72B184)
+val ForestGreen500 = Color(0xFF569C6A)
+val ForestGreen700 = Color(0xFF437A53)
+val Jasmine200 = Color(0xFFFFFFAB)
+val Jasmine500 = Color(0xFFf9DE7A)
+val Jasmine700 = Color(0xFFC4AC4B)

@@ -1,7 +1,7 @@
 package trashissue.rebage.domain.model
 
 sealed class Result<out R> {
-    data class NoData(val loading: Boolean = true) : Result<Nothing>()
+    data class NoData(val loading: Boolean = false) : Result<Nothing>()
     data class Success<out T>(val data: T) : Result<T>()
     data class Error(val throwable: Throwable) : Result<Nothing>()
 
