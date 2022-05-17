@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Rebage</string>
+    <string name="text_welcome">Welcome to Rebage</string>
+    <string name="text_help_save_the_earth">Ready to help save the earth today?</string>
+    <string name="text_sign_in">Sign In</string>
+    <string name="error_name_is_required">Name is required</string>
+    <string name="error_name_min_char">Minimum character is 5</string>
+    <string name="error_name_max_char">Maximum character is 50</string>
+    <string name="error_invalid_email">Email is invalid</string>
+    <string name="error_password_is_required">Password is required</string>
+    <string name="error_password_min_char">Minimum character is 6</string>
+    <string name="error_password_max_char">Maximum character is 50</string>
+    <string name="text_email">Email</string>
+    <string name="text_password">Password</string>
+    <string name="cd_pass_visible">Password visible</string>
+    <string name="text_sign_alternative">Or sign in with</string>
+    <string name="cd_google_sign_in">Sign in with google</string>
 </resources>
