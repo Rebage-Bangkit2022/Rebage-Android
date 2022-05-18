@@ -13,11 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import trashissue.rebage.R
+import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.onboarding.component.OnboardingContent
 import trashissue.rebage.presentation.onboarding.component.Pages
 import trashissue.rebage.presentation.onboarding.component.TopBar
@@ -25,7 +28,9 @@ import trashissue.rebage.presentation.theme.RebageTheme
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun OnboardingScreen() {
+fun OnboardingScreen(
+    navController: NavHostController
+) {
     Column(
         modifier = Modifier
             .systemBarsPadding()
@@ -67,6 +72,7 @@ fun OnboardingScreen() {
                 .fillMaxWidth(),
             onClick = {
                 if (isLastPage) {
+                    navController.navigate(Route.Home())
                     return@Button
                 }
                 scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
@@ -81,6 +87,6 @@ fun OnboardingScreen() {
 @Composable
 fun OnboardingScreenPreview() {
     RebageTheme {
-        OnboardingScreen()
+        OnboardingScreen(navController = rememberNavController())
     }
 }
