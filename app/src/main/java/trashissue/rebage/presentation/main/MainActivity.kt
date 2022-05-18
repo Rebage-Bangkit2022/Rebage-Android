@@ -1,4 +1,4 @@
-package trashissue.rebage.presentation
+package trashissue.rebage.presentation.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
