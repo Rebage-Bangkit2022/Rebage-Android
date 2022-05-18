@@ -1,102 +1,119 @@
 package trashissue.rebage.presentation.main
 
+import androidx.compose.animation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import trashissue.rebage.R
-import trashissue.rebage.presentation.navhost.NavGraph
-import trashissue.rebage.presentation.navhost.Route
-import trashissue.rebage.presentation.theme.RebageTheme
 
-val BotNavMenu = listOf(
-    Triple(Route.Home(), R.string.text_home, R.drawable.ic_home),
-    Triple(Route.Detection(), R.string.text_detection, R.drawable.ic_detection),
-    Triple(Route.Price(), R.string.text_price, R.drawable.ic_price),
-    Triple(Route.Profile(), R.string.text_profile, R.drawable.ic_profile)
+val BotNavMenus = listOf(
+    Triple(R.string.text_home, R.drawable.ic_home, Route.Home()),
+    Triple(R.string.text_detection, R.drawable.ic_detection, Route.Detection()),
+    Triple(R.string.text_price, R.drawable.ic_price, Route.Price()),
+    Triple(R.string.text_profile, R.drawable.ic_profile, Route.Profile()),
 )
 
 @Composable
-fun Main(
-    navController: NavHostController
-) {
+fun Main() {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
     ) {
-        Box(
-            modifier = Modifier
-                .weight(1F)
-                .fillMaxWidth()
-        ) {
-            NavGraph()
-        }
-        MainBottomNavigation(
-            onClickItem = { route ->
-                navController.navigate(route) {
-                    popUpTo(Route.Home()) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
+        val navController = rememberNavController()
+        val currentBackStack by navController.currentBackStackEntryFlow.collectAsState(navController.currentBackStackEntry)
+        val isBotNavVisible by remember {
+            val screenWithBotNav = BotNavMenus.map { it.third }
+
+            derivedStateOf {
+                when (currentBackStack?.destination?.route) {
+                    in screenWithBotNav -> true
+                    else -> false
                 }
             }
-        )
-    }
-}
+        }
 
-@Composable
-fun MainBottomNavigation(
-    modifier: Modifier = Modifier,
-    onClickItem: (String) -> Unit
-) {
-    BottomNavigation(
-        backgroundColor = MaterialTheme.colors.background
-    ) {
-        for (menu in BotNavMenu) {
-            val (route, title, icon) = menu
+        Box(modifier = Modifier.weight(1F)) {
+            val onboarding = true
 
-            BottomNavigationItem(
-                selected = route == Route.Home(),
-                selectedContentColor = MaterialTheme.colors.primary,
-                unselectedContentColor = MaterialTheme.colors.onBackground.copy(alpha = 0.3F),
-                onClick = { onClickItem(route) },
-                icon = {
-                    Icon(
-                        painter = painterResource(icon),
-                        contentDescription = stringResource(title)
-                    )
-                },
-                label = {
-                    Text(text = stringResource(title))
-                }
+            NavGraph(
+                startDestination = if (onboarding) Route.Onboarding() else Route.Home(),
+                navController = navController
             )
         }
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun MainPreview() {
-    RebageTheme {
-        Main(
-            navController = rememberNavController()
+        BottomNavigationMain(
+            navController = navController,
+            isBotNavVisible = isBotNavVisible,
+            currentBackStack = { currentBackStack }
         )
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun MainBotNavPreview() {
-    RebageTheme {
-        MainBottomNavigation(onClickItem = {})
+fun BottomNavigationMain(
+    navController: NavHostController,
+    isBotNavVisible: Boolean,
+    currentBackStack: () -> NavBackStackEntry?
+) {
+    AnimatedVisibility(
+        visible = isBotNavVisible,
+        enter = expandVertically() ,
+        exit = shrinkVertically()
+    ) {
+        BottomNavigation(
+            backgroundColor = MaterialTheme.colors.surface,
+            modifier = Modifier
+                .border(width = 1.dp, color = MaterialTheme.colors.onSurface.copy(0.05F))
+                .navigationBarsPadding(),
+            elevation = 0.dp
+        ) {
+            val currentDestination = currentBackStack()?.destination
+
+            for (menu in BotNavMenus) {
+                val (title, icon, route) = menu
+
+                BottomNavigationItem(
+                    selected = currentDestination?.hierarchy?.any { it.route == route } == true,
+                    selectedContentColor = MaterialTheme.colors.primary,
+                    unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.4F),
+                    onClick = {
+                        navController.navigate(route) {
+                            // Pop up to the start destination of the graph to
+                            // avoid building up a large stack of destinations
+                            // on the back stack as users select items
+                            popUpTo(Route.Home()) {
+                                saveState = true
+                            }
+                            // Avoid multiple copies of the same destination when
+                            // reselecting the same item
+                            launchSingleTop = true
+                            // Restore state when reselecting a previously selected item
+                            restoreState = true
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(icon),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    },
+                    label = {
+                        Text(text = stringResource(title))
+                    }
+                )
+            }
+        }
     }
 }
