@@ -33,7 +33,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        freeCompilerArgs += ['-Xcontext-receivers']
+        freeCompilerArgs += [
+                '-Xcontext-receivers',
+                '-opt-in=kotlin.RequiresOptIn'
+        ]
     }
     buildFeatures {
         compose true
@@ -77,6 +80,10 @@ dependencies {
 
     // Coil
     implementation "io.coil-kt:coil-compose:$coil_version"
+
+    // Pager
+    implementation "com.google.accompanist:accompanist-pager:$pager_version"
+    implementation 'com.google.accompanist:accompanist-pager-indicators:0.24.8-beta'
 
     // Room
     implementation "androidx.room:room-runtime:$room_version"
