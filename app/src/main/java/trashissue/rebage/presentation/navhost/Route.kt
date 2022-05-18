@@ -3,6 +3,7 @@ package trashissue.rebage.presentation.navhost
 import androidx.compose.material.Text
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import trashissue.rebage.presentation.onboarding.OnboardingScreen
 import trashissue.rebage.presentation.signin.SignInScreen
 
 sealed class Route(
@@ -12,7 +13,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-
+            OnboardingScreen()
         }
 
         operator fun invoke() = route
