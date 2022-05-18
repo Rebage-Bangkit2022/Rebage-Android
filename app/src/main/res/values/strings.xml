@@ -25,4 +25,8 @@
     <string name="text_next">Next</string>
     <string name="text_start">Start</string>
     <string name="text_get_started">Get started</string>
+    <string name="text_home">Home</string>
+    <string name="text_detection">Detection</string>
+    <string name="text_price">Price</string>
+    <string name="text_profile">Profile</string>
 </resources>

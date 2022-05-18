@@ -59,7 +59,7 @@ sealed class Route(
         operator fun invoke() = route
     }
 
-    object Estimation : Route("estimation") {
+    object Price : Route("estimation") {
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
