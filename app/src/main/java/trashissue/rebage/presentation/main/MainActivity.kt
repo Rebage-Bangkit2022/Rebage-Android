@@ -1,11 +1,10 @@
-package trashissue.rebage.presentation
+package trashissue.rebage.presentation.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import dagger.hilt.android.AndroidEntryPoint
-import trashissue.rebage.presentation.navhost.NavGraph
 import trashissue.rebage.presentation.theme.RebageTheme
 
 @AndroidEntryPoint
@@ -17,7 +16,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             RebageTheme {
-                NavGraph()
+                Main()
             }
         }
     }

@@ -14,10 +14,15 @@ fun NavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Route.SignIn()
+        startDestination = Route.Home()
     ) {
+        Route.Onboarding.composable()
+        Route.SignUp.composable()
         Route.SignIn.composable()
         Route.Home.composable()
+        Route.Detection.composable()
+        Route.Price.composable()
+        Route.Profile.composable()
     }
 }
 

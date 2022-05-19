@@ -1,4 +1,4 @@
-package trashissue.rebage.presentation.navhost
+package trashissue.rebage.presentation.main
 
 import androidx.compose.material.Text
 import androidx.navigation.NavGraphBuilder
@@ -13,7 +13,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-            OnboardingScreen()
+            OnboardingScreen(LocalNavController.current)
         }
 
         operator fun invoke() = route
@@ -53,17 +53,17 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-
+            Text(text = "Detection")
         }
 
         operator fun invoke() = route
     }
 
-    object Price : Route("estimation") {
+    object Price : Route("price") {
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-
+            Text(text = "Price")
         }
 
         operator fun invoke() = route
@@ -73,7 +73,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-
+            Text(text = "Profile")
         }
 
         operator fun invoke() = route

@@ -17,7 +17,7 @@
         android:theme="@style/Theme.Rebage"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Rebage">
             <intent-filter>

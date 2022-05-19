@@ -23,11 +23,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import trashissue.rebage.R
 import trashissue.rebage.di.UseCaseModule
-import trashissue.rebage.domain.usecase.ValidateEmailUseCase
 import trashissue.rebage.presentation.common.component.OutlinedTextFieldPassword
 import trashissue.rebage.presentation.common.component.TextError
 import trashissue.rebage.presentation.common.component.TwoLineDivider
-import trashissue.rebage.presentation.navhost.Route
+import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.theme.RebageTheme
 
 @Composable
