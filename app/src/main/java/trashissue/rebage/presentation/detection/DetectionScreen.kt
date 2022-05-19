@@ -63,17 +63,6 @@ fun DetectionScreen(
             val cameraLauncher = rememberCameraLauncher { imageFile = it }
             val context = LocalContext.current
             val systemUiController = rememberSystemUiController()
-            val primaryColor = MaterialTheme.colors.primary
-
-            DisposableEffect(Unit) {
-                systemUiController.setStatusBarColor(primaryColor)
-                onDispose {
-                    systemUiController.setStatusBarColor(
-                        Color.Transparent,
-                        darkIcons = true
-                    )
-                }
-            }
 
             LazyColumn(
                 modifier = Modifier

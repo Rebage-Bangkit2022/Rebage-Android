@@ -41,8 +41,8 @@ fun OnboardingScreen(
         verticalArrangement = Arrangement.Top
     ) {
         TopBar(
-            onClick = {
-
+            onClickSkip = {
+                navController.navigate(Route.Home())
             },
             text = stringResource(R.string.text_skip)
         )
@@ -75,6 +75,8 @@ fun OnboardingScreen(
                     navController.navigate(Route.Home())
                     return@Button
                 }
+                if (pagerState.pageCount == 0) return@Button
+
                 scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
             }
         ) {

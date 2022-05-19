@@ -3,6 +3,7 @@ package trashissue.rebage.presentation.onboarding.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,7 +17,7 @@ import trashissue.rebage.R
 @Composable
 fun TopBar(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    onClickSkip: () -> Unit,
     text: String
 ) {
     Row(
@@ -33,7 +34,8 @@ fun TopBar(
         )
         Text(
             text = text,
-            modifier = Modifier.clickable(onClick = onClick)
+            modifier = Modifier.clickable(onClick = onClickSkip),
+            style = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground)
         )
     }
 }
@@ -42,7 +44,7 @@ fun TopBar(
 @Composable
 fun TopBarPreview() {
     TopBar(
-        onClick = {},
+        onClickSkip = {},
         text = stringResource(R.string.text_skip)
     )
 }

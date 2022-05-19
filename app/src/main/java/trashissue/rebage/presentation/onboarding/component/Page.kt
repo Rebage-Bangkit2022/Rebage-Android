@@ -41,13 +41,13 @@ fun Page(
         )
         Text(
             text = title,
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(16.dp)
         )
         Text(
             text = subTitle,
-            style = MaterialTheme.typography.subtitle1,
+            style = MaterialTheme.typography.subtitle1.copy(color = MaterialTheme.colors.onBackground),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp)
         )

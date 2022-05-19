@@ -1,12 +1,16 @@
 package trashissue.rebage.presentation.main
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -14,7 +18,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import trashissue.rebage.R
+import trashissue.rebage.presentation.theme.ForestGreen500
 
 val BotNavMenus = listOf(
     Triple(R.string.text_home, R.drawable.ic_home, Route.Home()),
@@ -43,6 +49,7 @@ fun Main() {
             }
         }
 
+        SetupSystemBar({ currentBackStack })
         Box(modifier = Modifier.weight(1F)) {
             val onboarding = true
 
@@ -60,6 +67,37 @@ fun Main() {
     }
 }
 
+private val GreenStatusBar = listOf(
+    Route.Home(),
+    Route.Detection(),
+    Route.Price(),
+    Route.Profile()
+)
+
+@Composable
+fun SetupSystemBar(
+    currentBackStack: () -> NavBackStackEntry?,
+    darkTheme: Boolean = isSystemInDarkTheme()
+) {
+    val systemUiController = rememberSystemUiController()
+    val greenStatusBar by remember {
+        derivedStateOf {
+            val current = currentBackStack()?.destination
+            current?.hierarchy?.any { it.route in GreenStatusBar } == true
+        }
+    }
+
+    LaunchedEffect(greenStatusBar, darkTheme) {
+        if (greenStatusBar && !darkTheme) {
+            systemUiController.setStatusBarColor(ForestGreen500)
+        }
+
+        if (darkTheme || !greenStatusBar) {
+            systemUiController.setStatusBarColor(Color.Transparent, true)
+        }
+    }
+}
+
 @Composable
 fun BottomNavigationMain(
     navController: NavHostController,
@@ -68,7 +106,7 @@ fun BottomNavigationMain(
 ) {
     AnimatedVisibility(
         visible = isBotNavVisible,
-        enter = expandVertically() ,
+        enter = expandVertically(),
         exit = shrinkVertically()
     ) {
         BottomNavigation(
