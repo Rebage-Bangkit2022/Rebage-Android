@@ -3,6 +3,7 @@ package trashissue.rebage.presentation.main
 import androidx.compose.material.Text
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import trashissue.rebage.presentation.detection.DetectionScreen
 import trashissue.rebage.presentation.onboarding.OnboardingScreen
 import trashissue.rebage.presentation.signin.SignInScreen
 
@@ -53,7 +54,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-            Text(text = "Detection")
+            DetectionScreen(LocalNavController.current)
         }
 
         operator fun invoke() = route

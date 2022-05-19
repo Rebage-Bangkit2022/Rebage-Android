@@ -83,7 +83,7 @@ dependencies {
 
     // Pager
     implementation "com.google.accompanist:accompanist-pager:$pager_version"
-    implementation 'com.google.accompanist:accompanist-pager-indicators:0.24.8-beta'
+    implementation "com.google.accompanist:accompanist-pager-indicators:$pager_version"
 
     // Room
     implementation "androidx.room:room-runtime:$room_version"
@@ -96,6 +96,17 @@ dependencies {
 
     // DataStore
     implementation "androidx.datastore:datastore-preferences:$datastore_version"
+
+    // Camerax
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+    implementation "androidx.camera:camera-view:$camerax_version"
+
+    // System ui
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$systemuicontroller_version"
+
+    // Permission
+    implementation "com.google.accompanist:accompanist-permissions:$permission_version"
 
     // Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
