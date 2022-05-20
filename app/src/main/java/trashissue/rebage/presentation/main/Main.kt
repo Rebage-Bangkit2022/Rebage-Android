@@ -20,7 +20,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import trashissue.rebage.R
-import trashissue.rebage.presentation.theme.ForestGreen500
 
 val BotNavMenus = listOf(
     Triple(R.string.text_home, R.drawable.ic_home, Route.Home()),
@@ -67,7 +66,7 @@ fun Main() {
     }
 }
 
-private val GreenStatusBar = listOf(
+private val LightStatusBar = listOf(
     Route.Home(),
     Route.Detection(),
     Route.Price(),
@@ -80,19 +79,19 @@ fun SetupSystemBar(
     darkTheme: Boolean = isSystemInDarkTheme()
 ) {
     val systemUiController = rememberSystemUiController()
-    val greenStatusBar by remember {
+    val lightIcons by remember {
         derivedStateOf {
             val current = currentBackStack()?.destination
-            current?.hierarchy?.any { it.route in GreenStatusBar } == true
+            current?.hierarchy?.any { it.route in LightStatusBar } == true
         }
     }
 
-    LaunchedEffect(greenStatusBar, darkTheme) {
-        if (greenStatusBar && !darkTheme) {
-            systemUiController.setStatusBarColor(ForestGreen500)
+    LaunchedEffect(lightIcons, darkTheme) {
+        if (lightIcons && !darkTheme) {
+            systemUiController.setStatusBarColor(Color.Transparent, false)
         }
 
-        if (darkTheme || !greenStatusBar) {
+        if (darkTheme || !lightIcons) {
             systemUiController.setStatusBarColor(Color.Transparent, true)
         }
     }
