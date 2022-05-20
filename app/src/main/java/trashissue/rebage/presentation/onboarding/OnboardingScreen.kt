@@ -20,6 +20,7 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import trashissue.rebage.R
+import trashissue.rebage.presentation.main.BotNavMenus
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.onboarding.component.OnboardingContent
 import trashissue.rebage.presentation.onboarding.component.Pages
@@ -75,7 +76,7 @@ fun OnboardingScreen(
                     navController.navigate(Route.Home())
                     return@Button
                 }
-                if (pagerState.pageCount == 0) return@Button
+                if (pagerState.pageCount == 0 || pagerState.currentPage >= BotNavMenus.size) return@Button
 
                 scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
             }
