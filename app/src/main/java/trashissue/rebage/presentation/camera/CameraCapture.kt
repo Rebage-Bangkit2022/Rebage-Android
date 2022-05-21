@@ -3,38 +3,45 @@ package trashissue.rebage.presentation.camera
 import android.content.Context
 import android.view.OrientationEventListener
 import android.view.Surface
-import androidx.activity.ComponentActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CameraAlt
+import androidx.compose.material.icons.outlined.Cameraswitch
+import androidx.compose.material.icons.outlined.ImageSearch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import trashissue.rebage.presentation.camera.component.CameraPreview
 import java.io.File
 import java.util.concurrent.Executor
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+
+private var ActionCornerShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
 
 @Composable
 fun CameraCapture(
@@ -42,7 +49,9 @@ fun CameraCapture(
     cameraSelector: CameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA,
     onCaptured: (File) -> Unit = { }
 ) {
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier
+    ) {
         val context = LocalContext.current
         val lifecycleOwner = LocalLifecycleOwner.current
         val coroutineScope = rememberCoroutineScope()
@@ -87,22 +96,62 @@ fun CameraCapture(
         }
 
         CameraPreview(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 98.dp),
             onUseCase = { previewUseCase = it }
         )
-        Button(
+        Row(
             modifier = Modifier
-                .wrapContentSize()
-                .padding(16.dp)
-                .align(Alignment.BottomCenter),
-            onClick = {
-                coroutineScope.launch {
-                    val file = imageCaptureUseCase.takePicture(context.executor)
-                    onCaptured(file)
-                }
-            }
+                .align(Alignment.BottomStart)
+                .height(120.dp)
+                .clip(ActionCornerShape)
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.surface)
+                .padding(horizontal = 16.dp, vertical = 32.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Click!")
+            IconButton(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colors.primary),
+                onClick = {
+
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.ImageSearch,
+                    contentDescription = "Gallery",
+                    tint = MaterialTheme.colors.onPrimary
+                )
+            }
+            IconButton(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colors.primary),
+                onClick = {
+
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.CameraAlt,
+                    contentDescription = "Gallery",
+                    tint = MaterialTheme.colors.onPrimary
+                )
+            }
+            IconButton(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colors.primary),
+                onClick = {
+
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Cameraswitch,
+                    contentDescription = "Gallery",
+                    tint = MaterialTheme.colors.onPrimary
+                )
+            }
         }
     }
 }

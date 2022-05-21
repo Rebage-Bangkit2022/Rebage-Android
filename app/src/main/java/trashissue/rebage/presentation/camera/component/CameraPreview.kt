@@ -1,4 +1,4 @@
-package trashissue.rebage.presentation.camera
+package trashissue.rebage.presentation.camera.component
 
 import android.view.ViewGroup
 import androidx.camera.core.Preview
@@ -6,7 +6,6 @@ import androidx.camera.view.PreviewView
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import timber.log.Timber
 
 @Composable
 fun CameraPreview(
@@ -14,9 +13,6 @@ fun CameraPreview(
     scaleType: PreviewView.ScaleType = PreviewView.ScaleType.FILL_CENTER,
     onUseCase: (Preview) -> Unit = { }
 ) {
-
-    Timber.i("REKOMPOSISI")
-
     AndroidView(
         modifier = modifier,
         factory = { context ->
