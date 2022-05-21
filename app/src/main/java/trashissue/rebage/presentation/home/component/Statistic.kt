@@ -67,7 +67,7 @@ fun Statistic(
                 Text(
                     modifier = Modifier.padding(top = 16.dp),
                     text = "Total Sampah",
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.subtitle1
                 )
             }
             Column(
@@ -89,7 +89,7 @@ fun Statistic(
                         .align(Alignment.End)
                         .padding(top = 16.dp),
                     text = "Lihat selengkapnya",
-                    style = MaterialTheme.typography.body1,
+                    style = MaterialTheme.typography.subtitle1,
                     textDecoration = TextDecoration.Underline
                 )
             }
