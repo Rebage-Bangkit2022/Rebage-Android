@@ -6,11 +6,13 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Camera
+import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -30,6 +32,7 @@ import trashissue.rebage.presentation.detection.component.AddGarbage
 import trashissue.rebage.presentation.detection.component.ScannedGarbage
 import java.io.File
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetectionScreen(
     navController: NavHostController
@@ -66,8 +69,12 @@ fun DetectionScreen(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                item {
-                    Box(modifier = Modifier.fillMaxWidth()) {
+                item(key = { "scan" }) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateItemPlacement()
+                    ) {
                         Button(
                             onClick = {
                                 cameraLauncher.launch(Intent(context, CameraActivity::class.java))
@@ -77,7 +84,7 @@ fun DetectionScreen(
                                 .padding(top = 16.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Outlined.Camera,
+                                imageVector = Icons.Outlined.CameraAlt,
                                 contentDescription = "Scan"
                             )
                             Spacer(modifier = Modifier.width(4.dp))
@@ -85,15 +92,18 @@ fun DetectionScreen(
                         }
                     }
                 }
-                items(10) {
-                    ScannedGarbage()
-                }
-                item {
+                item(key = { "add_garbage" }) {
                     AddGarbage(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 16.dp)
                     )
+                }
+                items(30, key = { it }) {
+                    ScannedGarbage(modifier = Modifier.animateItemPlacement())
+                }
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
