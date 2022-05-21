@@ -10,9 +10,9 @@ import timber.log.Timber
 
 @Composable
 fun NavGraph(
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController,
     startDestination: String,
-) = CompositionLocalProvider(LocalNavController provides navController) {
+) {
     NavHost(
         navController = navController,
         startDestination = startDestination

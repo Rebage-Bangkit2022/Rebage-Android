@@ -28,6 +28,7 @@ val BotNavMenus = listOf(
     Triple(R.string.text_profile, R.drawable.ic_profile, Route.Profile()),
 )
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Main() {
     Column(
@@ -50,14 +51,19 @@ fun Main() {
 
         SetupSystemBar({ currentBackStack })
         Box(modifier = Modifier.weight(1F)) {
-            val onboarding = true
 
-            NavGraph(
-                startDestination = if (onboarding) Route.Onboarding() else Route.Home(),
-                navController = navController
-            )
+            CompositionLocalProvider(
+                LocalNavController provides navController,
+                LocalMinimumTouchTargetEnforcement provides false
+            ) {
+                val onboarding = true
+
+                NavGraph(
+                    startDestination = if (onboarding) Route.Onboarding() else Route.Home(),
+                    navController = navController
+                )
+            }
         }
-
         BottomNavigationMain(
             navController = navController,
             isBotNavVisible = isBotNavVisible,
