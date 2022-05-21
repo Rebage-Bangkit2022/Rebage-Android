@@ -29,4 +29,9 @@
     <string name="text_detection">Detection</string>
     <string name="text_price">Price</string>
     <string name="text_profile">Profile</string>
+    <string name="text_recommended_articles">Recommended Articles</string>
+    <string name="text_handicraft_product">Handicrafts Product</string>
+    <string name="text_see_more">See More</string>
+    <string name="text_recommendation_subtitle">Recommendations based on your interest</string>
+    <string name="text_total_garbage">Total Garbage</string>
 </resources>
