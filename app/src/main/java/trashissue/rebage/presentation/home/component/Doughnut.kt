@@ -11,8 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import timber.log.Timber
-import trashissue.rebage.presentation.home.GarbageStat
 
 data class ChartData(
     val name: String,
@@ -29,7 +27,6 @@ fun Doughnut(
 
     val total = remember(data) { data.sumOf { it.value } }
     val density = LocalDensity.current
-
 
     Canvas(modifier = modifier.size(width)) {
         var startAngle = 0F

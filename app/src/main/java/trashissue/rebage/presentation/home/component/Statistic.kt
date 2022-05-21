@@ -1,8 +1,6 @@
 package trashissue.rebage.presentation.home.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -10,11 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import trashissue.rebage.R
+import trashissue.rebage.presentation.common.noRippleClickable
 
 private val DefaultContentPadding = PaddingValues(12.dp)
 
@@ -66,7 +65,7 @@ fun Statistic(
                 }
                 Text(
                     modifier = Modifier.padding(top = 16.dp),
-                    text = "Total Sampah",
+                    text = stringResource(R.string.text_total_garbage),
                     style = MaterialTheme.typography.subtitle1
                 )
             }
@@ -76,9 +75,8 @@ fun Statistic(
                     .padding(12.dp)
             ) {
 
-
                 for (garbage in top3) {
-                    Garbage(
+                    GarbageLabel(
                         name = garbage.name,
                         color = garbage.color,
                         value = "${garbage.value.toInt()}"
@@ -87,43 +85,13 @@ fun Statistic(
                 Text(
                     modifier = Modifier
                         .align(Alignment.End)
-                        .padding(top = 16.dp),
-                    text = "Lihat selengkapnya",
-                    style = MaterialTheme.typography.subtitle1,
+                        .padding(top = 16.dp)
+                        .noRippleClickable(onClick = onClickShowMore),
+                    text = stringResource(R.string.text_see_more),
+                    style = MaterialTheme.typography.button,
                     textDecoration = TextDecoration.Underline
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun Garbage(
-    modifier: Modifier = Modifier,
-    name: String,
-    color: Color,
-    value: String
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(16.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(color)
-        )
-        Text(
-            modifier = Modifier
-                .weight(1F)
-                .padding(8.dp),
-            text = name,
-            style = MaterialTheme.typography.body1
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.body2
-        )
     }
 }

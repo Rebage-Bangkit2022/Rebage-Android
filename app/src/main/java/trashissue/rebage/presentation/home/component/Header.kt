@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import trashissue.rebage.presentation.home.GarbageStat
+import trashissue.rebage.presentation.home.DummyGarbageStat
 
 @Composable
 fun Header(
@@ -29,7 +29,7 @@ fun Header(
             )
 
             val (data, total) = remember {
-                val d = GarbageStat.sortedByDescending { it.value }
+                val d = DummyGarbageStat.sortedByDescending { it.value }
                 d to d.sumOf { it.value }
             }
 
