@@ -14,7 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import trashissue.rebage.R
 
 @Composable
 fun AddGarbage(
@@ -41,7 +43,8 @@ fun AddGarbage(
                         modifier = Modifier.clickable {
                             addNewGarbage = false
                         },
-                        imageVector = Icons.Outlined.Delete,
+                        painterResource(R.drawable.ic_trash),
+//                        imageVector = Icons.Outlined.Delete,
                         contentDescription = "Delete"
                     )
                 }
@@ -65,7 +68,8 @@ fun AddGarbage(
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.Add,
+                    painterResource(R.drawable.ic_plus),
+//                    imageVector = Icons.Outlined.Add,
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(4.dp))
