@@ -72,13 +72,13 @@ fun OnboardingScreen(
                 .padding(16.dp)
                 .fillMaxWidth(),
             onClick = {
-                if (isLastPage) {
-                    navController.navigate(Route.Home())
-                    return@Button
+                scope.launch {
+                    if (isLastPage) {
+                        navController.navigate(Route.Home())
+                        return@launch
+                    }
+                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
                 }
-                if (pagerState.pageCount == 0 || pagerState.currentPage >= BotNavMenus.size) return@Button
-
-                scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
             }
         ) {
             Text(text = if (!isLastPage) stringResource(R.string.text_next) else stringResource(R.string.text_get_started))
