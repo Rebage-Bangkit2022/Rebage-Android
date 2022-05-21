@@ -43,8 +43,7 @@ fun AddGarbage(
                         modifier = Modifier.clickable {
                             addNewGarbage = false
                         },
-                        painterResource(R.drawable.ic_trash),
-//                        imageVector = Icons.Outlined.Delete,
+                        imageVector = Icons.Outlined.Delete,
                         contentDescription = "Delete"
                     )
                 }
@@ -68,8 +67,7 @@ fun AddGarbage(
                 }
             ) {
                 Icon(
-                    painterResource(R.drawable.ic_plus),
-//                    imageVector = Icons.Outlined.Add,
+                    imageVector = Icons.Outlined.Add,
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(4.dp))

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Camera
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.presentation.camera.CameraActivity
-import trashissue.rebage.presentation.common.component.TopAppBar
+import trashissue.rebage.presentation.common.statusBarsPaddingWithColor
 import trashissue.rebage.presentation.detection.component.AddGarbage
 import trashissue.rebage.presentation.detection.component.ScannedGarbage
 import java.io.File
@@ -38,7 +37,9 @@ fun DetectionScreen(
     navController: NavHostController
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPaddingWithColor(),
         topBar = {
             TopAppBar {
                 Text(
