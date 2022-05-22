@@ -52,10 +52,7 @@ fun Main() {
         SetupSystemBar({ currentBackStack })
         Box(modifier = Modifier.weight(1F)) {
 
-            CompositionLocalProvider(
-                LocalNavController provides navController,
-                LocalMinimumTouchTargetEnforcement provides false
-            ) {
+            CompositionLocalProvider(LocalNavController provides navController) {
                 val onboarding = true
 
                 NavGraph(
@@ -76,7 +73,8 @@ private val LightStatusBar = listOf(
     Route.Home(),
     Route.Detection(),
     Route.Price(),
-    Route.Profile()
+    Route.Profile(),
+    Route.FavoriteArticle()
 )
 
 @Composable
