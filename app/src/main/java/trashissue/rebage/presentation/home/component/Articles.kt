@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import trashissue.rebage.R
 import trashissue.rebage.presentation.theme.RebageTheme
 
-private val ContentPadding = PaddingValues(16.dp)
+private val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 
 @Composable
 fun Articles(
@@ -22,12 +22,14 @@ fun Articles(
     label: String
 ) {
     Column(
-        modifier = modifier.background(MaterialTheme.colors.background)
+        modifier = modifier
+            .background(MaterialTheme.colors.background)
+            .padding(top = 16.dp, bottom = 8.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
