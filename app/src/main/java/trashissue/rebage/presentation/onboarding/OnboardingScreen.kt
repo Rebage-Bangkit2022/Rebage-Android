@@ -20,7 +20,6 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import trashissue.rebage.R
-import trashissue.rebage.presentation.main.BotNavMenus
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.onboarding.component.OnboardingContent
 import trashissue.rebage.presentation.onboarding.component.Pages

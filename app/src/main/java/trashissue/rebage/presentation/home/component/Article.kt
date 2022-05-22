@@ -12,6 +12,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import trashissue.rebage.presentation.theme.RebageTheme
 
 @Composable
 fun Article(
@@ -44,5 +45,7 @@ fun Article(
 @Preview(showBackground = true)
 @Composable
 fun ArticlePreview() {
-    Article(title = "Huw huw huw huw huw huw huw huw huw huw huw huw huw huw huw huw huw")
+    RebageTheme {
+        Article(title = "Du du du Du du du Du du du Du du du Du du du Du du du Du du du")
+    }
 }

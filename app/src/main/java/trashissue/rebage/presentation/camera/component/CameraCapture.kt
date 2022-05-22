@@ -1,4 +1,4 @@
-package trashissue.rebage.presentation.camera
+package trashissue.rebage.presentation.camera.component
 
 import android.content.Context
 import android.view.OrientationEventListener
@@ -20,10 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Cameraswitch
 import androidx.compose.material.icons.outlined.ImageSearch
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,22 +29,21 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import trashissue.rebage.presentation.camera.component.CameraPreview
 import java.io.File
 import java.util.concurrent.Executor
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-private var ActionCornerShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+private val DefaultActionCornerShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
 
 @Composable
 fun CameraCapture(
     modifier: Modifier = Modifier,
-    cameraSelector: CameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA,
-    onCaptured: (File) -> Unit = { }
+    onCaptured: (File) -> Unit
 ) {
     Box(
         modifier = modifier
@@ -55,6 +51,7 @@ fun CameraCapture(
         val context = LocalContext.current
         val lifecycleOwner = LocalLifecycleOwner.current
         val coroutineScope = rememberCoroutineScope()
+        val cameraSelector by remember { mutableStateOf(CameraSelector.DEFAULT_BACK_CAMERA) }
         var previewUseCase = remember { Preview.Builder().build() }
         val imageCaptureUseCase = remember {
             val imageCapture = ImageCapture.Builder()
@@ -79,7 +76,7 @@ fun CameraCapture(
             imageCapture
         }
 
-        LaunchedEffect(previewUseCase) {
+        LaunchedEffect(previewUseCase, cameraSelector) {
             val cameraProvider = context.getCameraProvider()
             try {
                 // Must unbind the use-cases before rebinding them.
@@ -96,14 +93,16 @@ fun CameraCapture(
         }
 
         CameraPreview(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 98.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 98.dp),
             onUseCase = { previewUseCase = it }
         )
         Row(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .height(120.dp)
-                .clip(ActionCornerShape)
+                .clip(DefaultActionCornerShape)
                 .fillMaxWidth()
                 .background(MaterialTheme.colors.surface)
                 .padding(horizontal = 16.dp, vertical = 32.dp),
@@ -129,7 +128,10 @@ fun CameraCapture(
                     .clip(CircleShape)
                     .background(MaterialTheme.colors.primary),
                 onClick = {
-
+                    coroutineScope.launch {
+                        val file = imageCaptureUseCase.takePicture(context.executor)
+                        onCaptured(file)
+                    }
                 }
             ) {
                 Icon(

@@ -19,17 +19,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import trashissue.rebage.R
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.presentation.camera.CameraActivity
 import trashissue.rebage.presentation.common.statusBarsPaddingWithColor
 import trashissue.rebage.presentation.detection.component.AddGarbage
 import trashissue.rebage.presentation.detection.component.ScannedGarbage
 import java.io.File
+
+private val ContentPadding = PaddingValues(16.dp)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -43,7 +47,7 @@ fun DetectionScreen(
         topBar = {
             TopAppBar {
                 Text(
-                    text = "Deteksi",
+                    text = stringResource(R.string.text_detection),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.subtitle1,
@@ -65,10 +69,9 @@ fun DetectionScreen(
             val context = LocalContext.current
 
             LazyColumn(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = ContentPadding
             ) {
                 item(key = { "scan" }) {
                     Box(
@@ -80,9 +83,7 @@ fun DetectionScreen(
                             onClick = {
                                 cameraLauncher.launch(Intent(context, CameraActivity::class.java))
                             },
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .padding(top = 16.dp)
+                            modifier = Modifier.align(Alignment.CenterEnd)
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.CameraAlt,
@@ -102,9 +103,6 @@ fun DetectionScreen(
                 }
                 items(30, key = { it }) {
                     ScannedGarbage(modifier = Modifier.animateItemPlacement())
-                }
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }

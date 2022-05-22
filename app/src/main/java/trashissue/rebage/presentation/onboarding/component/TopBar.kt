@@ -1,7 +1,6 @@
 package trashissue.rebage.presentation.onboarding.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -13,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import trashissue.rebage.R
+import trashissue.rebage.presentation.common.noRippleClickable
 
 @Composable
 fun TopBar(
@@ -33,9 +33,10 @@ fun TopBar(
             contentDescription = null
         )
         Text(
+            modifier = Modifier.noRippleClickable(onClick = onClickSkip),
             text = text,
-            modifier = Modifier.clickable(onClick = onClickSkip),
-            style = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground)
+            style = MaterialTheme.typography.button,
+            color = MaterialTheme.colors.onBackground
         )
     }
 }

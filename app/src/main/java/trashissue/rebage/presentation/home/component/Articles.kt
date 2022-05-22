@@ -1,5 +1,6 @@
 package trashissue.rebage.presentation.home.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.MaterialTheme
@@ -13,13 +14,15 @@ import androidx.compose.ui.unit.dp
 import trashissue.rebage.R
 import trashissue.rebage.presentation.theme.RebageTheme
 
+private val ContentPadding = PaddingValues(16.dp)
+
 @Composable
 fun Articles(
     modifier: Modifier = Modifier,
     label: String
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.background(MaterialTheme.colors.background)
     ) {
         Row(
             modifier = Modifier
@@ -39,22 +42,14 @@ fun Articles(
             )
         }
         LazyRow(
-            modifier = Modifier.padding(top = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = ContentPadding
         ) {
-            item {
-                Spacer(modifier = Modifier.width(4.dp))
-            }
             items(10, key = { it }) {
                 Article(
-                    modifier = Modifier
-                        .width(240.dp)
-                        .padding(bottom = 12.dp),
+                    modifier = Modifier.width(240.dp),
                     title = "Cara Indonesia Kurangi Sampah Plastik hingga 70 Persen"
                 )
-            }
-            item {
-                Spacer(modifier = Modifier.width(4.dp))
             }
         }
     }
