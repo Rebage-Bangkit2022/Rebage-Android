@@ -34,4 +34,6 @@
     <string name="text_see_more">See More</string>
     <string name="text_recommendation_subtitle">Recommendations based on your interest</string>
     <string name="text_total_garbage">Total Garbage</string>
+    <string name="text_favorite_article">Favorite Article</string>
+    <string name="cd_back">Back</string>
 </resources>
