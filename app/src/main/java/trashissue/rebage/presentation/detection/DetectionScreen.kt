@@ -36,7 +36,6 @@ private val ContentPadding = PaddingValues(16.dp)
 fun DetectionScreen(
     navController: NavHostController
 ) {
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -47,9 +46,13 @@ fun DetectionScreen(
                     Text(text = stringResource(R.string.text_detection))
                 },
                 actions = {
+                    val context = LocalContext.current
+                    val cameraLauncher = rememberCameraLauncher()
+
                     IconButton(
                         onClick = {
-
+                            val intent = Intent(context, CameraActivity::class.java)
+                            cameraLauncher.launch(intent)
                         }
                     ) {
                         Icon(
