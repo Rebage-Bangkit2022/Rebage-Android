@@ -35,6 +35,7 @@
     <string name="text_recommendation_subtitle">Recommendations based on your interest</string>
     <string name="text_total_garbage">Total Garbage</string>
     <string name="text_favorite_article">Favorite Article</string>
+    <string name="text_list_title_article">Plastic</string>
     <string name="cd_back">Back</string>
     <string name="camera_permission">"You must allow camera permission to use this feature"</string>
     <string name="cd_save_result">Save result</string>
