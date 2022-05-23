@@ -3,18 +3,20 @@ package trashissue.rebage.presentation.detection.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import trashissue.rebage.presentation.common.noRippleClickable
 
 @Composable
 fun Counter(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickIncrement: () -> Unit,
+    onClickDecrement: () -> Unit,
+    text: @Composable () -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -23,15 +25,14 @@ fun Counter(
     ) {
         Icon(
             imageVector = Icons.Outlined.Add,
-            contentDescription = null
+            contentDescription = null,
+            modifier = Modifier.noRippleClickable(onClick = onClickDecrement)
         )
-        Text(
-            text = "3",
-            style = MaterialTheme.typography.caption
-        )
+        text()
         Icon(
             imageVector = Icons.Outlined.Add,
-            contentDescription = null
+            contentDescription = null,
+            modifier = Modifier.noRippleClickable(onClick = onClickIncrement)
         )
     }
 }
