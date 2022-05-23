@@ -4,32 +4,31 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import timber.log.Timber
 import trashissue.rebage.R
 
 val BotNavMenus = listOf(
-    Triple(R.string.text_home, R.drawable.ic_home, Route.Home()),
-    Triple(R.string.text_detection, R.drawable.ic_detection, Route.Detection()),
-    Triple(R.string.text_price, R.drawable.ic_price, Route.Price()),
-    Triple(R.string.text_profile, R.drawable.ic_profile, Route.Profile()),
+    Triple(R.string.text_home, Icons.Outlined.Home to Icons.Filled.Home, Route.Home()),
+    Triple(R.string.text_detection, Icons.Outlined.DocumentScanner to Icons.Filled.DocumentScanner, Route.Detection()),
+    Triple(R.string.text_price, Icons.Outlined.Paid to Icons.Filled.Paid, Route.Price()),
+    Triple(R.string.text_profile, Icons.Outlined.AccountCircle to Icons.Filled.AccountCircle, Route.Profile())
 )
 
 @Composable
 fun Main() {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -86,10 +85,13 @@ fun NavigationBarMain(
             val currentDestination = currentBackStack()?.destination
 
             for (menu in BotNavMenus) {
-                val (title, icon, route) = menu
+                val (title, icons, route) = menu
+                val (outlined, filled) = icons
+
+                val selected = currentDestination?.hierarchy?.any { it.route == route } == true
 
                 NavigationBarItem(
-                    selected = currentDestination?.hierarchy?.any { it.route == route } == true,
+                    selected = selected,
                     onClick = {
                         navController.navigate(route) {
                             // Pop up to the start destination of the graph to
@@ -107,7 +109,7 @@ fun NavigationBarMain(
                     },
                     icon = {
                         Icon(
-                            painter = painterResource(icon),
+                            imageVector = if (selected) filled else outlined,
                             contentDescription = null,
                             modifier = Modifier.size(24.dp)
                         )
