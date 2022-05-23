@@ -96,14 +96,13 @@ fun ProfileScreen(
                 text = "Theme",
                 icon = {
                     var darkTheme by remember { mutableStateOf(false) }
-                    CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
-                        Switch(
-                            checked = darkTheme,
-                            onCheckedChange = {
-                                darkTheme = !darkTheme
-                            }
-                        )
-                    }
+                    Switch(
+                        modifier = Modifier.height(24.dp),
+                        checked = darkTheme,
+                        onCheckedChange = {
+                            darkTheme = !darkTheme
+                        }
+                    )
                 }
             )
         }
