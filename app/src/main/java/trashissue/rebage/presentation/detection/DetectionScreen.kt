@@ -36,7 +36,6 @@ private val ContentPadding = PaddingValues(16.dp)
 fun DetectionScreen(
     navController: NavHostController
 ) {
-    var addGarbage by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier
@@ -59,7 +58,7 @@ fun DetectionScreen(
                         )
                     }
                     Text(
-                        text = "Save",
+                        text = stringResource(R.string.text_next),
                         style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier
                             .padding(start = 4.dp, end = 12.dp)

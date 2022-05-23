@@ -40,4 +40,7 @@
     <string name="camera_permission">"You must allow camera permission to use this feature"</string>
     <string name="cd_save_result">Save result</string>
     <string name="cd_add_manually">Add manually</string>
+    <string name="text_choose_item">Choose item</string>
+    <string name="text_save">Save</string>
+    <string name="text_cancel">Cancel</string>
 </resources>
