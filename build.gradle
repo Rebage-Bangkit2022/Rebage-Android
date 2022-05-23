@@ -2,7 +2,7 @@ buildscript {
     ext {
         kotlin_version = "1.6.21"
         core_ktx_version = '1.7.0'
-        compose_version = '1.2.0-beta01'
+        compose_version = '1.2.0-beta02'
         lifecycle_version = '2.4.1'
         activity_compose = '1.4.0'
         hilt_version = '2.42'
