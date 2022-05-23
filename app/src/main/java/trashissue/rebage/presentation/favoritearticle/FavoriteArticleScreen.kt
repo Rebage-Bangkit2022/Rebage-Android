@@ -1,43 +1,31 @@
 package trashissue.rebage.presentation.favoritearticle
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material.icons.rounded.ArrowBackIos
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import trashissue.rebage.R
-import trashissue.rebage.presentation.common.statusBarsPaddingWithColor
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteArticleScreen(
     navController: NavHostController
 ) {
     Scaffold(
-        modifier = Modifier
-            .statusBarsPaddingWithColor()
-            .navigationBarsPadding(),
+        modifier = Modifier.systemBarsPadding(),
         topBar = {
-            TopAppBar(
+            SmallTopAppBar(
                 title = {
-                    Text(
-                        text = stringResource(R.string.text_favorite_article),
-                        modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.subtitle1,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colors.onPrimary
-                    )
+                    Text(text = stringResource(R.string.text_favorite_article))
                 },
                 navigationIcon = {
                     IconButton(
@@ -46,7 +34,7 @@ fun FavoriteArticleScreen(
                         }
                     ) {
                         Icon(
-                            Icons.Filled.ArrowBackIos,
+                            Icons.Rounded.ArrowBackIos,
                             stringResource(R.string.cd_back)
                         )
                     }
@@ -76,17 +64,14 @@ fun FavoriteArticleScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Article(
     modifier: Modifier = Modifier,
     title: String,
     description: String
 ) {
-    Card(
-        modifier = modifier.height(120.dp),
-        elevation = 0.dp,
-        border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.primary)
-    ) {
+    Card(modifier = modifier.height(120.dp)) {
         Row(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
@@ -101,13 +86,13 @@ fun Article(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.subtitle1,
+                    style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = description,
-                    style = MaterialTheme.typography.body2,
+                    style = MaterialTheme.typography.bodyMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )

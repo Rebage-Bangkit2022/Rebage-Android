@@ -4,10 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +18,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import timber.log.Timber
 import trashissue.rebage.R
 
 val BotNavMenus = listOf(
@@ -28,13 +28,12 @@ val BotNavMenus = listOf(
     Triple(R.string.text_profile, R.drawable.ic_profile, Route.Profile()),
 )
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Main() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryFlow.collectAsState(navController.currentBackStackEntry)
@@ -49,11 +48,10 @@ fun Main() {
             }
         }
 
-        SetupSystemBar({ currentBackStack })
         Box(modifier = Modifier.weight(1F)) {
 
             CompositionLocalProvider(LocalNavController provides navController) {
-                val onboarding = true
+                val onboarding = false
 
                 NavGraph(
                     startDestination = if (onboarding) Route.Onboarding() else Route.Home(),
@@ -61,7 +59,7 @@ fun Main() {
                 )
             }
         }
-        BottomNavigationMain(
+        NavigationBarMain(
             navController = navController,
             isBotNavVisible = isBotNavVisible,
             currentBackStack = { currentBackStack }
@@ -69,40 +67,8 @@ fun Main() {
     }
 }
 
-private val LightStatusBar = listOf(
-    Route.Home(),
-    Route.Detection(),
-    Route.Price(),
-    Route.Profile(),
-    Route.FavoriteArticle()
-)
-
 @Composable
-fun SetupSystemBar(
-    currentBackStack: () -> NavBackStackEntry?,
-    darkTheme: Boolean = isSystemInDarkTheme()
-) {
-    val systemUiController = rememberSystemUiController()
-    val lightIcons by remember {
-        derivedStateOf {
-            val current = currentBackStack()?.destination
-            current?.hierarchy?.any { it.route in LightStatusBar } == true
-        }
-    }
-
-    LaunchedEffect(lightIcons, darkTheme) {
-        if (lightIcons && !darkTheme) {
-            systemUiController.setStatusBarColor(Color.Transparent, false)
-        }
-
-        if (darkTheme || !lightIcons) {
-            systemUiController.setStatusBarColor(Color.Transparent, true)
-        }
-    }
-}
-
-@Composable
-fun BottomNavigationMain(
+fun NavigationBarMain(
     navController: NavHostController,
     isBotNavVisible: Boolean,
     currentBackStack: () -> NavBackStackEntry?
@@ -112,22 +78,18 @@ fun BottomNavigationMain(
         enter = expandVertically(),
         exit = shrinkVertically()
     ) {
-        BottomNavigation(
-            backgroundColor = MaterialTheme.colors.surface,
-            modifier = Modifier
-                .border(width = 1.dp, color = MaterialTheme.colors.onSurface.copy(0.05F))
-                .navigationBarsPadding(),
-            elevation = 0.dp
+        NavigationBar(
+            modifier = Modifier.navigationBarsPadding(),
+            tonalElevation = 4.dp,
+            containerColor = MaterialTheme.colorScheme.surface
         ) {
             val currentDestination = currentBackStack()?.destination
 
             for (menu in BotNavMenus) {
                 val (title, icon, route) = menu
 
-                BottomNavigationItem(
+                NavigationBarItem(
                     selected = currentDestination?.hierarchy?.any { it.route == route } == true,
-                    selectedContentColor = MaterialTheme.colors.primary,
-                    unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.4F),
                     onClick = {
                         navController.navigate(route) {
                             // Pop up to the start destination of the graph to

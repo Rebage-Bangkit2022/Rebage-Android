@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +24,7 @@ import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.onboarding.component.OnboardingContent
 import trashissue.rebage.presentation.onboarding.component.Pages
 import trashissue.rebage.presentation.onboarding.component.TopBar
-import trashissue.rebage.presentation.theme.RebageTheme
+import trashissue.rebage.presentation.theme3.RebageTheme3
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -60,7 +60,7 @@ fun OnboardingScreen(
             indicatorWidth = 32.dp,
             indicatorHeight = 6.dp,
             spacing = 12.dp,
-            activeColor = MaterialTheme.colors.primary
+            activeColor = MaterialTheme.colorScheme.primary
         )
 
         val isLastPage by remember { derivedStateOf { pagerState.currentPage == OnboardingContent.size - 1 } }
@@ -88,7 +88,7 @@ fun OnboardingScreen(
 @Preview(showBackground = true)
 @Composable
 fun OnboardingScreenPreview() {
-    RebageTheme {
+    RebageTheme3 {
         OnboardingScreen(navController = rememberNavController())
     }
 }

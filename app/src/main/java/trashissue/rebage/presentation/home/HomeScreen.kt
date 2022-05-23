@@ -5,11 +5,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import trashissue.rebage.R
 import trashissue.rebage.presentation.common.statusBarsPaddingWithColor
 import trashissue.rebage.presentation.home.component.Articles
@@ -43,9 +48,24 @@ fun HomeScreen() {
             .statusBarsPaddingWithColor()
             .verticalScroll(rememberScrollState())
     ) {
+
+        val isLight = MaterialTheme.colorScheme.isLight()
+        val systemUiController = rememberSystemUiController()
+
+        DisposableEffect(isLight) {
+            systemUiController.setStatusBarColor(Color.Transparent, darkIcons = false)
+
+            onDispose {
+                systemUiController.setStatusBarColor(Color.Transparent, darkIcons = isLight)
+            }
+        }
+
         Header(modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp))
         Articles(label = stringResource(R.string.text_recommended_articles))
         Articles(label = stringResource(R.string.text_handicraft_product))
         Articles(label = stringResource(R.string.text_recommended_articles))
     }
 }
+
+@Composable
+fun ColorScheme.isLight() = this.background.luminance() > 0.5

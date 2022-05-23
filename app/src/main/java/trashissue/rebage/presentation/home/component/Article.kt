@@ -2,27 +2,25 @@ package trashissue.rebage.presentation.home.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import trashissue.rebage.presentation.theme.RebageTheme
+import trashissue.rebage.presentation.theme3.RebageTheme3
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Article(
     modifier: Modifier = Modifier,
-    title: String,
-    elevation: Dp = 4.dp
+    title: String
 ) {
     Card(
-        elevation = elevation,
-        modifier = modifier.wrapContentSize()
+        modifier = modifier.wrapContentSize(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
             Box(
@@ -34,7 +32,8 @@ fun Article(
             Text(
                 modifier = Modifier.padding(8.dp),
                 text = title,
-                style = MaterialTheme.typography.subtitle2,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -45,7 +44,7 @@ fun Article(
 @Preview(showBackground = true)
 @Composable
 fun ArticlePreview() {
-    RebageTheme {
+    RebageTheme3 {
         Article(title = "Du du du Du du du Du du du Du du du Du du du Du du du Du du du")
     }
 }
