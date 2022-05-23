@@ -37,4 +37,6 @@
     <string name="text_favorite_article">Favorite Article</string>
     <string name="cd_back">Back</string>
     <string name="camera_permission">"You must allow camera permission to use this feature"</string>
+    <string name="cd_save_result">Save result</string>
+    <string name="cd_add_manually">Add manually</string>
 </resources>
