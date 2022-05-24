@@ -43,4 +43,6 @@
     <string name="text_choose_item">Choose item</string>
     <string name="text_save">Save</string>
     <string name="text_cancel">Cancel</string>
+    <string name="cd_sign_out">Sign out</string>
+    <string name="cd_edit_profile_photo">Edit profile photo</string>
 </resources>
