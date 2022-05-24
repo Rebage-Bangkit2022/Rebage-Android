@@ -2,7 +2,7 @@ package trashissue.rebage.presentation.detection.component
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,6 +31,14 @@ fun AddGarbage(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.align(Alignment.End)
             ) {
+                var item by remember { mutableStateOf(0) }
+
+                AnimatedCounter(
+                    value = item,
+                    onClickDecrement = { if (item != 0) item-- },
+                    onClickIncrement = { item++ }
+                )
+                Spacer(modifier = Modifier.weight(1F))
                 TextButton(
                     onClick = onCancel,
                     contentPadding = DefaultButtonContentPadding
