@@ -1,4 +1,4 @@
-package trashissue.rebage.presentation.favoritearticle
+package trashissue.rebage.presentation.article
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,7 +17,7 @@ import trashissue.rebage.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoriteArticleScreen(
+fun ListArticleScreen(
     navController: NavHostController
 ) {
     Scaffold(
@@ -25,7 +25,7 @@ fun FavoriteArticleScreen(
         topBar = {
             SmallTopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.text_favorite_article))
+                    Text(text = stringResource(R.string.text_list_title_article))
                 },
                 navigationIcon = {
                     IconButton(

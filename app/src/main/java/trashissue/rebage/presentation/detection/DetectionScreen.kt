@@ -9,33 +9,29 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CameraAlt
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.presentation.camera.CameraActivity
-import trashissue.rebage.presentation.common.statusBarsPaddingWithColor
+import trashissue.rebage.presentation.common.noRippleClickable
 import trashissue.rebage.presentation.detection.component.AddGarbage
 import trashissue.rebage.presentation.detection.component.ScannedGarbage
 import java.io.File
 
 private val ContentPadding = PaddingValues(16.dp)
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DetectionScreen(
     navController: NavHostController
@@ -43,19 +39,36 @@ fun DetectionScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPaddingWithColor(),
+            .statusBarsPadding(),
         topBar = {
-            TopAppBar {
-                Text(
-                    text = stringResource(R.string.text_detection),
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.subtitle1,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colors.onPrimary
-                )
-            }
+            SmallTopAppBar(
+                title = {
+                    Text(text = stringResource(R.string.text_detection))
+                },
+                actions = {
+                    val context = LocalContext.current
+                    val cameraLauncher = rememberCameraLauncher()
+
+                    IconButton(
+                        onClick = {
+                            val intent = Intent(context, CameraActivity::class.java)
+                            cameraLauncher.launch(intent)
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.CameraAlt,
+                            contentDescription = stringResource(R.string.cd_add_manually)
+                        )
+                    }
+                    Text(
+                        text = stringResource(R.string.text_next),
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier
+                            .padding(start = 4.dp, end = 12.dp)
+                            .noRippleClickable { }
+                    )
+                }
+            )
         }
     ) { innerPadding ->
         Column(
@@ -73,33 +86,19 @@ fun DetectionScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = ContentPadding
             ) {
-                item(key = { "scan" }) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .animateItemPlacement()
-                    ) {
-                        Button(
-                            onClick = {
-                                cameraLauncher.launch(Intent(context, CameraActivity::class.java))
-                            },
-                            modifier = Modifier.align(Alignment.CenterEnd)
+                item {
+                    var addItemMode by rememberSaveable { mutableStateOf(false) }
+
+                    if (addItemMode) {
+                        AddGarbage(onCancel = { addItemMode = false })
+                    } else {
+                        OutlinedButton(
+                            onClick = { addItemMode = true },
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            Icon(
-                                imageVector = Icons.Outlined.CameraAlt,
-                                contentDescription = "Scan"
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = "Scan")
+                            Text(text = "Add item")
                         }
                     }
-                }
-                item(key = { "add_garbage" }) {
-                    AddGarbage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp)
-                    )
                 }
                 items(30, key = { it }) {
                     ScannedGarbage(modifier = Modifier.animateItemPlacement())

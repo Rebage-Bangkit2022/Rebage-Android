@@ -2,13 +2,13 @@ package trashissue.rebage.presentation.common.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,7 +17,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import trashissue.rebage.R
-import trashissue.rebage.presentation.theme.RebageTheme
+import trashissue.rebage.presentation.theme3.RebageTheme3
 
 @Composable
 fun OutlinedTextFieldPassword(
@@ -61,7 +61,7 @@ fun OutlinedTextFieldPassword(
 @Preview(showBackground = true)
 @Composable
 fun OutlinedTextFieldPasswordPreview() {
-    RebageTheme {
+    RebageTheme3 {
         OutlinedTextFieldPassword(
             value = "naruto",
             onValueChange = {},

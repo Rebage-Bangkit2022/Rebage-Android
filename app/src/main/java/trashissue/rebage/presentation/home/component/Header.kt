@@ -4,9 +4,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -17,15 +17,15 @@ import trashissue.rebage.presentation.home.DummyGarbageStat
 fun Header(
     modifier: Modifier = Modifier
 ) {
-    Surface(color = if (isSystemInDarkTheme()) MaterialTheme.colors.background else MaterialTheme.colors.primary) {
+    Surface(color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.primary) {
         Column(modifier = modifier) {
             Text(
                 text = "Selamat Datang, Tubagus!",
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 text = "Ini adalah data sampah yang kamu kumpulkan",
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
 
             val (data, total) = remember {

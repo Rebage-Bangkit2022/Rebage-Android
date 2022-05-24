@@ -6,7 +6,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -27,7 +27,7 @@ fun Modifier.statusBarsPaddingWithColor(color: Color? = null): Modifier = compos
     val density = LocalDensity.current
     val height = WindowInsets.statusBars.getTop(density).toFloat()
     val darkMode = isSystemInDarkTheme()
-    val backgroundColor = color ?: MaterialTheme.colors.primary
+    val backgroundColor = color ?: MaterialTheme.colorScheme.primary
 
     drawBehind {
         val width = size.width
