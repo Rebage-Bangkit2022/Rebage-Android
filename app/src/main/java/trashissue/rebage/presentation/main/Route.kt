@@ -10,6 +10,7 @@ import trashissue.rebage.presentation.price.PriceScreen
 import trashissue.rebage.presentation.profile.ProfileScreen
 import trashissue.rebage.presentation.signin.SignInScreen
 import trashissue.rebage.presentation.signup.SignUpScreen
+import trashissue.rebage.presentation.threers.ThreeRsScreen
 
 sealed class Route(
     protected val route: String
@@ -89,6 +90,16 @@ sealed class Route(
         context (NavGraphBuilder)
         fun composable() = composable(route) {
             FavoriteArticleScreen(LocalNavController.current)
+        }
+
+        operator fun invoke() = route
+    }
+
+    object ThreeRs : Route("three_r_s}") {
+
+        context (NavGraphBuilder)
+        fun composable() = composable(route) {
+            ThreeRsScreen(LocalNavController.current)
         }
 
         operator fun invoke() = route
