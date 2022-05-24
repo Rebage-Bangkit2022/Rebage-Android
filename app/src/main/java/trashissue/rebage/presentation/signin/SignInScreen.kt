@@ -4,9 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,7 +27,7 @@ import trashissue.rebage.presentation.common.component.OutlinedTextFieldPassword
 import trashissue.rebage.presentation.common.component.TextError
 import trashissue.rebage.presentation.common.component.TwoLineDivider
 import trashissue.rebage.presentation.main.Route
-import trashissue.rebage.presentation.theme.RebageTheme
+import trashissue.rebage.presentation.theme3.RebageTheme3
 
 @Composable
 fun SignInScreen(
@@ -48,10 +48,10 @@ fun SignInScreen(
         )
         Text(
             text = stringResource(R.string.text_welcome),
-            style = MaterialTheme.typography.h5,
+            style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(vertical = 12.dp),
-            color = MaterialTheme.colors.primary
+            color = MaterialTheme.colorScheme.primary
         )
 
         val email by viewModel.emailValue.collectAsState()
@@ -96,9 +96,9 @@ fun SignInScreen(
                 .padding(vertical = 16.dp),
             enabled = isEnabled,
             onClick = {
-//                viewModel.signIn()
+                viewModel.signIn()
                 navController.navigate(Route.Home()) {
-//                    popUpTo(Route.SignIn()) { inclusive = true }
+                    popUpTo(Route.SignIn()) { inclusive = true }
                 }
             }
         ) {
@@ -112,8 +112,8 @@ fun SignInScreen(
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = stringResource(R.string.text_sign_alternative),
-                style = MaterialTheme.typography.subtitle1,
-                color = MaterialTheme.colors.onBackground
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
         IconButton(
@@ -148,13 +148,13 @@ fun NavigateToSignUpScreen(
     ) {
         Text(
             text = "Don't have an account?",
-            style = MaterialTheme.typography.subtitle1,
-            color = MaterialTheme.colors.onBackground
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onBackground
         )
         Text(
             text = "Sign up now",
-            style = MaterialTheme.typography.subtitle1,
-            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.clickable(onClick = onClick)
         )
     }
@@ -163,7 +163,7 @@ fun NavigateToSignUpScreen(
 @Preview(showBackground = true)
 @Composable
 fun SignInScreen() {
-    RebageTheme {
+    RebageTheme3 {
         SignInScreen(
             navController = rememberNavController(),
             viewModel = SignInViewModel(

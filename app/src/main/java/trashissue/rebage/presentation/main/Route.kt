@@ -1,10 +1,15 @@
 package trashissue.rebage.presentation.main
 
-import androidx.compose.material.Text
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import trashissue.rebage.presentation.detection.DetectionScreen
+import trashissue.rebage.presentation.favoritearticle.FavoriteArticleScreen
+import trashissue.rebage.presentation.home.HomeScreen
 import trashissue.rebage.presentation.onboarding.OnboardingScreen
+import trashissue.rebage.presentation.price.PriceScreen
+import trashissue.rebage.presentation.profile.ProfileScreen
 import trashissue.rebage.presentation.signin.SignInScreen
+import trashissue.rebage.presentation.signup.SignUpScreen
 
 sealed class Route(
     protected val route: String
@@ -33,7 +38,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-
+            SignUpScreen()
         }
 
         operator fun invoke() = route
@@ -43,7 +48,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-            Text(text = "Home")
+            HomeScreen()
         }
 
         operator fun invoke() = route
@@ -53,7 +58,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-            Text(text = "Detection")
+            DetectionScreen(LocalNavController.current)
         }
 
         operator fun invoke() = route
@@ -63,7 +68,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-            Text(text = "Price")
+            PriceScreen()
         }
 
         operator fun invoke() = route
@@ -73,7 +78,17 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-            Text(text = "Profile")
+            ProfileScreen(LocalNavController.current)
+        }
+
+        operator fun invoke() = route
+    }
+
+    object FavoriteArticle : Route("favorite_article") {
+
+        context (NavGraphBuilder)
+        fun composable() = composable(route) {
+            FavoriteArticleScreen(LocalNavController.current)
         }
 
         operator fun invoke() = route

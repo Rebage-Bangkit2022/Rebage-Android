@@ -10,7 +10,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import trashissue.rebage.R
-import trashissue.rebage.presentation.theme.RebageTheme
+import trashissue.rebage.presentation.theme3.RebageTheme3
 
 val OnboardingContent = listOf(
     Triple(
@@ -55,7 +55,7 @@ fun Pages(
 @Composable
 @OptIn(ExperimentalPagerApi::class)
 fun PagesPreview() {
-    RebageTheme {
+    RebageTheme3 {
         Pages(pagerState = rememberPagerState())
     }
 }

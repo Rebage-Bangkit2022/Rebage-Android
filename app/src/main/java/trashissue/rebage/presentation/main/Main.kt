@@ -1,13 +1,16 @@
 package trashissue.rebage.presentation.main
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
@@ -17,18 +20,19 @@ import androidx.navigation.compose.rememberNavController
 import trashissue.rebage.R
 
 val BotNavMenus = listOf(
-    Triple(R.string.text_home, R.drawable.ic_home, Route.Home()),
-    Triple(R.string.text_detection, R.drawable.ic_detection, Route.Detection()),
-    Triple(R.string.text_price, R.drawable.ic_price, Route.Price()),
-    Triple(R.string.text_profile, R.drawable.ic_profile, Route.Profile()),
+    Triple(R.string.text_home, Icons.Outlined.Home to Icons.Filled.Home, Route.Home()),
+    Triple(R.string.text_detection, Icons.Outlined.DocumentScanner to Icons.Filled.DocumentScanner, Route.Detection()),
+    Triple(R.string.text_price, Icons.Outlined.Paid to Icons.Filled.Paid, Route.Price()),
+    Triple(R.string.text_profile, Icons.Outlined.AccountCircle to Icons.Filled.AccountCircle, Route.Profile())
 )
 
 @Composable
 fun Main() {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryFlow.collectAsState(navController.currentBackStackEntry)
@@ -44,15 +48,17 @@ fun Main() {
         }
 
         Box(modifier = Modifier.weight(1F)) {
-            val onboarding = true
 
-            NavGraph(
-                startDestination = if (onboarding) Route.Onboarding() else Route.Home(),
-                navController = navController
-            )
+            CompositionLocalProvider(LocalNavController provides navController) {
+                val onboarding = true
+
+                NavGraph(
+                    startDestination = if (onboarding) Route.Onboarding() else Route.Home(),
+                    navController = navController
+                )
+            }
         }
-
-        BottomNavigationMain(
+        NavigationBarMain(
             navController = navController,
             isBotNavVisible = isBotNavVisible,
             currentBackStack = { currentBackStack }
@@ -61,32 +67,31 @@ fun Main() {
 }
 
 @Composable
-fun BottomNavigationMain(
+fun NavigationBarMain(
     navController: NavHostController,
     isBotNavVisible: Boolean,
     currentBackStack: () -> NavBackStackEntry?
 ) {
     AnimatedVisibility(
         visible = isBotNavVisible,
-        enter = expandVertically() ,
+        enter = expandVertically(),
         exit = shrinkVertically()
     ) {
-        BottomNavigation(
-            backgroundColor = MaterialTheme.colors.surface,
-            modifier = Modifier
-                .border(width = 1.dp, color = MaterialTheme.colors.onSurface.copy(0.05F))
-                .navigationBarsPadding(),
-            elevation = 0.dp
+        NavigationBar(
+            modifier = Modifier.navigationBarsPadding(),
+            tonalElevation = 4.dp,
+            containerColor = MaterialTheme.colorScheme.surface
         ) {
             val currentDestination = currentBackStack()?.destination
 
             for (menu in BotNavMenus) {
-                val (title, icon, route) = menu
+                val (title, icons, route) = menu
+                val (outlined, filled) = icons
 
-                BottomNavigationItem(
-                    selected = currentDestination?.hierarchy?.any { it.route == route } == true,
-                    selectedContentColor = MaterialTheme.colors.primary,
-                    unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.4F),
+                val selected = currentDestination?.hierarchy?.any { it.route == route } == true
+
+                NavigationBarItem(
+                    selected = selected,
                     onClick = {
                         navController.navigate(route) {
                             // Pop up to the start destination of the graph to
@@ -104,7 +109,7 @@ fun BottomNavigationMain(
                     },
                     icon = {
                         Icon(
-                            painter = painterResource(icon),
+                            imageVector = if (selected) filled else outlined,
                             contentDescription = null,
                             modifier = Modifier.size(24.dp)
                         )
