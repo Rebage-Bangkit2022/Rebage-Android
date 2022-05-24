@@ -2,15 +2,15 @@ package trashissue.rebage.presentation.common.component
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import trashissue.rebage.presentation.theme.RebageTheme
+import trashissue.rebage.presentation.theme3.RebageTheme3
 
 @Composable
 inline fun TwoLineDivider(
@@ -40,7 +40,7 @@ inline fun TwoLineDivider(
 @Preview(showBackground = true)
 @Composable
 fun TwoLineDivider() {
-    RebageTheme {
+    RebageTheme3 {
         TwoLineDivider {
             Text(text = "Sign in with google")
         }

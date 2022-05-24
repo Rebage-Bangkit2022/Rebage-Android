@@ -50,7 +50,7 @@ fun Main() {
         Box(modifier = Modifier.weight(1F)) {
 
             CompositionLocalProvider(LocalNavController provides navController) {
-                val onboarding = false
+                val onboarding = true
 
                 NavGraph(
                     startDestination = if (onboarding) Route.Onboarding() else Route.Home(),

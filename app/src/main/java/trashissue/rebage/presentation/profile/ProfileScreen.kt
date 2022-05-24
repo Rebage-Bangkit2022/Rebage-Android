@@ -1,17 +1,12 @@
 package trashissue.rebage.presentation.profile
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowForwardIos
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -19,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import trashissue.rebage.R
 import trashissue.rebage.presentation.main.Route
+import trashissue.rebage.presentation.profile.component.Photo
+import trashissue.rebage.presentation.profile.component.ProfileMenuItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,6 +33,16 @@ fun ProfileScreen(
                         text = stringResource(R.string.text_profile),
                         modifier = Modifier.fillMaxWidth(),
                     )
+                },
+                actions = {
+                    IconButton(
+                        onClick = { }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Logout,
+                            contentDescription = stringResource(R.string.cd_sign_out)
+                        )
+                    }
                 }
             )
         }
@@ -46,12 +53,9 @@ fun ProfileScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(top = 32.dp, bottom = 16.dp)
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .background(Color.Gray)
+            Photo(
+                modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
+                onClick = {}
             )
             Text(
                 modifier = Modifier
@@ -105,40 +109,6 @@ fun ProfileScreen(
                     )
                 }
             )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ProfileMenuItem(
-    modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null,
-    text: String,
-    icon: @Composable () -> Unit = {
-        Icon(
-            imageVector = Icons.Outlined.ArrowForwardIos,
-            contentDescription = null
-        )
-    }
-) {
-    Card(modifier = modifier.wrapContentSize()) {
-        Row(
-            modifier = Modifier
-                .clickable(enabled = onClick != null, onClick = onClick ?: {})
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1F),
-                text = text,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            icon()
         }
     }
 }

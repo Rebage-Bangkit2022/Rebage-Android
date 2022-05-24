@@ -2,6 +2,16 @@ package trashissue.rebage.presentation.theme3
 
 import androidx.compose.ui.graphics.Color
 
+val ForestGreen = Color(0xFF569C6A)
+val PeachChart = Color(0xFFF2D08F)
+val TealChart = Color(0xFF8FF2AB)
+val JordyChart = Color(0xFF8FC2F2)
+val PastelChart = Color(0xFFA38FF2)
+val BlueGChart = Color(0xFF5989D1)
+val PistachioChart = Color(0xFF97C573)
+val TulipChart = Color(0xFFF28F8F)
+val SiennaChart = Color(0xFFED724B)
+
 val LightPrimary = Color(0xFF006d45)
 val LightOnPrimary = Color(0xFFffffff)
 val LightPrimaryContainer = Color(0xFF8ef7c0)

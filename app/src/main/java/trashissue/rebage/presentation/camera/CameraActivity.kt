@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import dagger.hilt.android.AndroidEntryPoint
-import trashissue.rebage.presentation.theme.RebageTheme
+import trashissue.rebage.presentation.theme3.RebageTheme3
 
 @AndroidEntryPoint
 class CameraActivity : ComponentActivity() {
@@ -16,7 +16,7 @@ class CameraActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            RebageTheme {
+            RebageTheme3 {
                 CameraScreen()
             }
         }

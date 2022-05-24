@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import trashissue.rebage.presentation.theme.RebageTheme
 import trashissue.rebage.presentation.theme3.RebageTheme3
 
 @Composable

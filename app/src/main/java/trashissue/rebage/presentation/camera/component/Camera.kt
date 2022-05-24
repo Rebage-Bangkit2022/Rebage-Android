@@ -4,19 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Cameraswitch
 import androidx.compose.material.icons.outlined.ImageSearch
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import timber.log.Timber
 
@@ -53,7 +52,7 @@ fun CameraCapture(
                 .height(120.dp)
                 .clip(DefaultActionCornerShape)
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 16.dp, vertical = 32.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
@@ -61,37 +60,37 @@ fun CameraCapture(
             IconButton(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(MaterialTheme.colors.primary),
+                    .background(MaterialTheme.colorScheme.primary),
                 onClick = onClickGallery
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ImageSearch,
                     contentDescription = "Gallery",
-                    tint = MaterialTheme.colors.onPrimary
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
             IconButton(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(MaterialTheme.colors.primary),
+                    .background(MaterialTheme.colorScheme.primary),
                 onClick = onClickCapture
             ) {
                 Icon(
                     imageVector = Icons.Outlined.CameraAlt,
                     contentDescription = "Gallery",
-                    tint = MaterialTheme.colors.onPrimary
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
             IconButton(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(MaterialTheme.colors.primary),
+                    .background(MaterialTheme.colorScheme.primary),
                 onClick = onClickSwitchCamera
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Cameraswitch,
                     contentDescription = "Gallery",
-                    tint = MaterialTheme.colors.onPrimary
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }

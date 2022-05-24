@@ -20,7 +20,7 @@ import trashissue.rebage.presentation.common.statusBarsPaddingWithColor
 import trashissue.rebage.presentation.home.component.Articles
 import trashissue.rebage.presentation.home.component.ChartData
 import trashissue.rebage.presentation.home.component.Header
-import trashissue.rebage.presentation.theme.*
+import trashissue.rebage.presentation.theme3.*
 
 val DummyGarbageStat = listOf(
     ChartData("Plastik", SiennaChart, 4.0),
@@ -32,9 +32,9 @@ val DummyGarbageStat = listOf(
     ChartData("Bebek", PistachioChart, 6.0),
     ChartData("Ayam", TulipChart, 8.0),
     ChartData("Plastik", PeachChart, 9.0),
-    ChartData("Kardus", ForestGreen500, 20.0),
-    ChartData("Bebek", ForestGreen200, 11.0),
-    ChartData("Ayam", Color.Gray, 13.0),
+    ChartData("Kardus", ForestGreen, 20.0),
+    ChartData("Bebek", ForestGreen, 11.0),
+    ChartData("Ayam", SiennaChart, 13.0),
 )
 
 @Composable
