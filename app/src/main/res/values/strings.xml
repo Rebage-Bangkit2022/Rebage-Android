@@ -45,4 +45,8 @@
     <string name="text_cancel">Cancel</string>
     <string name="cd_sign_out">Sign out</string>
     <string name="cd_edit_profile_photo">Edit profile photo</string>
+    <string name="text_scan">Scan</string>
+    <string name="text_recycle">Recycle</string>
+    <string name="text_reduce">Reduce</string>
+    <string name="text_reuse">Reuse</string>
 </resources>
