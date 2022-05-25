@@ -16,7 +16,7 @@ class CameraActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            RebageTheme3 {
+            RebageTheme3(dynamicColor = false) {
                 CameraScreen()
             }
         }

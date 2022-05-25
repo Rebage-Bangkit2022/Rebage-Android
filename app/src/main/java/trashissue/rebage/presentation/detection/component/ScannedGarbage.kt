@@ -2,6 +2,7 @@ package trashissue.rebage.presentation.detection.component
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -21,12 +22,13 @@ import trashissue.rebage.presentation.theme3.RebageTheme3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScannedGarbage(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     var editMode by rememberSaveable { mutableStateOf(false) }
 
     Column(modifier = modifier.animateContentSize()) {
-        Card {
+        Card(modifier = Modifier.clickable(onClick = onClick)) {
             Row(
                 modifier = modifier
                     .fillMaxWidth()
@@ -79,9 +81,8 @@ fun ScannedGarbage(
                     }
 
                     MenuActions(
-                        onClickEdit = {
-                            editMode = true
-                        },
+                        modifier.offset(x = 8.dp),
+                        onClickEdit = { editMode = true },
                         onClickDelete = {}
                     )
                 }
@@ -115,6 +116,6 @@ fun ScannedGarbage(
 @Composable
 fun ScannedGarbagePreview() {
     RebageTheme3 {
-        ScannedGarbage()
+        ScannedGarbage(onClick = {})
     }
 }

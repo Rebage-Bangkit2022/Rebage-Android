@@ -1,7 +1,10 @@
 package trashissue.rebage.presentation.main
 
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import trashissue.rebage.presentation.article.ArticleScreen
 import trashissue.rebage.presentation.detection.DetectionScreen
 import trashissue.rebage.presentation.favoritearticle.FavoriteArticleScreen
 import trashissue.rebage.presentation.home.HomeScreen
@@ -10,6 +13,7 @@ import trashissue.rebage.presentation.price.PriceScreen
 import trashissue.rebage.presentation.profile.ProfileScreen
 import trashissue.rebage.presentation.signin.SignInScreen
 import trashissue.rebage.presentation.signup.SignUpScreen
+import trashissue.rebage.presentation.threers.ThreeRsScreen
 
 sealed class Route(
     protected val route: String
@@ -92,5 +96,36 @@ sealed class Route(
         }
 
         operator fun invoke() = route
+    }
+
+    object ThreeRs : Route("three_r_s}") {
+
+        context (NavGraphBuilder)
+        fun composable() = composable(route) {
+            ThreeRsScreen(LocalNavController.current)
+        }
+
+        operator fun invoke() = route
+    }
+
+    object Article : Route("article/{$KEY_ARTICLE_ID}") {
+        private val arguments = listOf(
+            navArgument(KEY_ARTICLE_ID) {
+                type = NavType.IntType
+            }
+        )
+
+        context (NavGraphBuilder)
+        fun composable() = composable(route, arguments) {
+            it.arguments?.getInt(KEY_ARTICLE_ID)?.let { articleId ->
+                ArticleScreen(LocalNavController.current, articleId)
+            }
+        }
+
+        operator fun invoke(articleId: Int) = "article/$articleId"
+    }
+
+    companion object {
+        protected const val KEY_ARTICLE_ID = "articleId"
     }
 }
