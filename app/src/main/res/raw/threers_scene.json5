@@ -1,0 +1,66 @@
+{
+  ConstraintSets: {
+    start: {
+      image: {
+        width: 200,
+        height: 200,
+        start: ['parent', 'start'],
+        top: ['parent', 'top'],
+        end: ['parent', 'end']
+      },
+      tab3r: {
+        width: 'spread',
+        start: ['parent', 'start'],
+        top: ['image', 'bottom', 32],
+        end: ['parent', 'end']
+      },
+      pager3r: {
+        width: 'spread',
+        height: 'spread',
+        start: ['parent', 'start'],
+        top: ['tab3r', 'bottom'],
+        end: ['parent', 'end'],
+        bottom: ['parent', 'bottom']
+      }
+    },
+    end: {
+      image: {
+        width: 200,
+        height: 200,
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+        bottom: ['parent', 'top']
+      },
+      tab3r: {
+        width: 'spread',
+        start: ['parent', 'start'],
+        top: ['image', 'bottom', 0],
+        end: ['parent', 'end']
+      },
+      pager3r: {
+        width: 'spread',
+        height: 'spread',
+        start: ['parent', 'start'],
+        top: ['tab3r', 'bottom'],
+        end: ['parent', 'end'],
+        bottom: ['parent', 'bottom']
+      }
+    }
+  },
+  Transitions: {
+    default: {
+      from: 'start',
+      to: 'end',
+      pathMotionArc: 'startHorizontally',
+      KeyFrames: {
+        KeyAttributes: [
+          {
+            target: ['image'],
+            frames: [0, 50, 100],
+            alpha: [1, 0, 0],
+          }
+        ]
+      }
+    }
+  }
+}
