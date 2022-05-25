@@ -24,9 +24,9 @@ import androidx.navigation.NavHostController
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.presentation.camera.CameraActivity
-import trashissue.rebage.presentation.common.noRippleClickable
 import trashissue.rebage.presentation.detection.component.AddGarbage
 import trashissue.rebage.presentation.detection.component.ScannedGarbage
+import trashissue.rebage.presentation.main.Route
 import java.io.File
 
 private val ContentPadding = PaddingValues(16.dp)
@@ -36,6 +36,9 @@ private val ContentPadding = PaddingValues(16.dp)
 fun DetectionScreen(
     navController: NavHostController
 ) {
+    var imageFile by rememberSaveable { mutableStateOf<File?>(null) }
+    val imageBitmap by fileAsImageBitmap(imageFile)
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -47,26 +50,25 @@ fun DetectionScreen(
                 },
                 actions = {
                     val context = LocalContext.current
-                    val cameraLauncher = rememberCameraLauncher()
+                    val cameraLauncher = rememberCameraLauncher(
+                        onSuccess = { imageFile = it },
+                        onFailed = { }
+                    )
 
-                    IconButton(
+                    TextButton(
                         onClick = {
                             val intent = Intent(context, CameraActivity::class.java)
                             cameraLauncher.launch(intent)
-                        }
+                        },
+                        colors = ButtonDefaults.textButtonColors()
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.CameraAlt,
                             contentDescription = stringResource(R.string.cd_add_manually)
                         )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(text = stringResource(R.string.text_scan))
                     }
-                    Text(
-                        text = stringResource(R.string.text_next),
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier
-                            .padding(start = 4.dp, end = 12.dp)
-                            .noRippleClickable { }
-                    )
                 }
             )
         }
@@ -76,10 +78,6 @@ fun DetectionScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            var imageFile by rememberSaveable { mutableStateOf<File?>(null) }
-            val imageBitmap by fileAsImageBitmap(imageFile)
-            val cameraLauncher = rememberCameraLauncher { imageFile = it }
-            val context = LocalContext.current
 
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
@@ -101,7 +99,10 @@ fun DetectionScreen(
                     }
                 }
                 items(30, key = { it }) {
-                    ScannedGarbage(modifier = Modifier.animateItemPlacement())
+                    ScannedGarbage(
+                        modifier = Modifier.animateItemPlacement(),
+                        onClick = { navController.navigate(Route.ThreeRs()) }
+                    )
                 }
             }
         }

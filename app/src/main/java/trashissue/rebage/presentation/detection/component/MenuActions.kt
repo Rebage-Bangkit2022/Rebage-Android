@@ -16,10 +16,11 @@ import trashissue.rebage.presentation.theme3.RebageTheme3
 
 @Composable
 fun MenuActions(
+    modifier: Modifier = Modifier,
     onClickEdit: () -> Unit,
     onClickDelete: () -> Unit
 ) {
-    Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
+    Box(modifier = modifier.wrapContentSize(Alignment.TopStart)) {
         var expanded by remember { mutableStateOf(false) }
 
         Icon(
