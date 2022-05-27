@@ -2,7 +2,7 @@ package trashissue.rebage.domain.repository
 
 import trashissue.rebage.domain.model.User
 
-interface AuthRepository {
+interface UserRepository {
 
     suspend fun signUp(name: String, email: String, password: String): User
 
