@@ -23,11 +23,11 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "BACKEND_BASE_URL", '" https://ae4f-8-34-202-103.ap.ngrok.io"'
+            buildConfigField "String", "BACKEND_BASE_URL", '"https://bc0f-8-29-105-80.ap.ngrok.io/"'
             minifyEnabled false
         }
         release {
-            buildConfigField "String", "BACKEND_BASE_URL", '" https://ae4f-8-34-202-103.ap.ngrok.io"'
+            buildConfigField "String", "BACKEND_BASE_URL", '"https://bc0f-8-29-105-80.ap.ngrok.io/"'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -115,6 +115,9 @@ dependencies {
 
     // System ui
     implementation "com.google.accompanist:accompanist-systemuicontroller:$systemuicontroller_version"
+
+    // Splash Screen
+    implementation "androidx.core:core-splashscreen:$splash_screen_version"
 
     // Permission
     implementation "com.google.accompanist:accompanist-permissions:$permission_version"

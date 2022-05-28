@@ -20,6 +20,7 @@ buildscript {
         camerax_version = '1.2.0-alpha01'
         permission_version = '0.24.9-beta'
         systemuicontroller_version = '0.24.9-beta'
+        splash_screen_version = '1.0.0-alpha01'
         timber_version = '5.0.1'
         constraintlayout_compose_version = '1.0.1'
     }
