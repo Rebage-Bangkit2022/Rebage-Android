@@ -10,17 +10,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import trashissue.rebage.R
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.profile.component.Photo
 import trashissue.rebage.presentation.profile.component.ProfileMenuItem
+import trashissue.rebage.presentation.theme3.RebageTheme3
+
+@Composable
+fun ProfileScreen(
+    navController: NavHostController,
+    viewModel: ProfileViewModel = hiltViewModel()
+) {
+    ProfileScreen(
+        navController = navController,
+        signOut = viewModel::signOut
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    signOut: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier
@@ -36,7 +52,7 @@ fun ProfileScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { }
+                        onClick = { signOut() }
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Logout,
@@ -110,5 +126,16 @@ fun ProfileScreen(
                 }
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun ProfileScreenPreview() {
+    RebageTheme3 {
+        ProfileScreen(
+            navController = rememberNavController(),
+            signOut = { }
+        )
     }
 }

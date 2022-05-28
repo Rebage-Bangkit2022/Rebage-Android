@@ -13,8 +13,10 @@
     <string name="text_email">Email</string>
     <string name="text_password">Password</string>
     <string name="cd_pass_visible">Password visible</string>
-    <string name="text_sign_alternative">Or sign in with</string>
+    <string name="text_sign_in_alternative">Or sign in with</string>
+    <string name="text_sign_up_alternative">Or sign up with</string>
     <string name="cd_google_sign_in">Sign in with google</string>
+    <string name="cd_google_sign_up">Sign up with google</string>
     <string name="text_skip">Skip</string>
     <string name="title_onboarding1">Find out what kind of garbage you found</string>
     <string name="subtitle_onboarding1">Use the garbage log to find out the amount that you earn</string>
@@ -37,7 +39,7 @@
     <string name="text_favorite_article">Favorite Article</string>
     <string name="text_list_title_article">Plastic</string>
     <string name="cd_back">Back</string>
-    <string name="camera_permission">"You must allow camera permission to use this feature"</string>
+    <string name="camera_permission">You must allow camera permission to use this feature</string>
     <string name="cd_save_result">Save result</string>
     <string name="cd_add_manually">Add manually</string>
     <string name="text_choose_item">Choose item</string>
@@ -49,4 +51,13 @@
     <string name="text_recycle">Recycle</string>
     <string name="text_reduce">Reduce</string>
     <string name="text_reuse">Reuse</string>
+    <string name="error_password_not_match">Password doesn\'t match</string>
+    <string name="error_email_is_required">Email is required</string>
+    <string name="text_name">Name</string>
+    <string name="text_already_have_account">Already have an account</string>
+    <string name="text_sign_in_now">Sign in now</string>
+    <string name="text_dont_have_account">Don\'t have an account?</string>
+    <string name="text_sign_up_now">Sign up now</string>
+    <string name="text_unknown_error">Error has occurred</string>
+    <string name="text_sign_up">Sign Up</string>
 </resources>

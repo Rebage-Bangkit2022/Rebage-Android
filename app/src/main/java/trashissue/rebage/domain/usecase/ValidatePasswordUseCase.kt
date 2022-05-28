@@ -10,15 +10,21 @@ class ValidatePasswordUseCase(
     @StringRes private val errorBlankMessage: Int,
     @StringRes private val errorMinMessage: Int,
     @StringRes private val errorMaxMessage: Int,
+    @StringRes private val errorNotMatch: Int
 ) {
 
-    operator fun invoke(value: String): Int? {
-        if (value.isBlank()) return errorBlankMessage
+    operator fun invoke(password: String): Int? {
+        if (password.isBlank()) return errorBlankMessage
 
-        if (value.length < 6) return errorMinMessage
+        if (password.length < 6) return errorMinMessage
 
-        if (value.length > 50) return errorMaxMessage
+        if (password.length > 50) return errorMaxMessage
 
+        return null
+    }
+
+    operator fun invoke(password: String, confirm: String): Int? {
+        if (password != confirm) return errorNotMatch
         return null
     }
 }

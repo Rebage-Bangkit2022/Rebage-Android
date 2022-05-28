@@ -15,11 +15,13 @@ buildscript {
         room_version = '2.4.2'
         paging_version = '3.1.1'
         datastore_version = '1.0.0'
-        camerax_version = '1.1.0-rc01'
+        retrofit_version = '2.9.0'
+        okhttp3_version = '5.0.0-alpha.6'
+        camerax_version = '1.2.0-alpha01'
         permission_version = '0.24.9-beta'
         systemuicontroller_version = '0.24.9-beta'
         timber_version = '5.0.1'
-        constraintlayout_compose_version = '1.0.0'
+        constraintlayout_compose_version = '1.0.1'
     }
 
     dependencies {

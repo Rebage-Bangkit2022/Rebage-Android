@@ -42,7 +42,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-            SignUpScreen()
+            SignUpScreen(LocalNavController.current)
         }
 
         operator fun invoke() = route

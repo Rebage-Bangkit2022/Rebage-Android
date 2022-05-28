@@ -6,8 +6,14 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.DocumentScanner
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Paid
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.DocumentScanner
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Paid
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -17,6 +23,8 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.flow.SharedFlow
+import timber.log.Timber
 import trashissue.rebage.R
 
 val BotNavMenus = listOf(
@@ -27,8 +35,10 @@ val BotNavMenus = listOf(
 )
 
 @Composable
-fun Main() {
-
+fun Main(
+    isAlreadyOnboardingFlow: SharedFlow<Boolean>,
+    isLoggedInFlow: SharedFlow<Boolean?>
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,12 +60,24 @@ fun Main() {
         Box(modifier = Modifier.weight(1F)) {
 
             CompositionLocalProvider(LocalNavController provides navController) {
-                val onboarding = true
+                val isAlreadyOnboarding by isAlreadyOnboardingFlow.collectAsState(null)
+                val isLoggedIn by isLoggedInFlow.collectAsState(null)
 
-                NavGraph(
-                    startDestination = if (onboarding) Route.Onboarding() else Route.Home(),
-                    navController = navController
-                )
+                Timber.i("IS LOGGED IN $isLoggedIn")
+                Timber.i("IS ALREADY ONBOARDING $isAlreadyOnboarding")
+
+                if (isAlreadyOnboarding != null && isLoggedIn != null) {
+                    NavGraph(
+                        startDestination = when (isAlreadyOnboarding) {
+                            false -> Route.Onboarding()
+                            else -> when (isLoggedIn) {
+                                true -> Route.Home()
+                                else -> Route.SignUp()
+                            }
+                        },
+                        navController = navController
+                    )
+                }
             }
         }
         NavigationBarMain(

@@ -22,7 +22,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "BACKEND_BASE_URL", '" https://ae4f-8-34-202-103.ap.ngrok.io"'
+            minifyEnabled false
+        }
         release {
+            buildConfigField "String", "BACKEND_BASE_URL", '" https://ae4f-8-34-202-103.ap.ngrok.io"'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -96,6 +101,12 @@ dependencies {
 
     // DataStore
     implementation "androidx.datastore:datastore-preferences:$datastore_version"
+
+    // Retrofit & okhttp
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
 
     // Camerax
     implementation "androidx.camera:camera-camera2:$camerax_version"
