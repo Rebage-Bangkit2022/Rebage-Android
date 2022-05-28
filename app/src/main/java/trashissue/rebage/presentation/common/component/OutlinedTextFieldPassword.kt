@@ -23,7 +23,8 @@ import trashissue.rebage.presentation.theme3.RebageTheme3
 fun OutlinedTextFieldPassword(
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    text: String = stringResource(R.string.text_password)
 ) {
     var visible by remember { mutableStateOf(false) }
 
@@ -34,7 +35,7 @@ fun OutlinedTextFieldPassword(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         visualTransformation = if (visible) VisualTransformation.None else PasswordVisualTransformation(),
         label = {
-            Text(text = stringResource(R.string.text_password))
+            Text(text = text)
         },
         trailingIcon = {
             IconButton(
