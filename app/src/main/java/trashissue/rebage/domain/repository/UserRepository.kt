@@ -1,5 +1,6 @@
 package trashissue.rebage.domain.repository
 
+import kotlinx.coroutines.flow.Flow
 import trashissue.rebage.domain.model.User
 
 interface UserRepository {
@@ -11,4 +12,10 @@ interface UserRepository {
     suspend fun authGoogle(googleToken: String): User
 
     suspend fun signOut()
+
+    fun getUser(): Flow<User?>
+
+    suspend fun onboarding(isAlreadyOnboarding: Boolean)
+
+    fun onboarding(): Flow<Boolean>
 }
