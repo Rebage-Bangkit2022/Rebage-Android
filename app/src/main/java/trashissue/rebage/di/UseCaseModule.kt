@@ -5,11 +5,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import trashissue.rebage.R
-import trashissue.rebage.data.DefaultAuthRepository
-import trashissue.rebage.domain.usecase.SignInUseCase
-import trashissue.rebage.domain.usecase.ValidateEmailUseCase
-import trashissue.rebage.domain.usecase.ValidateNameUseCase
-import trashissue.rebage.domain.usecase.ValidatePasswordUseCase
+import trashissue.rebage.domain.repository.UserRepository
+import trashissue.rebage.domain.usecase.*
 import javax.inject.Singleton
 
 @Module
@@ -20,7 +17,7 @@ object UseCaseModule {
     @Singleton
     fun provideValidateNameUseCase(): ValidateNameUseCase {
         return ValidateNameUseCase(
-            errorBlankMessage = R.string.error_name_max_char,
+            errorBlankMessage = R.string.error_name_is_required,
             errorMinMessage = R.string.error_name_min_char,
             errorMaxMessage = R.string.error_name_max_char
         )
@@ -30,9 +27,10 @@ object UseCaseModule {
     @Singleton
     fun provideValidatePasswordUseCase(): ValidatePasswordUseCase {
         return ValidatePasswordUseCase(
-            errorBlankMessage = R.string.error_password_max_char,
+            errorBlankMessage = R.string.error_password_is_required,
             errorMinMessage = R.string.error_password_min_char,
-            errorMaxMessage = R.string.error_password_max_char
+            errorMaxMessage = R.string.error_password_max_char,
+            errorNotMatch = R.string.error_password_not_match
         )
     }
 
@@ -40,13 +38,38 @@ object UseCaseModule {
     @Singleton
     fun provideValidateEmailUseCase(): ValidateEmailUseCase {
         return ValidateEmailUseCase(
+            errorBlankEmail = R.string.error_email_is_required,
             errorIncorrectMessage = R.string.error_invalid_email
         )
     }
 
     @Provides
     @Singleton
-    fun provideSignInUseCase(): SignInUseCase {
-        return SignInUseCase(DefaultAuthRepository())
+    fun provideSignInUseCase(userRepository: UserRepository): SignInUseCase {
+        return SignInUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignUpUseCase(userRepository: UserRepository): SignUpUseCase {
+        return SignUpUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOnBoardingUseCase(userRepository: UserRepository): OnboardingUseCase {
+        return OnboardingUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserUseCase(userRepository: UserRepository): GetUserUseCase {
+        return GetUserUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignOutUseCase(userRepository: UserRepository): SignOutUseCase {
+        return SignOutUseCase(userRepository)
     }
 }

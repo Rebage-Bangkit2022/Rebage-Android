@@ -63,8 +63,10 @@ fun Main(
                 val isAlreadyOnboarding by isAlreadyOnboardingFlow.collectAsState(null)
                 val isLoggedIn by isLoggedInFlow.collectAsState(null)
 
-                Timber.i("IS LOGGED IN $isLoggedIn")
-                Timber.i("IS ALREADY ONBOARDING $isAlreadyOnboarding")
+                SideEffect {
+                    Timber.i("IS LOGGED IN $isLoggedIn")
+                    Timber.i("IS ALREADY ONBOARDING $isAlreadyOnboarding")
+                }
 
                 if (isAlreadyOnboarding != null && isLoggedIn != null) {
                     NavGraph(

@@ -60,4 +60,5 @@
     <string name="text_sign_up_now">Sign up now</string>
     <string name="text_unknown_error">Error has occurred</string>
     <string name="text_sign_up">Sign Up</string>
+    <string name="text_confirm_password">Confirm Password</string>
 </resources>

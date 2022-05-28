@@ -2,7 +2,9 @@ package trashissue.rebage.presentation.signin
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.*
@@ -82,8 +84,11 @@ fun SignInScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
+            val scrollState = rememberScrollState()
+
             Column(
                 modifier = Modifier
+                    .verticalScroll(scrollState)
                     .fillMaxSize()
                     .padding(horizontal = 16.dp, vertical = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -91,7 +96,7 @@ fun SignInScreen(
                 Image(
                     painter = painterResource(R.drawable.ic_rebage),
                     contentDescription = null,
-                    modifier = Modifier.size(84.dp)
+                    modifier = Modifier.size(64.dp)
                 )
                 Text(
                     text = stringResource(R.string.text_welcome),
