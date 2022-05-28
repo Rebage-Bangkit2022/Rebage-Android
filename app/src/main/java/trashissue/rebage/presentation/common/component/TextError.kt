@@ -1,5 +1,6 @@
 package trashissue.rebage.presentation.common.component
 
+import androidx.annotation.StringRes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -7,16 +8,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import trashissue.rebage.R
-import trashissue.rebage.presentation.common.FieldState
 import trashissue.rebage.presentation.theme3.RebageTheme3
 
 @Composable
 fun TextError(
-    field: FieldState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    @StringRes textRes: Int?
 ) {
     Text(
-        text = field.errorMessage?.let { stringResource(it) } ?: " ",
+        text = textRes?.let { stringResource(it) } ?: " ",
         color = MaterialTheme.colorScheme.error,
         style = MaterialTheme.typography.labelSmall,
         modifier = modifier
@@ -27,11 +27,6 @@ fun TextError(
 @Composable
 fun TextErrorPreview() {
     RebageTheme3 {
-        TextError(
-            field = FieldState(
-                value = "bagus",
-                errorMessage = R.string.error_invalid_email
-            )
-        )
+        TextError(textRes = R.string.error_name_is_required)
     }
 }

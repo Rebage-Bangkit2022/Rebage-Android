@@ -1,35 +1,49 @@
-package trashissue.rebage.presentation.signin
+package trashissue.rebage.presentation.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.domain.model.isLoading
-import trashissue.rebage.domain.usecase.SignInUseCase
+import trashissue.rebage.domain.usecase.SignUpUseCase
 import trashissue.rebage.domain.usecase.ValidateEmailUseCase
+import trashissue.rebage.domain.usecase.ValidateNameUseCase
 import trashissue.rebage.domain.usecase.ValidatePasswordUseCase
-import trashissue.rebage.presentation.signin.FormState
 import javax.inject.Inject
 
 @HiltViewModel
-class SignInViewModel @Inject constructor(
+class SignUpViewModel @Inject constructor(
+    private val validateNameUseCase: ValidateNameUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
-    private val signInUseCase: SignInUseCase
+    private val signUpUseCase: SignUpUseCase
 ) : ViewModel() {
     private var _formState = MutableStateFlow(FormState())
     val formState = _formState.asStateFlow()
-    val signInResult = signInUseCase.result
-    val isEnabled = combine(formState, signInResult) { (_formState, _signInResult) ->
+    val signUpResult = signUpUseCase.result
+    val isEnabled = combine(formState, signUpResult) { (_formState, _signUpResult) ->
         val formState = _formState as FormState
-        val signInResult = _signInResult as Result<*>
-        formState.isNotBlank && formState.isNotError && !signInResult.isLoading
+        val signUpResult = _signUpResult as Result<*>
+        formState.isNotBlank && formState.isNotError && !signUpResult.isLoading
     }
         .distinctUntilChanged()
         .catch { emit(false) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
+
+    fun onNameChange(name: String) {
+        viewModelScope.launch {
+            val errorMessage = validateNameUseCase(name)
+            val formState = formState.value.copy(
+                name = name,
+                nameErrorMessage = errorMessage
+            )
+            _formState.emit(formState)
+        }
+    }
 
     fun onEmailChange(email: String) = viewModelScope.launch {
         val errorMessage = validateEmailUseCase(email)
@@ -52,12 +66,23 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    fun signIn() {
+    fun onConfirmPasswordChange(confirm: String) {
+        viewModelScope.launch {
+            val errorMessage = validatePasswordUseCase(formState.value.password, confirm)
+            val formState = formState.value.copy(
+                confirmPassword = confirm,
+                confirmPasswordErrorMessage = errorMessage
+            )
+            _formState.emit(formState)
+        }
+    }
+
+    fun signUp() {
         viewModelScope.launch {
             if (!isEnabled.value) return@launch
             val formState = formState.value
-            signInUseCase(formState.email, formState.password)
+            Timber.i("${formState.name}, ${formState.email}, ${formState.password}")
+            signUpUseCase(formState.name, formState.email, formState.password)
         }
     }
 }
-
