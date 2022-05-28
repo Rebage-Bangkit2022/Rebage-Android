@@ -8,11 +8,14 @@ class ValidateEmailUseCase(
      * [Int] reference to string resource.
      * You can use string resource to inject these values
      * */
+    @StringRes private val errorBlankEmail: Int,
     @StringRes private val errorIncorrectMessage: Int
 ) {
 
-    operator fun invoke(value: String): Int? {
-        if (!PatternsCompat.EMAIL_ADDRESS.matcher(value).matches()) return errorIncorrectMessage
+    operator fun invoke(email: String): Int? {
+        if (email.isBlank()) return errorBlankEmail
+
+        if (!PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()) return errorIncorrectMessage
 
         return null
     }

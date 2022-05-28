@@ -12,12 +12,12 @@ class ValidateNameUseCase(
     @StringRes private val errorMaxMessage: Int,
 ) {
 
-    operator fun invoke(value: String): Int? {
-        if (value.isBlank()) return errorBlankMessage
+    operator fun invoke(name: String): Int? {
+        if (name.isBlank()) return errorBlankMessage
 
-        if (value.length < 5) return errorMinMessage
+        if (name.length < 5) return errorMinMessage
 
-        if (value.length > 50) return errorMaxMessage
+        if (name.length > 50) return errorMaxMessage
 
         return null
     }

@@ -1,24 +1,20 @@
 package trashissue.rebage.domain.usecase
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.domain.model.User
-import trashissue.rebage.domain.repository.AuthRepository
+import trashissue.rebage.domain.repository.UserRepository
 
 class SignUpUseCase(
-    private val authRepository: AuthRepository
-) {
-    private val _result = MutableStateFlow<Result<User>>(Result.NoData())
-    val result = _result.asStateFlow()
+    private val userRepository: UserRepository
+) : FlowUseCase<Result<User>>(Result.NoData()) {
 
     suspend operator fun invoke(name: String, email: String, password: String) {
-        _result.emit(Result.NoData())
+        emit(Result.NoData(loading = true))
         try {
-            val user = authRepository.signUp(name, email, password)
-            _result.emit(Result.Success(user))
+            val user = userRepository.signUp(name, email, password)
+            emit(Result.Success(user))
         } catch (e: Exception) {
-            _result.emit(Result.Error(e))
+            emit(Result.Error(e))
         }
     }
 }
