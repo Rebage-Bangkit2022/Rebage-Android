@@ -18,15 +18,15 @@ inline fun <T> Result<T>.onSuccess(block: (T) -> Unit) {
     if (this is Result.Success) block(data)
 }
 
-inline fun Result<Any>.onError(block: (Throwable) -> Unit) {
+inline fun Result<*>.onError(block: (Throwable) -> Unit) {
     if (this is Result.Error) block(throwable)
 }
 
-inline fun Result<Any>.onNoData(block: (Boolean) -> Unit) {
+inline fun Result<*>.onNoData(block: (Boolean) -> Unit) {
     if (this is Result.NoData) block(loading)
 }
 
-val Result<Any>.isLoading: Boolean
+val Result<*>.isLoading: Boolean
     get() {
         onNoData { return it }
         return false
