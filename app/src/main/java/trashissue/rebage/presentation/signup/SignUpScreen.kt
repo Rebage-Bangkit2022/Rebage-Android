@@ -97,7 +97,7 @@ fun SignUpScreen(
                 Image(
                     painter = painterResource(R.drawable.ic_rebage),
                     contentDescription = null,
-                    modifier = Modifier.size(84.dp)
+                    modifier = Modifier.size(64.dp)
                 )
                 Text(
                     text = stringResource(R.string.text_welcome),
