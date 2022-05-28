@@ -4,7 +4,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import trashissue.rebage.domain.repository.AuthRepository
+import trashissue.rebage.data.DefaultUserRepository
+import trashissue.rebage.data.local.UserLocalDataSource
+import trashissue.rebage.data.remote.UserRemoteDataSource
+import trashissue.rebage.domain.repository.UserRepository
 import javax.inject.Singleton
 
 @Module
@@ -13,5 +16,13 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(): AuthRepository = TODO()
+    fun provideUserRepository(
+        userLocalDataSource: UserLocalDataSource,
+        userRemoteDataSource: UserRemoteDataSource
+    ): UserRepository {
+        return DefaultUserRepository(
+            userLocalDataSource = userLocalDataSource,
+            userRemoteDataSource = userRemoteDataSource
+        )
+    }
 }
