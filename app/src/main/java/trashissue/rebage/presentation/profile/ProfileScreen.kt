@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import trashissue.rebage.R
+import trashissue.rebage.presentation.common.component.rememberGoogleSignInClient
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.profile.component.Photo
 import trashissue.rebage.presentation.profile.component.ProfileMenuItem
@@ -51,8 +52,13 @@ fun ProfileScreen(
                     )
                 },
                 actions = {
+                    val googleSignInClient= rememberGoogleSignInClient()
+
                     IconButton(
-                        onClick = { signOut() }
+                        onClick = {
+                            googleSignInClient.signOut()
+                            signOut()
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Logout,

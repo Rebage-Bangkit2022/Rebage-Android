@@ -23,15 +23,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.domain.model.User
 import trashissue.rebage.domain.model.isLoading
 import trashissue.rebage.domain.model.onError
-import trashissue.rebage.presentation.common.component.OutlinedTextFieldPassword
-import trashissue.rebage.presentation.common.component.TextError
-import trashissue.rebage.presentation.common.component.TwoLineDivider
+import trashissue.rebage.presentation.common.component.*
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.signin.component.NavigateToSignUpButton
 import trashissue.rebage.presentation.theme3.RebageTheme3
@@ -48,7 +47,8 @@ fun SignInScreen(
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         signInResultFlow = viewModel.signInResult,
-        signIn = viewModel::signIn
+        signIn = viewModel::signIn,
+        authGoogle = viewModel::authGoogle
     )
 }
 
@@ -61,7 +61,8 @@ fun SignInScreen(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     signInResultFlow: StateFlow<Result<User>>,
-    signIn: () -> Unit
+    signIn: () -> Unit,
+    authGoogle: (String) -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val signInResult by signInResultFlow.collectAsState()
@@ -168,16 +169,32 @@ fun SignInScreen(
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 }
-                IconButton(
-                    modifier = Modifier.size(64.dp),
-                    onClick = { }
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_google),
-                        contentDescription = stringResource(R.string.cd_google_sign_in),
-                        modifier = Modifier.size(32.dp),
-                    )
-                }
+
+                val scope = rememberCoroutineScope()
+                val googleSignInClient = rememberGoogleSignInClient()
+                val googleAuthLauncher = rememberGoogleAuthLauncher(
+                    onResult = { account ->
+                        val idToken = account.idToken
+                        if (idToken == null) {
+                            scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.text_unknown_error)) }
+                            return@rememberGoogleAuthLauncher
+                        }
+
+                        authGoogle(idToken)
+                    },
+                    onError = { e ->
+
+                        val message = e?.message ?: context.getString(R.string.text_unknown_error)
+                        scope.launch { snackbarHostState.showSnackbar(message) }
+                    },
+                )
+
+                GoogleOauth(
+                    onClick = {
+                        val intent = googleSignInClient.signInIntent
+                        googleAuthLauncher.launch(intent)
+                    }
+                )
                 NavigateToSignUpButton(
                     modifier = Modifier.padding(vertical = 32.dp),
                     onClick = {
@@ -206,7 +223,8 @@ fun SignInScreenPreview() {
             onEmailChange = { },
             onPasswordChange = { },
             signInResultFlow = MutableStateFlow(Result.NoData()),
-            signIn = { }
+            signIn = { },
+            authGoogle = { }
         )
     }
 }
