@@ -27,7 +27,7 @@ android {
             minifyEnabled false
         }
         release {
-            buildConfigField "String", "BACKEND_BASE_URL", '"https://bc0f-8-29-105-80.ap.ngrok.io/"'
+            buildConfigField "String", "BACKEND_BASE_URL", '"http://rebage.rayatiga.com/"'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
