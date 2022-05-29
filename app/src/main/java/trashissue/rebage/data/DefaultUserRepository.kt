@@ -4,11 +4,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
 import trashissue.rebage.data.local.UserLocalDataSource
 import trashissue.rebage.data.mapper.asEntity
 import trashissue.rebage.data.mapper.asModel
 import trashissue.rebage.data.remote.UserRemoteDataSource
+import trashissue.rebage.data.remote.payload.AuthGoogleRequest
 import trashissue.rebage.data.remote.payload.SignInRequest
 import trashissue.rebage.data.remote.payload.SignUpRequest
 import trashissue.rebage.domain.model.User
@@ -40,8 +40,11 @@ class DefaultUserRepository(
         return res.asModel()
     }
 
-    override suspend fun authGoogle(googleToken: String): User {
-        TODO("Not yet implemented")
+    override suspend fun authGoogle(idToken: String): User {
+        val req = AuthGoogleRequest(idToken = idToken)
+        val res = userRemoteDataSource.authGoogle(req)
+        userLocalDataSource.saveUser(res.asEntity())
+        return res.asModel()
     }
 
     override suspend fun signOut() {

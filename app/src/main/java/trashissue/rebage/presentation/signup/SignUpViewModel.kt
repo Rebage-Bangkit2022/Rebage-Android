@@ -3,6 +3,7 @@ package trashissue.rebage.presentation.signup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -19,7 +20,8 @@ class SignUpViewModel @Inject constructor(
     private val validateNameUseCase: ValidateNameUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
-    private val signUpUseCase: SignUpUseCase
+    private val signUpUseCase: SignUpUseCase,
+    private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private var _formState = MutableStateFlow(FormState())
     val formState = _formState.asStateFlow()
@@ -78,7 +80,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun signUp() {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             if (!isEnabled.value) return@launch
             val formState = formState.value
             Timber.i("${formState.name}, ${formState.email}, ${formState.password}")

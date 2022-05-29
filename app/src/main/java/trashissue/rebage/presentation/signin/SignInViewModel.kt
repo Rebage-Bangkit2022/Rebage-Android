@@ -3,21 +3,24 @@ package trashissue.rebage.presentation.signin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.domain.model.isLoading
+import trashissue.rebage.domain.usecase.AuthGoogleUseCase
 import trashissue.rebage.domain.usecase.SignInUseCase
 import trashissue.rebage.domain.usecase.ValidateEmailUseCase
 import trashissue.rebage.domain.usecase.ValidatePasswordUseCase
-import trashissue.rebage.presentation.signin.FormState
 import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
-    private val signInUseCase: SignInUseCase
+    private val signInUseCase: SignInUseCase,
+    private val authGoogleUseCase: AuthGoogleUseCase,
+    private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private var _formState = MutableStateFlow(FormState())
     val formState = _formState.asStateFlow()
@@ -53,10 +56,16 @@ class SignInViewModel @Inject constructor(
     }
 
     fun signIn() {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             if (!isEnabled.value) return@launch
             val formState = formState.value
             signInUseCase(formState.email, formState.password)
+        }
+    }
+
+    fun authGoogle(idToken: String) {
+        viewModelScope.launch(dispatcher) {
+            authGoogleUseCase(idToken)
         }
     }
 }

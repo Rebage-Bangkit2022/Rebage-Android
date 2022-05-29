@@ -9,7 +9,7 @@ interface UserRepository {
 
     suspend fun signIn(email: String, password: String): User
 
-    suspend fun authGoogle(googleToken: String): User
+    suspend fun authGoogle(idToken: String): User
 
     suspend fun signOut()
 

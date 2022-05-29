@@ -58,7 +58,6 @@ fun Main(
         }
 
         Box(modifier = Modifier.weight(1F)) {
-
             CompositionLocalProvider(LocalNavController provides navController) {
                 val isAlreadyOnboarding by isAlreadyOnboardingFlow.collectAsState(null)
                 val isLoggedIn by isLoggedInFlow.collectAsState(null)
@@ -74,7 +73,7 @@ fun Main(
                             false -> Route.Onboarding()
                             else -> when (isLoggedIn) {
                                 true -> Route.Home()
-                                else -> Route.SignUp()
+                                else -> Route.SignIn()
                             }
                         },
                         navController = navController
@@ -121,9 +120,7 @@ fun NavigationBarMain(
                             // Pop up to the start destination of the graph to
                             // avoid building up a large stack of destinations
                             // on the back stack as users select items
-                            popUpTo(Route.Home()) {
-                                saveState = true
-                            }
+                            popUpTo(Route.Home()) { saveState = true }
                             // Avoid multiple copies of the same destination when
                             // reselecting the same item
                             launchSingleTop = true

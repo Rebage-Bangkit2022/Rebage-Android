@@ -23,7 +23,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "BACKEND_BASE_URL", '"https://bc0f-8-29-105-80.ap.ngrok.io/"'
+            buildConfigField "String", "BACKEND_BASE_URL", '"http://192.168.1.109:8080"'
             minifyEnabled false
         }
         release {
@@ -121,6 +121,9 @@ dependencies {
 
     // Permission
     implementation "com.google.accompanist:accompanist-permissions:$permission_version"
+
+    // Play Services Auth
+    implementation "com.google.android.gms:play-services-auth:$play_services_auth_version"
 
     // Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
