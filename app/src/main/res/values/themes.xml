@@ -9,7 +9,7 @@
 
     <style name="Theme.Rebage.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/primary_color</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_rebage_white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash_screen</item>
         <item name="windowSplashScreenAnimationDuration">300</item>
         <item name="postSplashScreenTheme">@style/Theme.Rebage</item>
     </style>
