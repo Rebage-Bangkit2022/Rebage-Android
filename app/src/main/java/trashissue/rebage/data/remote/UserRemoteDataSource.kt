@@ -2,6 +2,7 @@ package trashissue.rebage.data.remote
 
 import okhttp3.ResponseBody
 import org.json.JSONObject
+import trashissue.rebage.data.remote.payload.AuthGoogleRequest
 import trashissue.rebage.data.remote.payload.SignInRequest
 import trashissue.rebage.data.remote.payload.SignUpRequest
 import trashissue.rebage.data.remote.payload.UserResponse
@@ -23,6 +24,16 @@ class UserRemoteDataSource(
 
     suspend fun signIn(req: SignInRequest): UserResponse {
         val res = userService.signIn(req)
+        val data = res.takeIf { it.isSuccessful }?.body()?.data
+        if (data == null) {
+            res.errorBody()?.let { throw RuntimeException(it.getErrorMessage()) }
+        }
+
+        return data ?: throw RuntimeException("Response body is empty")
+    }
+
+    suspend fun authGoogle(req: AuthGoogleRequest): UserResponse {
+        val res = userService.authGoogle(req)
         val data = res.takeIf { it.isSuccessful }?.body()?.data
         if (data == null) {
             res.errorBody()?.let { throw RuntimeException(it.getErrorMessage()) }
