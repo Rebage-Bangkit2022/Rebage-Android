@@ -3,18 +3,18 @@ package trashissue.rebage.di
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import trashissue.rebage.R
 import trashissue.rebage.domain.repository.UserRepository
 import trashissue.rebage.domain.usecase.*
-import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object UseCaseModule {
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideValidateNameUseCase(): ValidateNameUseCase {
         return ValidateNameUseCase(
             errorBlankMessage = R.string.error_name_is_required,
@@ -24,7 +24,7 @@ object UseCaseModule {
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideValidatePasswordUseCase(): ValidatePasswordUseCase {
         return ValidatePasswordUseCase(
             errorBlankMessage = R.string.error_password_is_required,
@@ -35,7 +35,7 @@ object UseCaseModule {
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideValidateEmailUseCase(): ValidateEmailUseCase {
         return ValidateEmailUseCase(
             errorBlankEmail = R.string.error_email_is_required,
@@ -44,32 +44,38 @@ object UseCaseModule {
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideSignInUseCase(userRepository: UserRepository): SignInUseCase {
         return SignInUseCase(userRepository)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideSignUpUseCase(userRepository: UserRepository): SignUpUseCase {
         return SignUpUseCase(userRepository)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideOnBoardingUseCase(userRepository: UserRepository): OnboardingUseCase {
         return OnboardingUseCase(userRepository)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideGetUserUseCase(userRepository: UserRepository): GetUserUseCase {
         return GetUserUseCase(userRepository)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideSignOutUseCase(userRepository: UserRepository): SignOutUseCase {
         return SignOutUseCase(userRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideAuthGoogleUseCase(userRepository: UserRepository): AuthGoogleUseCase {
+        return AuthGoogleUseCase(userRepository)
     }
 }
