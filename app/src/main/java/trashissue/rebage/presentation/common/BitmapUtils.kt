@@ -10,13 +10,13 @@ import java.io.FileOutputStream
 
 object BitmapUtils {
 
-    fun reduceSize(file: File, isBackCamera: Boolean): File {
+    fun reduceSize(file: File, isBackCamera: Boolean = true, rotate: Boolean = true): File {
         var bitmap = BitmapFactory.decodeFile(file.path)
         var compressQuality = 100
         var streamLength: Int
 
         val matrix = Matrix()
-        bitmap = if (isBackCamera) {
+        bitmap = if (isBackCamera && rotate) {
             matrix.postRotate(90f)
             Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
         } else {
