@@ -25,9 +25,9 @@ class UserPreferences(
             UserEntity(
                 id = preferences[KEY_USER_ID] ?: return@map null,
                 name = preferences[KEY_USER_NAME] ?: return@map null,
-                email = preferences[KEY_USER_NAME] ?: return@map null,
+                email = preferences[KEY_USER_EMAIL] ?: return@map null,
                 photo = preferences[KEY_USER_PHOTO],
-                token = preferences[KEY_USER_NAME] ?: return@map null
+                token = preferences[KEY_USER_TOKEN] ?: return@map null
             )
         }
     }

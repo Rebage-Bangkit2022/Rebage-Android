@@ -15,7 +15,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import trashissue.rebage.R
+import trashissue.rebage.domain.model.User
 import trashissue.rebage.presentation.common.component.rememberGoogleSignInClient
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.profile.component.Photo
@@ -29,7 +32,8 @@ fun ProfileScreen(
 ) {
     ProfileScreen(
         navController = navController,
-        signOut = viewModel::signOut
+        userFlow = viewModel.user,
+        signOut = viewModel::signOut,
     )
 }
 
@@ -37,6 +41,7 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreen(
     navController: NavHostController,
+    userFlow: StateFlow<User?>,
     signOut: () -> Unit
 ) {
     Scaffold(
@@ -75,15 +80,18 @@ fun ProfileScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val user by userFlow.collectAsState()
+
             Photo(
                 modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
+                photo = user?.photo,
                 onClick = {}
             )
             Text(
                 modifier = Modifier
                     .padding(horizontal = 32.dp)
                     .fillMaxWidth(),
-                text = "Tubagus",
+                text = user?.name ?: "-",
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center,
@@ -93,7 +101,7 @@ fun ProfileScreen(
                 modifier = Modifier
                     .padding(horizontal = 32.dp)
                     .fillMaxWidth(),
-                text = "tubagus@student.ub.ac.id",
+                text = user?.email ?: "-",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center,
@@ -141,6 +149,7 @@ fun ProfileScreenPreview() {
     RebageTheme3 {
         ProfileScreen(
             navController = rememberNavController(),
+            userFlow = MutableStateFlow(User(1, "bagus", "bagus@gmail.com", null, "")),
             signOut = { }
         )
     }

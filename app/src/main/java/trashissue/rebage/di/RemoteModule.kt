@@ -1,5 +1,6 @@
 package trashissue.rebage.di
 
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,7 +11,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import trashissue.rebage.BuildConfig
+import trashissue.rebage.data.remote.GarbageRemoteDataSource
 import trashissue.rebage.data.remote.UserRemoteDataSource
+import trashissue.rebage.data.remote.service.GarbageService
 import trashissue.rebage.data.remote.service.UserService
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -30,18 +33,21 @@ object RemoteModule {
             .addInterceptor(httpLoggingInterceptor)
             .build()
 
-        val certClient = OkHttpClient.Builder()
+        val client = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(120, TimeUnit.SECONDS)
+            .writeTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
             .build()
+
+        val gson = GsonBuilder().setLenient().create()
 
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_BASE_URL)
             .callFactory(callFactory)
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(certClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(client)
             .build()
     }
 
@@ -50,5 +56,12 @@ object RemoteModule {
     fun provideUserRemoteDataSource(retrofit: Retrofit): UserRemoteDataSource {
         val userService = retrofit.create(UserService::class.java)
         return UserRemoteDataSource(userService = userService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGarbageRemoteDataSource(retrofit: Retrofit): GarbageRemoteDataSource {
+        val garbageService = retrofit.create(GarbageService::class.java)
+        return GarbageRemoteDataSource(garbageService = garbageService)
     }
 }

@@ -12,6 +12,11 @@ sealed class Result<out R> {
             is Error -> "Error[throwable=$throwable]"
         }
     }
+
+    companion object {
+        val Loading = NoData(loading = true)
+        val Empty = NoData()
+    }
 }
 
 inline fun <T> Result<T>.onSuccess(block: (T) -> Unit) {
