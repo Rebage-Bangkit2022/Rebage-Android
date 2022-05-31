@@ -179,12 +179,10 @@ fun SignInScreen(
                             scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.text_unknown_error)) }
                             return@rememberGoogleAuthLauncher
                         }
-
                         authGoogle(idToken)
                     },
-                    onError = { e ->
-
-                        val message = e?.message ?: context.getString(R.string.text_unknown_error)
+                    onError = { error ->
+                        val message = error?.message ?: context.getString(R.string.text_unknown_error)
                         scope.launch { snackbarHostState.showSnackbar(message) }
                     },
                 )

@@ -11,8 +11,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 import java.util.concurrent.Executor
@@ -48,13 +46,13 @@ class CameraState(
     }
 
     private suspend fun ImageCapture.takePicture(executor: Executor): File {
-        val photoFile = withContext(Dispatchers.IO) {
-            runCatching {
-                File.createTempFile("image", "jpg")
-            }.getOrElse { e ->
-                Timber.e(e, "Failed to create temporary file")
-                File("/dev/null")
+        val photoFile = runCatching {
+            File.createTempFile("image", ".jpg").apply {
+                Timber.i("")
             }
+        }.getOrElse { e ->
+            Timber.e(e, "Failed to create temporary file")
+            File("/dev/null")
         }
 
         return suspendCoroutine { continuation ->

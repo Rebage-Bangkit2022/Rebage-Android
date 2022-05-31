@@ -15,17 +15,19 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import trashissue.rebage.R
 import trashissue.rebage.presentation.camera.component.CameraCapture
 import trashissue.rebage.presentation.camera.component.rememberCameraState
+import trashissue.rebage.presentation.common.BitmapUtils
 import trashissue.rebage.presentation.common.component.toast
 
 @Composable
 @OptIn(ExperimentalPermissionsApi::class)
 fun CameraActivity.CameraScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
-        val camera = rememberCameraState()
+        val cameraState = rememberCameraState()
         val scope = rememberCoroutineScope()
         var loading by remember { mutableStateOf(false) }
         val permission = rememberPermissionState(permission.CAMERA) { isGranted ->
@@ -45,23 +47,24 @@ fun CameraActivity.CameraScreen() {
         if (permission.status.isGranted) {
             CameraCapture(
                 modifier = Modifier.fillMaxSize(),
-                state = camera,
+                state = cameraState,
                 onClickGallery = {},
                 onClickCapture = {
-                    scope.launch {
+                    scope.launch(Dispatchers.IO) {
                         loading = true
-                        val capturedImage = camera.takePicture()
+                        val capturedImage = cameraState.takePicture()
+                        val backCamera = cameraState.selector == CameraSelector.DEFAULT_BACK_CAMERA
                         val intent = Intent().apply {
+                            BitmapUtils.reduceSize(capturedImage, backCamera)
                             putExtra(CameraActivity.KEY_IMAGE_RESULT, capturedImage)
                         }
-
                         setResult(CameraActivity.RESULT_SUCCESS, intent)
                         loading = false
                         finish()
                     }
                 },
                 onClickSwitchCamera = {
-                    camera.selector = when (camera.selector) {
+                    cameraState.selector = when (cameraState.selector) {
                         CameraSelector.DEFAULT_BACK_CAMERA -> CameraSelector.DEFAULT_FRONT_CAMERA
                         else -> CameraSelector.DEFAULT_BACK_CAMERA
                     }

@@ -1,7 +1,6 @@
 package trashissue.rebage.presentation.detection
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
@@ -15,17 +14,22 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Result
+import trashissue.rebage.domain.model.onError
+import trashissue.rebage.domain.model.onNoData
+import trashissue.rebage.domain.model.onSuccess
 import trashissue.rebage.presentation.camera.CameraActivity
 import trashissue.rebage.presentation.detection.component.AddGarbage
+import trashissue.rebage.presentation.detection.component.BoundingBoxScaffold
 import trashissue.rebage.presentation.detection.component.ScannedGarbage
+import trashissue.rebage.presentation.detection.component.rememberDetectionScaffoldState
 import trashissue.rebage.presentation.main.Route
 import java.io.File
 
@@ -34,15 +38,19 @@ private val ContentPadding = PaddingValues(16.dp)
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DetectionScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: DetectionViewModel = hiltViewModel()
 ) {
-    var imageFile by rememberSaveable { mutableStateOf<File?>(null) }
-    val imageBitmap by fileAsImageBitmap(imageFile)
+    val detectionScaffoldState = rememberDetectionScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    var firstPreview by rememberSaveable { mutableStateOf(true) }
 
-    Scaffold(
+    BoundingBoxScaffold(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        state = detectionScaffoldState,
         topBar = {
             SmallTopAppBar(
                 title = {
@@ -51,7 +59,10 @@ fun DetectionScreen(
                 actions = {
                     val context = LocalContext.current
                     val cameraLauncher = rememberCameraLauncher(
-                        onSuccess = { imageFile = it },
+                        onSuccess = { file ->
+                            viewModel.detectGarbage(file)
+                            firstPreview = true
+                        },
                         onFailed = { }
                     )
 
@@ -73,15 +84,36 @@ fun DetectionScreen(
             )
         }
     ) { innerPadding ->
+        val context = LocalContext.current
+        val detectGarbageResult by viewModel.detectGarbageResult.collectAsState(Result.Empty)
+        val scope = rememberCoroutineScope()
+
+        LaunchedEffect(detectGarbageResult) {
+            detectGarbageResult.onNoData { detectionScaffoldState.isLoading = it }
+            detectGarbageResult.onSuccess {
+                if (firstPreview) {
+                    detectionScaffoldState.showPreview = Result.Success(it)
+                }
+                detectionScaffoldState.isLoading = false
+                firstPreview = false
+            }
+            detectGarbageResult.onError {
+                scope.launch {
+                    val message = it.message ?: context.getString(R.string.text_unknown_error)
+                    snackbarHostState.showSnackbar(message)
+                    detectionScaffoldState.isLoading = false
+                }
+            }
+        }
+
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = ContentPadding
             ) {
                 item {
@@ -127,18 +159,4 @@ fun rememberCameraLauncher(
             onSuccess(imageFile)
         }
     )
-}
-
-@Composable
-fun fileAsImageBitmap(file: File?): State<Result<ImageBitmap>> {
-    val initialValue: Result<ImageBitmap> = Result.NoData()
-
-    return produceState(initialValue, file) {
-        value = try {
-            val imageBitmap = BitmapFactory.decodeFile((file ?: return@produceState).absolutePath)
-            Result.Success(imageBitmap.asImageBitmap())
-        } catch (e: Exception) {
-            Result.Error(e)
-        }
-    }
 }
