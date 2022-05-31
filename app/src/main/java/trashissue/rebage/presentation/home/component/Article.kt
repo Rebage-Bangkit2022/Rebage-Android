@@ -6,16 +6,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import trashissue.rebage.presentation.theme3.RebageTheme3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Article(
     modifier: Modifier = Modifier,
-    title: String
+    title: String,
+    photo: String?
 ) {
     Card(
         modifier = modifier.wrapContentSize(),
@@ -23,7 +26,10 @@ fun Article(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
-            Box(
+            AsyncImage(
+                model = photo,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp)
@@ -45,6 +51,9 @@ fun Article(
 @Composable
 fun ArticlePreview() {
     RebageTheme3 {
-        Article(title = "Du du du Du du du Du du du Du du du Du du du Du du du Du du du")
+        Article(
+            title = "Du du du Du du du Du du du Du du du Du du du Du du du Du du du",
+            photo = "https://i.pinimg.com/564x/d7/f8/5e/d7f85e8343547676774a4ffdffc96143.jpg"
+        )
     }
 }

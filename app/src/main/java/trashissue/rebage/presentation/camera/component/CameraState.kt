@@ -29,10 +29,14 @@ class CameraState(
     private val Context.executor: Executor
         get() = ContextCompat.getMainExecutor(this)
 
+
+    suspend fun unbind() {
+        val cameraProvider = getCameraProvider()
+        cameraProvider.unbindAll()
+    }
+
     suspend fun bind() {
         val cameraProvider = getCameraProvider()
-        // Must unbind the use-cases before rebinding them.
-        cameraProvider.unbindAll()
         cameraProvider.bindToLifecycle(
             lifecycleOwner,
             selector,

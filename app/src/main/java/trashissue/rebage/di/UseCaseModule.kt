@@ -6,7 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import trashissue.rebage.R
-import trashissue.rebage.domain.model.DetectedGarbage
+import trashissue.rebage.domain.repository.ArticleRepository
 import trashissue.rebage.domain.repository.GarbageRepository
 import trashissue.rebage.domain.repository.UserRepository
 import trashissue.rebage.domain.usecase.*
@@ -85,5 +85,11 @@ object UseCaseModule {
     @ViewModelScoped
     fun provideDetectGarbageUseCase(garbageRepository: GarbageRepository): DetectGarbageUseCase {
         return DetectGarbageUseCase(garbageRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetArticleUseCase(articleRepository: ArticleRepository): GetArticleUseCase {
+        return GetArticleUseCase(articleRepository)
     }
 }

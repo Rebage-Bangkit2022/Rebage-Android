@@ -34,6 +34,7 @@ fun CameraCapture(
     ) {
         LaunchedEffect(state.selector) {
             try {
+                state.unbind()
                 state.bind()
             } catch (e: Exception) {
                 Timber.e(e, "Failed to bind camera use cases")
