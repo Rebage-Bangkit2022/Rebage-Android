@@ -9,11 +9,14 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import trashissue.rebage.R
 import trashissue.rebage.presentation.common.statusBarsPaddingWithColor
@@ -38,7 +41,9 @@ val DummyGarbageStat = listOf(
 )
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,9 +63,23 @@ fun HomeScreen() {
         }
 
         Header(modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp))
-        Articles(label = stringResource(R.string.text_recommended_articles))
-        Articles(label = stringResource(R.string.text_handicraft_product))
-        Articles(label = stringResource(R.string.text_recommended_articles))
+
+        val allArticles by viewModel.allArticles.collectAsState()
+        val handicrafts by viewModel.handicrafts.collectAsState()
+        val reduce by viewModel.reduce.collectAsState()
+
+        Articles(
+            label = stringResource(R.string.text_all_articles),
+            articles = allArticles
+        )
+        Articles(
+            label = stringResource(R.string.text_handicraft_product),
+            articles = handicrafts
+        )
+        Articles(
+            label = stringResource(R.string.text_reduce),
+            articles = reduce
+        )
     }
 }
 
