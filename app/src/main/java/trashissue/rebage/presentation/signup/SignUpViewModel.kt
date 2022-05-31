@@ -9,10 +9,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.domain.model.isLoading
-import trashissue.rebage.domain.usecase.SignUpUseCase
-import trashissue.rebage.domain.usecase.ValidateEmailUseCase
-import trashissue.rebage.domain.usecase.ValidateNameUseCase
-import trashissue.rebage.domain.usecase.ValidatePasswordUseCase
+import trashissue.rebage.domain.usecase.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +18,7 @@ class SignUpViewModel @Inject constructor(
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val signUpUseCase: SignUpUseCase,
+    private val authGoogleUseCase: AuthGoogleUseCase,
     private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private var _formState = MutableStateFlow(FormState())
@@ -85,6 +83,12 @@ class SignUpViewModel @Inject constructor(
             val formState = formState.value
             Timber.i("${formState.name}, ${formState.email}, ${formState.password}")
             signUpUseCase(formState.name, formState.email, formState.password)
+        }
+    }
+
+    fun authGoogle(idToken: String) {
+        viewModelScope.launch(dispatcher) {
+            authGoogleUseCase(idToken)
         }
     }
 }
