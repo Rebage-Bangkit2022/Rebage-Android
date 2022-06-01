@@ -16,4 +16,14 @@ class ArticleRemoteDataSource(
 
         return data ?: throw RuntimeException("Response body is empty")
     }
+
+    suspend fun getArticle(id: Int): ArticleResponse {
+        val res = articleService.getArticle(id)
+        val data = res.takeIf { it.isSuccessful }?.body()?.data
+        if (data == null) {
+            res.errorBody()?.let { throw RuntimeException(it.getErrorMessage()) }
+        }
+
+        return data ?: throw RuntimeException("Response body is empty")
+    }
 }
