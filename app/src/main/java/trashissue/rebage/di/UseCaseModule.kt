@@ -89,6 +89,12 @@ object UseCaseModule {
 
     @Provides
     @ViewModelScoped
+    fun provideGetArticlesUseCase(articleRepository: ArticleRepository): GetArticlesUseCase {
+        return GetArticlesUseCase(articleRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
     fun provideGetArticleUseCase(articleRepository: ArticleRepository): GetArticleUseCase {
         return GetArticleUseCase(articleRepository)
     }
