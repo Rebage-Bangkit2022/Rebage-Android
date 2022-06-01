@@ -12,5 +12,7 @@ interface GarbageService {
 
     @POST("/api/detection")
     @Multipart
-    suspend fun detect(@Part image: MultipartBody.Part): Response<Api<DetectedGarbageResponse>>
+    suspend fun detect(
+        @Part image: MultipartBody.Part
+    ): Response<Api<DetectedGarbageResponse>>
 }
