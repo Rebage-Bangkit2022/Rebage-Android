@@ -1,8 +1,6 @@
 package trashissue.rebage.data
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import trashissue.rebage.data.local.UserLocalDataSource
 import trashissue.rebage.data.mapper.asEntity
@@ -52,9 +50,7 @@ class DefaultUserRepository(
     }
 
     override fun getUser(): Flow<User?> {
-        return userLocalDataSource.getUser()
-            .flowOn(Dispatchers.IO)
-            .map { it?.asModel() }
+        return userLocalDataSource.getUser().map { it?.asModel() }
     }
 
     override suspend fun onboarding(isAlreadyOnboarding: Boolean) {
