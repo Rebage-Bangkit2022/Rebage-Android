@@ -6,4 +6,6 @@ import trashissue.rebage.domain.model.Article
 interface ArticleRepository {
 
     fun getArticles(category: String? = null, page: Int, size: Int): Flow<List<Article>>
+
+    suspend fun getArticle(articleId: Int): Article
 }
