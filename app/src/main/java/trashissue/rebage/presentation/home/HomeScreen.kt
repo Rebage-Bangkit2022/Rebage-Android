@@ -17,12 +17,14 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import trashissue.rebage.R
 import trashissue.rebage.presentation.common.statusBarsPaddingWithColor
 import trashissue.rebage.presentation.home.component.Articles
 import trashissue.rebage.presentation.home.component.ChartData
 import trashissue.rebage.presentation.home.component.Header
+import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.theme3.*
 
 val DummyGarbageStat = listOf(
@@ -42,6 +44,7 @@ val DummyGarbageStat = listOf(
 
 @Composable
 fun HomeScreen(
+    navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     Column(
@@ -64,21 +67,30 @@ fun HomeScreen(
 
         Header(modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp))
 
-        val allArticles by viewModel.allArticles.collectAsState()
-        val handicrafts by viewModel.handicrafts.collectAsState()
-        val reduce by viewModel.reduce.collectAsState()
+        val allArticlesResult by viewModel.allArticles.collectAsState()
+        val handicraftsResult by viewModel.handicrafts.collectAsState()
+        val reduceResult by viewModel.reduce.collectAsState()
 
         Articles(
             label = stringResource(R.string.text_all_articles),
-            articles = allArticles
+            articles = allArticlesResult,
+            onClickArticle = { articleId ->
+                navController.navigate(Route.Article(articleId))
+            }
         )
         Articles(
             label = stringResource(R.string.text_handicraft_product),
-            articles = handicrafts
+            articles = handicraftsResult,
+            onClickArticle = { articleId ->
+                navController.navigate(Route.Article(articleId))
+            }
         )
         Articles(
             label = stringResource(R.string.text_reduce),
-            articles = reduce
+            articles = reduceResult,
+            onClickArticle = { articleId ->
+                navController.navigate(Route.Article(articleId))
+            }
         )
     }
 }
