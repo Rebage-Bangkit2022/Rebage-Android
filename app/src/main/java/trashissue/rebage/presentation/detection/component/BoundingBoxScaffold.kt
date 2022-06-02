@@ -26,7 +26,7 @@ import coil.request.ImageRequest
 import trashissue.rebage.domain.model.DetectedGarbage
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.domain.model.isLoading
-import trashissue.rebage.domain.model.onSuccess
+import trashissue.rebage.domain.model.success
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +69,7 @@ fun BoundingBoxScaffold(
             }
         }
 
-        detectedGarbageWithBoundingBox.onSuccess { imageBitmap ->
+        detectedGarbageWithBoundingBox.success { imageBitmap ->
             Dialog(
                 onDismissRequest = {
                     state.showPreview = Result.Empty
