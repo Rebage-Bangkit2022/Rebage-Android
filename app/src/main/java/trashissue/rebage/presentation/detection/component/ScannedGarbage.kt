@@ -13,17 +13,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import trashissue.rebage.R
 import trashissue.rebage.presentation.theme3.RebageTheme3
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScannedGarbage(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    image: String,
+    name: String,
+    date: String,
+    total: Int
 ) {
     var editMode by rememberSaveable { mutableStateOf(false) }
 
@@ -35,12 +42,14 @@ fun ScannedGarbage(
                     .height(120.dp)
 
             ) {
-                Box(
+                AsyncImage(
                     modifier = Modifier
                         .size(height = 120.dp, width = 100.dp)
-                        .background(Color.Gray)
+                        .background(Color.Gray),
+                    model = image,
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null
                 )
-
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
@@ -54,12 +63,12 @@ fun ScannedGarbage(
                     ) {
                         Column {
                             Text(
-                                text = "Plastic",
+                                text = name,
                                 style = MaterialTheme.typography.titleLarge
                             )
                             Text(
                                 modifier = Modifier.padding(top = 4.dp),
-                                text = "17:05 12 Mei 2019",
+                                text = date,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5F)
                             )
@@ -74,7 +83,7 @@ fun ScannedGarbage(
                             )
                         } else {
                             Text(
-                                text = "3 Items",
+                                text = "$total Items",
                                 style = MaterialTheme.typography.titleMedium
                             )
                         }
@@ -116,6 +125,12 @@ fun ScannedGarbage(
 @Composable
 fun ScannedGarbagePreview() {
     RebageTheme3 {
-        ScannedGarbage(onClick = {})
+        ScannedGarbage(
+            onClick = {},
+            name = "Plastic",
+            date = Date().toString(),
+            total = 2,
+            image = "https://loremflickr.com/cache/resized/5444_10120060325_39562edbb8_c_640_480_nofilter.jpg"
+        )
     }
 }
