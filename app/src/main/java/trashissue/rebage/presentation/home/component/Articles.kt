@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Article
 import trashissue.rebage.domain.model.Result
-import trashissue.rebage.domain.model.onNoData
-import trashissue.rebage.domain.model.onSuccess
+import trashissue.rebage.domain.model.empty
+import trashissue.rebage.domain.model.success
 import trashissue.rebage.presentation.theme3.RebageTheme3
 
 private val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
@@ -56,7 +56,7 @@ fun Articles(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = ContentPadding
         ) {
-            articles.onNoData {
+            articles.empty {
                 item {
                     // TODO: Please create shimmer animation
                     Article(
@@ -69,7 +69,7 @@ fun Articles(
                     )
                 }
             }
-            articles.onSuccess { articles ->
+            articles.success { articles ->
                 items(items = articles, key = { it.id }) { article ->
                     Article(
                         modifier = Modifier.width(240.dp),
