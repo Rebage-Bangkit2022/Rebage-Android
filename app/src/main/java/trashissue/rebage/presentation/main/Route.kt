@@ -1,5 +1,6 @@
 package trashissue.rebage.presentation.main
 
+import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -14,6 +15,9 @@ import trashissue.rebage.presentation.profile.ProfileScreen
 import trashissue.rebage.presentation.signin.SignInScreen
 import trashissue.rebage.presentation.signup.SignUpScreen
 import trashissue.rebage.presentation.threers.ThreeRsScreen
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 sealed class Route(
     protected val route: String
@@ -98,14 +102,24 @@ sealed class Route(
         operator fun invoke() = route
     }
 
-    object ThreeRs : Route("three_r_s}") {
+    object ThreeRs : Route("three_r_s/{$KEY_NAME}/{$KEY_IMAGE}") {
 
         context (NavGraphBuilder)
         fun composable() = composable(route) {
-            ThreeRsScreen(LocalNavController.current)
+            val name = it.arguments?.getString(KEY_NAME)
+            val image = it.arguments?.getString(KEY_IMAGE)
+            if (name != null && image != null) {
+                val decodedUrl = remember {
+                    URLDecoder.decode(image, StandardCharsets.UTF_8.toString())
+                }
+                ThreeRsScreen(LocalNavController.current, name = name, image = decodedUrl)
+            }
         }
 
-        operator fun invoke() = route
+        operator fun invoke(name: String, image: String): String {
+            val encodedUrl = URLEncoder.encode(image, StandardCharsets.UTF_8.toString())
+            return "three_r_s/$name/$encodedUrl"
+        }
     }
 
     object Article : Route("article/{$KEY_ARTICLE_ID}") {
@@ -127,5 +141,7 @@ sealed class Route(
 
     companion object {
         protected const val KEY_ARTICLE_ID = "articleId"
+        protected const val KEY_NAME = "name"
+        protected const val KEY_IMAGE = "image"
     }
 }
