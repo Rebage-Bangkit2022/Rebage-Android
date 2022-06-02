@@ -3,7 +3,9 @@ package trashissue.rebage.data.remote.payload
 import com.google.gson.annotations.SerializedName
 
 data class DetectedGarbageResponse(
+    @field:SerializedName("image")
     val image: String,
+    @field:SerializedName("result")
     val result: DetectedGarbage
 ) {
     data class DetectedGarbage(
