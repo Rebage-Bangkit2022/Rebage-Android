@@ -55,7 +55,7 @@ fun OnboardingScreen(
     ) {
         TopBar(
             onClickSkip = {
-                navController.navigate(Route.Home())
+                navController.navigate(Route.SignIn())
             },
             text = stringResource(R.string.text_skip)
         )
@@ -86,7 +86,6 @@ fun OnboardingScreen(
             onClick = {
                 scope.launch {
                     if (isLastPage) {
-//                        navController.navigate(Route.Home())
                         onboarding(true)
                         return@launch
                     }
