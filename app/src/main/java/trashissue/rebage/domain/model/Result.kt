@@ -19,20 +19,20 @@ sealed class Result<out R> {
     }
 }
 
-inline fun <T> Result<T>.onSuccess(block: (T) -> Unit) {
+inline fun <T> Result<T>.success(block: (T) -> Unit) {
     if (this is Result.Success) block(data)
 }
 
-inline fun Result<*>.onError(block: (Throwable) -> Unit) {
+inline fun Result<*>.error(block: (Throwable) -> Unit) {
     if (this is Result.Error) block(throwable)
 }
 
-inline fun Result<*>.onNoData(block: (Boolean) -> Unit) {
+inline fun Result<*>.empty(block: (Boolean) -> Unit) {
     if (this is Result.NoData) block(loading)
 }
 
 val Result<*>.isLoading: Boolean
     get() {
-        onNoData { return it }
+        empty { return it }
         return false
     }
