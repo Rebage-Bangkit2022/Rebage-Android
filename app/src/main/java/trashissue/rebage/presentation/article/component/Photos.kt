@@ -18,7 +18,7 @@ import com.google.accompanist.pager.rememberPagerState
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun Images(
+fun Photos(
     modifier: Modifier = Modifier,
     photos: List<String>
 ) {

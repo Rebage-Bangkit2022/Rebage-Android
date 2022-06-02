@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import trashissue.rebage.R
-import trashissue.rebage.domain.model.onSuccess
-import trashissue.rebage.presentation.article.component.Images
+import trashissue.rebage.domain.model.success
+import trashissue.rebage.presentation.article.component.Photos
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +35,7 @@ fun ArticleScreen(
         topBar = {
             SmallTopAppBar(
                 title = {
-                    articleResult.onSuccess { article ->
+                    articleResult.success { article ->
                         Text(
                             text = article.title,
                             maxLines = 1,
@@ -70,11 +70,12 @@ fun ArticleScreen(
                 viewModel.fetchArticle(articleId)
             }
 
-            articleResult.onSuccess { article ->
-                Images(
+            articleResult.success { article ->
+                Photos(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .height(200.dp),
+                    photos = article.photo
                 )
                 Text(
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
