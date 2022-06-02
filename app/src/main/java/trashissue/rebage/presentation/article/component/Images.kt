@@ -20,20 +20,17 @@ import com.google.accompanist.pager.rememberPagerState
 @Composable
 fun Images(
     modifier: Modifier = Modifier,
-    images: List<String> = listOf(
-        "https://s3.theasianparent.com/tap-assets-prod/wp-content/uploads/sites/24/2021/05/kerajinan-tangan-lead.jpg",
-        "https://cdn0-production-images-kly.akamaized.net/c8P3vV_Bs98rtsBVSPPrDQHudvc=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/3174510/original/088932500_1594264287-POT.jpg"
-    )
+    photos: List<String>
 ) {
     Box(modifier = modifier) {
         val pagerState = rememberPagerState()
         HorizontalPager(
             modifier = Modifier.fillMaxSize(),
-            count = images.size,
+            count = photos.size,
             state = pagerState
         ) { index ->
             AsyncImage(
-                model = images[index],
+                model = photos[index],
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
