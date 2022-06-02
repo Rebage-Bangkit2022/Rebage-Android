@@ -23,11 +23,11 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "BACKEND_BASE_URL", '"https://rebage.rayatiga.com/"'
+            buildConfigField "String", "BACKEND_BASE_URL", '"https://rebage.uc.r.appspot.com/"'
             minifyEnabled false
         }
         release {
-            buildConfigField "String", "BACKEND_BASE_URL", '"https://rebage.rayatiga.com/"'
+            buildConfigField "String", "BACKEND_BASE_URL", '"https://rebage.uc.r.appspot.com/"'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
