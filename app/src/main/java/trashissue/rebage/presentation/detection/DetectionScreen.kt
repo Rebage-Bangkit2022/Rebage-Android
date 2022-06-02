@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material3.*
@@ -22,9 +23,9 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Result
-import trashissue.rebage.domain.model.onError
-import trashissue.rebage.domain.model.onNoData
-import trashissue.rebage.domain.model.onSuccess
+import trashissue.rebage.domain.model.empty
+import trashissue.rebage.domain.model.error
+import trashissue.rebage.domain.model.success
 import trashissue.rebage.presentation.camera.CameraActivity
 import trashissue.rebage.presentation.detection.component.AddGarbage
 import trashissue.rebage.presentation.detection.component.BoundingBoxScaffold
@@ -32,6 +33,7 @@ import trashissue.rebage.presentation.detection.component.ScannedGarbage
 import trashissue.rebage.presentation.detection.component.rememberDetectionScaffoldState
 import trashissue.rebage.presentation.main.Route
 import java.io.File
+import java.util.*
 
 private val ContentPadding = PaddingValues(16.dp)
 
@@ -89,15 +91,15 @@ fun DetectionScreen(
         val scope = rememberCoroutineScope()
 
         LaunchedEffect(detectGarbageResult) {
-            detectGarbageResult.onNoData { detectionScaffoldState.isLoading = it }
-            detectGarbageResult.onSuccess {
+            detectGarbageResult.empty { detectionScaffoldState.isLoading = it }
+            detectGarbageResult.success {
                 if (firstPreview) {
                     detectionScaffoldState.showPreview = Result.Success(it)
                 }
                 detectionScaffoldState.isLoading = false
                 firstPreview = false
             }
-            detectGarbageResult.onError {
+            detectGarbageResult.error {
                 scope.launch {
                     val message = it.message ?: context.getString(R.string.text_unknown_error)
                     snackbarHostState.showSnackbar(message)
@@ -111,30 +113,42 @@ fun DetectionScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = ContentPadding
-            ) {
-                item {
-                    var addItemMode by rememberSaveable { mutableStateOf(false) }
+            detectGarbageResult.success { detectedGarbage ->
+                val detectedGarbageItems = remember(detectedGarbage) { detectedGarbage.groupByLabel() }
 
-                    if (addItemMode) {
-                        AddGarbage(onCancel = { addItemMode = false })
-                    } else {
-                        OutlinedButton(
-                            onClick = { addItemMode = true },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(text = "Add item")
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = ContentPadding
+                ) {
+                    item {
+                        var addItemMode by rememberSaveable { mutableStateOf(false) }
+
+                        if (addItemMode) {
+                            AddGarbage(onCancel = { addItemMode = false })
+                        } else {
+                            OutlinedButton(
+                                onClick = { addItemMode = true },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(text = "Add item")
+                            }
                         }
                     }
-                }
-                items(30, key = { it }) {
-                    ScannedGarbage(
-                        modifier = Modifier.animateItemPlacement(),
-                        onClick = { navController.navigate(Route.ThreeRs()) }
-                    )
+
+                    items(items = detectedGarbageItems) { detected ->
+                        ScannedGarbage(
+                            modifier = Modifier.animateItemPlacement(),
+                            onClick = {
+                                val route = Route.ThreeRs(detected.label, detected.image)
+                                navController.navigate(route)
+                            },
+                            image = detected.image,
+                            name = detected.label,
+                            total = detected.total,
+                            date = Date().toString()
+                        )
+                    }
                 }
             }
         }
