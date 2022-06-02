@@ -29,7 +29,7 @@ import trashissue.rebage.R
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.domain.model.User
 import trashissue.rebage.domain.model.isLoading
-import trashissue.rebage.domain.model.onError
+import trashissue.rebage.domain.model.error
 import trashissue.rebage.presentation.common.component.*
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.signin.component.NavigateToSignUpButton
@@ -70,7 +70,7 @@ fun SignInScreen(
 
     LaunchedEffect(snackbarHostState, signInResult) {
         Timber.i("RESULT $signInResult")
-        signInResult.onError { error ->
+        signInResult.error { error ->
             val message = error.message ?: context.getString(R.string.text_unknown_error)
             snackbarHostState.showSnackbar(message)
         }
@@ -175,6 +175,7 @@ fun SignInScreen(
                 val googleAuthLauncher = rememberGoogleAuthLauncher(
                     onResult = { account ->
                         val idToken = account.idToken
+                        Timber.i("BERHASIL NIH token $idToken" )
                         if (idToken == null) {
                             scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.text_unknown_error)) }
                             return@rememberGoogleAuthLauncher
@@ -182,6 +183,7 @@ fun SignInScreen(
                         authGoogle(idToken)
                     },
                     onError = { error ->
+                        Timber.i("BERHASIL NIH error $error" )
                         val message = error?.message ?: context.getString(R.string.text_unknown_error)
                         scope.launch { snackbarHostState.showSnackbar(message) }
                     },

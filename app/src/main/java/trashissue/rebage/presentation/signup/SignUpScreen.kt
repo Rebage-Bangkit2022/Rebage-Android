@@ -28,7 +28,7 @@ import trashissue.rebage.R
 import trashissue.rebage.domain.model.Result
 import trashissue.rebage.domain.model.User
 import trashissue.rebage.domain.model.isLoading
-import trashissue.rebage.domain.model.onError
+import trashissue.rebage.domain.model.error
 import trashissue.rebage.presentation.common.component.*
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.signup.component.NavigateToSignInButton
@@ -72,7 +72,7 @@ fun SignUpScreen(
     val context = LocalContext.current
 
     LaunchedEffect(snackbarHostState, signUpResult) {
-        signUpResult.onError { error ->
+        signUpResult.error { error ->
             val message = error.message ?: context.getString(R.string.text_unknown_error)
             snackbarHostState.showSnackbar(message)
         }
