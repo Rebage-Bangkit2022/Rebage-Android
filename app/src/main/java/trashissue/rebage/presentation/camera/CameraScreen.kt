@@ -21,7 +21,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.net.toFile
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -31,7 +30,6 @@ import timber.log.Timber
 import trashissue.rebage.R
 import trashissue.rebage.presentation.camera.component.CameraCapture
 import trashissue.rebage.presentation.camera.component.rememberCameraState
-import trashissue.rebage.presentation.common.BitmapUtils
 import trashissue.rebage.presentation.common.component.toast
 import java.io.File
 import java.io.FileOutputStream
@@ -40,30 +38,26 @@ import java.io.OutputStream
 
 @Composable
 @OptIn(ExperimentalPermissionsApi::class)
-fun CameraActivity.CameraScreen() {
+fun CameraScreen(
+    onImageTakenFromCamera: (File, Boolean) -> Unit,
+    onImageTakenFromGallery: (File) -> Unit
+) {
     Box(modifier = Modifier.fillMaxSize()) {
+        val context = LocalContext.current
         val cameraState = rememberCameraState()
         val scope = rememberCoroutineScope()
         var loading by remember { mutableStateOf(false) }
         val permission = rememberPermissionState(permission.CAMERA) { isGranted ->
             if (!isGranted) {
-                toast(R.string.camera_permission, Toast.LENGTH_LONG)
-                openPermissionSettings()
-                finish()
+                context.toast(R.string.camera_permission, Toast.LENGTH_LONG)
+                context.openPermissionSettings()
             }
         }
         val galleryLauncher = rememberGalleryLauncher(
-            onSuccess = { file ->
-                val intent = Intent().apply {
-                    BitmapUtils.reduceSize(file = file, rotate = false)
-                    putExtra(CameraActivity.KEY_IMAGE_RESULT, file)
-                }
-                setResult(CameraActivity.RESULT_SUCCESS, intent)
-                finish()
-            },
+            onSuccess = onImageTakenFromGallery,
             onError = { error ->
-                Timber.e("Error nih ${error?.message}")
-                toast(R.string.text_unknown_error)
+                Timber.e(error)
+                context.toast(R.string.text_unknown_error)
             }
         )
 
@@ -92,13 +86,8 @@ fun CameraActivity.CameraScreen() {
                         loading = true
                         val capturedImage = cameraState.takePicture()
                         val backCamera = cameraState.selector == CameraSelector.DEFAULT_BACK_CAMERA
-                        val intent = Intent().apply {
-                            BitmapUtils.reduceSize(capturedImage, backCamera)
-                            putExtra(CameraActivity.KEY_IMAGE_RESULT, capturedImage)
-                        }
-                        setResult(CameraActivity.RESULT_SUCCESS, intent)
+                        onImageTakenFromCamera(capturedImage, backCamera)
                         loading = false
-                        finish()
                     }
                 },
                 onClickSwitchCamera = {
@@ -116,7 +105,7 @@ fun CameraActivity.CameraScreen() {
     }
 }
 
-private fun CameraActivity.openPermissionSettings() {
+private fun Context.openPermissionSettings() {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
     val uri: Uri = Uri.fromParts("package", packageName, null)
     intent.data = uri
