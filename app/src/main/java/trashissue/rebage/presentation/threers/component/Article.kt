@@ -9,26 +9,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 
 @Composable
 fun Article(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
-    onClick: () -> Unit = {}
+    photo: String?,
+    onClick: () -> Unit = { }
 ) {
     Row(
         modifier = modifier
             .clickable(onClick = onClick)
             .height(100.dp)
     ) {
-        Box(
+        AsyncImage(
+            model = photo,
             modifier = Modifier
                 .size(100.dp)
                 .clip(MaterialTheme.shapes.medium)
-                .background(Color.Gray)
+                .background(Color.Gray),
+            contentDescription = title,
+            contentScale = ContentScale.Crop
         )
         Column(
             modifier = Modifier
