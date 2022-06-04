@@ -5,13 +5,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import trashissue.rebage.data.DefaultArticleRepository
+import trashissue.rebage.data.DefaultDetectionRepository
 import trashissue.rebage.data.DefaultGarbageRepository
 import trashissue.rebage.data.DefaultUserRepository
 import trashissue.rebage.data.local.UserLocalDataSource
 import trashissue.rebage.data.remote.ArticleRemoteDataSource
+import trashissue.rebage.data.remote.DetectionRemoteDataSource
 import trashissue.rebage.data.remote.GarbageRemoteDataSource
 import trashissue.rebage.data.remote.UserRemoteDataSource
 import trashissue.rebage.domain.repository.ArticleRepository
+import trashissue.rebage.domain.repository.DetectionRepository
 import trashissue.rebage.domain.repository.GarbageRepository
 import trashissue.rebage.domain.repository.UserRepository
 import javax.inject.Singleton
@@ -34,13 +37,19 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideGarbageRepository(garbageRemoteDataSource: GarbageRemoteDataSource): GarbageRepository {
-        return DefaultGarbageRepository(garbageRemoteDataSource)
+    fun provideDetectionRepository(detectionRemoteDataSource: DetectionRemoteDataSource): DetectionRepository {
+        return DefaultDetectionRepository(detectionRemoteDataSource)
     }
 
     @Provides
     @Singleton
-    fun provideArticleRepository(garbageRemoteDataSource: ArticleRemoteDataSource): ArticleRepository {
-        return DefaultArticleRepository(garbageRemoteDataSource)
+    fun provideArticleRepository(articleRemoteDataSource: ArticleRemoteDataSource): ArticleRepository {
+        return DefaultArticleRepository(articleRemoteDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGarbageRepository(garbageRemoteDataSource: GarbageRemoteDataSource): GarbageRepository {
+        return DefaultGarbageRepository(garbageRemoteDataSource)
     }
 }
