@@ -1,9 +1,8 @@
 package trashissue.rebage.domain.repository
 
-import trashissue.rebage.domain.model.DetectedGarbage
-import java.io.File
+import trashissue.rebage.domain.model.Garbage
 
 interface GarbageRepository {
 
-    suspend fun detect(file: File): DetectedGarbage
+    suspend fun getGarbage(name: String): Garbage
 }
