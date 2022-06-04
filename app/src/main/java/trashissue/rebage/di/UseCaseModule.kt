@@ -7,6 +7,7 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import trashissue.rebage.R
 import trashissue.rebage.domain.repository.ArticleRepository
+import trashissue.rebage.domain.repository.DetectionRepository
 import trashissue.rebage.domain.repository.GarbageRepository
 import trashissue.rebage.domain.repository.UserRepository
 import trashissue.rebage.domain.usecase.*
@@ -83,8 +84,38 @@ object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun provideDetectGarbageUseCase(garbageRepository: GarbageRepository): DetectGarbageUseCase {
-        return DetectGarbageUseCase(garbageRepository)
+    fun provideDetectGarbageUseCase(
+        userRepository: UserRepository,
+        detectionRepository: DetectionRepository
+    ): DetectGarbageUseCase {
+        return DetectGarbageUseCase(userRepository, detectionRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetDetectionUseCase(
+        userRepository: UserRepository,
+        detectionRepository: DetectionRepository
+    ): GetDetectionUseCase {
+        return GetDetectionUseCase(userRepository, detectionRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideUpdateDetectionUseCase(
+        userRepository: UserRepository,
+        detectionRepository: DetectionRepository
+    ): UpdateDetectionUseCase {
+        return UpdateDetectionUseCase(userRepository, detectionRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideDeleteDetectionUseCase(
+        userRepository: UserRepository,
+        detectionRepository: DetectionRepository
+    ): DeleteDetectionUseCase {
+        return DeleteDetectionUseCase(userRepository, detectionRepository)
     }
 
     @Provides
@@ -97,5 +128,11 @@ object UseCaseModule {
     @ViewModelScoped
     fun provideGetArticleUseCase(articleRepository: ArticleRepository): GetArticleUseCase {
         return GetArticleUseCase(articleRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetGarbageUseCase(garbageRepository: GarbageRepository): GetGarbageUseCase {
+        return GetGarbageUseCase(garbageRepository)
     }
 }
