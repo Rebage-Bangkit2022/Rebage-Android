@@ -1,18 +1,19 @@
 package trashissue.rebage.data.remote.service
 
-import okhttp3.MultipartBody
 import retrofit2.Response
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
+import retrofit2.http.GET
+import retrofit2.http.Path
 import trashissue.rebage.data.remote.payload.Api
-import trashissue.rebage.data.remote.payload.DetectedGarbageResponse
+import trashissue.rebage.data.remote.payload.GarbageResponse
 
 interface GarbageService {
 
-    @POST("/api/detection")
-    @Multipart
-    suspend fun detect(
-        @Part image: MultipartBody.Part
-    ): Response<Api<DetectedGarbageResponse>>
+    @GET("/api/garbage/name/{name}")
+    suspend fun getGarbage(
+        @Path("name")
+        name: String
+    ): Response<Api<GarbageResponse>>
+
+    @GET("/api/garbages")
+    suspend fun getGarbage(): Response<Api<List<GarbageResponse>>>
 }

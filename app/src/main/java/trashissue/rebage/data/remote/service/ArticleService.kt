@@ -13,6 +13,8 @@ interface ArticleService {
     suspend fun getArticles(
         @Query("category")
         category: String?,
+        @Query("garbagecategory")
+        garbageCategory: String?,
         @Query("page")
         page: Int?,
         @Query("size")
