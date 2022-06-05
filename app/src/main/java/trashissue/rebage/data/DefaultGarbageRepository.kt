@@ -13,4 +13,9 @@ class DefaultGarbageRepository(
         val res = garbageRemoteDataSource.getGarbage(name)
         return res.asModel()
     }
+
+    override suspend fun getGarbage(): List<Garbage> {
+        val res = garbageRemoteDataSource.getGarbage()
+        return res.map { it.asModel() }
+    }
 }

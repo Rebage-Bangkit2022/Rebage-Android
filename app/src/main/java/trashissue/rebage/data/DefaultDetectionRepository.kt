@@ -4,6 +4,7 @@ import trashissue.rebage.data.mapper.asModel
 import trashissue.rebage.data.remote.DetectionRemoteDataSource
 import trashissue.rebage.data.remote.payload.UpdateDetectionRequest
 import trashissue.rebage.domain.model.Detection
+import trashissue.rebage.domain.model.DetectionStatistic
 import trashissue.rebage.domain.repository.DetectionRepository
 import java.io.File
 
@@ -16,14 +17,19 @@ class DefaultDetectionRepository(
         return res.map { it.asModel() }
     }
 
-    override suspend fun getDetectedGarbage(token: String): List<Detection> {
-        val res = detectionRemoteDataSource.getDetectedGarbage(token)
+    override suspend fun getDetections(token: String): List<Detection> {
+        val res = detectionRemoteDataSource.getDetections(token)
         return res.map { it.asModel() }
     }
 
-    override suspend fun getDetectedGarbage(token: String, id: Int): Detection {
-        val res = detectionRemoteDataSource.getDetectedGarbage(token, id)
+    override suspend fun getDetection(token: String, id: Int): Detection {
+        val res = detectionRemoteDataSource.getDetection(token, id)
         return res.asModel()
+    }
+
+    override suspend fun getDetectionsStatistic(token: String): List<DetectionStatistic> {
+        val res = detectionRemoteDataSource.getDetectionsStatistic(token)
+        return res.map { it.asModel() }
     }
 
     override suspend fun update(token: String, id: Int, total: Int): Detection {
