@@ -1,21 +1,18 @@
 package trashissue.rebage.domain.usecase
 
-import trashissue.rebage.domain.model.DetectedGarbage
-import trashissue.rebage.domain.model.Result
-import trashissue.rebage.domain.repository.GarbageRepository
+import kotlinx.coroutines.flow.firstOrNull
+import trashissue.rebage.domain.model.Detection
+import trashissue.rebage.domain.repository.DetectionRepository
+import trashissue.rebage.domain.repository.UserRepository
 import java.io.File
 
 class DetectGarbageUseCase(
-    private val garbageRepository: GarbageRepository
-) : FlowUseCase<Result<DetectedGarbage>>(Result.Empty) {
+    private val userRepository: UserRepository,
+    private val detectionRepository: DetectionRepository
+) {
 
-    suspend operator fun invoke(file: File) {
-        emit(Result.Loading)
-        try {
-            val detectedGarbage = garbageRepository.detect(file)
-            emit(Result.Success(detectedGarbage))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
-        }
+    suspend operator fun invoke(file: File): Result<List<Detection>> = runCatching {
+        val user = userRepository.getUser().firstOrNull() ?: throw Exception("Unauthorized")
+        detectionRepository.detect(user.token, file)
     }
 }
