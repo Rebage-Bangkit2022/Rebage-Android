@@ -1,7 +1,9 @@
 package trashissue.rebage.data.mapper
 
 import trashissue.rebage.data.remote.payload.DetectionResponse
+import trashissue.rebage.data.remote.payload.DetectionStatisticResponse
 import trashissue.rebage.domain.model.Detection
+import trashissue.rebage.domain.model.DetectionStatistic
 
 fun DetectionResponse.asModel(): Detection {
     return Detection(
@@ -14,3 +16,11 @@ fun DetectionResponse.asModel(): Detection {
         createdAt = createdAt
     )
 }
+
+fun DetectionStatisticResponse.asModel(): DetectionStatistic {
+    return DetectionStatistic(
+        label = label,
+        total = total
+    )
+}
+
