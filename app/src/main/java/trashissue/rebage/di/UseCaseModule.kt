@@ -102,6 +102,15 @@ object UseCaseModule {
 
     @Provides
     @ViewModelScoped
+    fun provideGetDetectionsStatisticUseCase(
+        userRepository: UserRepository,
+        detectionRepository: DetectionRepository
+    ): GetDetectionsStatisticUseCase {
+        return GetDetectionsStatisticUseCase(userRepository, detectionRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
     fun provideUpdateDetectionUseCase(
         userRepository: UserRepository,
         detectionRepository: DetectionRepository
