@@ -1,6 +1,5 @@
 package trashissue.rebage.presentation.common.component
 
-import android.app.Activity
 import android.content.Intent
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,8 +21,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import timber.log.Timber
 import trashissue.rebage.BuildConfig
 import trashissue.rebage.R
+
 
 @Composable
 fun GoogleOauth(
@@ -48,16 +49,12 @@ fun rememberGoogleAuthLauncher(
     onError: (Exception?) -> Unit
 ): ManagedActivityResultLauncher<Intent, ActivityResult> {
     return rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode != Activity.RESULT_OK) {
-            onError(null)
-            return@rememberLauncherForActivityResult
-        }
-
         val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(result.data)
         try {
             val account = task.getResult(ApiException::class.java)!!
             onResult(account)
         } catch (e: ApiException) {
+            Timber.e(e)
             onError(e)
         }
     }
@@ -68,7 +65,6 @@ fun rememberGoogleSignInClient(
     clientId: String = BuildConfig.AUTH_CLIENT_ID
 ): GoogleSignInClient {
     val context = LocalContext.current
-
     return remember {
         val gso = GoogleSignInOptions
             .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
