@@ -6,16 +6,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import trashissue.rebage.R
-import trashissue.rebage.presentation.common.noRippleClickable
+import trashissue.rebage.presentation.common.component.noRippleClickable
 
 private val DefaultContentPadding = PaddingValues(12.dp)
 
@@ -27,7 +25,6 @@ fun Statistic(
     total: String,
     onClickShowMore: () -> Unit = { },
     contentPadding: PaddingValues = DefaultContentPadding,
-    elevation: Dp = 8.dp
 ) {
     Card(modifier = modifier) {
         Row(
@@ -36,7 +33,6 @@ fun Statistic(
                 .fillMaxWidth()
                 .wrapContentSize(),
         ) {
-            val top3 = remember { data.take(3) }
 
             Column(
                 modifier = Modifier
@@ -52,7 +48,7 @@ fun Statistic(
 
                     Doughnut(
                         width = 16.dp,
-                        data = top3,
+                        data = data,
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(1F)
@@ -76,7 +72,7 @@ fun Statistic(
                     .padding(12.dp)
             ) {
 
-                for (garbage in top3) {
+                for (garbage in data) {
                     GarbageLabel(
                         name = garbage.name,
                         color = garbage.color,
