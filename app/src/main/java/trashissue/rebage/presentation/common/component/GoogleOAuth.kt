@@ -22,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import trashissue.rebage.BuildConfig
 import trashissue.rebage.R
 
 @Composable
@@ -64,7 +65,7 @@ fun rememberGoogleAuthLauncher(
 
 @Composable
 fun rememberGoogleSignInClient(
-    clientId: String = "1011653863710-q5aidgb3k8s6pnnk3pmavkpmmpa2r9no.apps.googleusercontent.com"
+    clientId: String = BuildConfig.AUTH_CLIENT_ID
 ): GoogleSignInClient {
     val context = LocalContext.current
 
