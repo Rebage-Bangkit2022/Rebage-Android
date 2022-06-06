@@ -1,12 +1,11 @@
 package trashissue.rebage.presentation.home.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,11 +23,10 @@ fun Article(
     onClick: (Int) -> Unit = { }
 ) {
     Card(
-        modifier = modifier.wrapContentSize(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.clickable(onClick = { onClick(id) })) {
+        Column(modifier = modifier.clickable(onClick = { onClick(id) })) {
             AsyncImage(
                 model = photo,
                 contentDescription = null,
@@ -36,17 +34,41 @@ fun Article(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp)
-                    .background(Color.Gray)
             )
-            Text(
-                modifier = Modifier.padding(8.dp),
-                text = title,
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+            Box {
+                Text(
+                    text = "\n\n",
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .align(Alignment.CenterStart),
+                    text = title,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
+    }
+}
+
+@Composable
+fun ArticlePlaceholder(
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+        )
+        Text(
+            text = "\n\n",
+            style = MaterialTheme.typography.titleSmall,
+        )
     }
 }
 

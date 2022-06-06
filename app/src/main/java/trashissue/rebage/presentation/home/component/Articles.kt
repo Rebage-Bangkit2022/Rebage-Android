@@ -4,20 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Article
-import trashissue.rebage.domain.model.Result
-import trashissue.rebage.domain.model.empty
-import trashissue.rebage.domain.model.success
+import trashissue.rebage.presentation.common.component.shimmer
 import trashissue.rebage.presentation.theme3.RebageTheme3
 
 private val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
@@ -26,7 +24,7 @@ private val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 fun Articles(
     modifier: Modifier = Modifier,
     label: String,
-    articles: Result<List<Article>>,
+    articles: List<Article>,
     onClickArticle: (Int) -> Unit
 ) {
     Column(
@@ -52,24 +50,13 @@ fun Articles(
                 color = MaterialTheme.colorScheme.primary,
             )
         }
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = ContentPadding
-        ) {
-            articles.empty {
-                item {
-                    // TODO: Please create shimmer animation
-                    Article(
-                        modifier = Modifier
-                            .width(240.dp)
-                            .alpha(0F),
-                        id = 0,
-                        title = " ",
-                        photo = null
-                    )
-                }
-            }
-            articles.success { articles ->
+        if (articles.isEmpty()) {
+            ArticlesPlaceholder()
+        } else {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = ContentPadding
+            ) {
                 items(items = articles, key = { it.id }) { article ->
                     Article(
                         modifier = Modifier.width(240.dp),
@@ -84,25 +71,54 @@ fun Articles(
     }
 }
 
+@Composable
+fun ArticlesPlaceholder(
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .wrapContentSize(align = Alignment.TopStart, unbounded = true)
+            .padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        repeat(3) {
+            ArticlePlaceholder(
+                modifier = Modifier
+                    .width(240.dp)
+                    .shimmer(
+                        shape = MaterialTheme.shapes.medium,
+                        startColor = CardDefaults
+                            .cardColors()
+                            .containerColor(enabled = true)
+                            .value,
+                        endColor = CardDefaults
+                            .cardColors()
+                            .containerColor(enabled = true)
+                            .value.copy(alpha = 0.2F),
+                    )
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ArticlesPreview() {
     RebageTheme3 {
         Articles(
             label = stringResource(R.string.text_all_articles),
-            articles = Result.Success(
-                (0..10).map {
-                    Article(
-                        id = 1,
-                        title = "title $it",
-                        body = "",
-                        createdAt = "",
-                        updatedAt = "",
-                        source = "",
-                        photo = listOf("https://i.pinimg.com/564x/d7/f8/5e/d7f85e8343547676774a4ffdffc96143.jpg"),
-                        author = "",
-                    )
-                }),
+            articles = (0..10).map {
+                Article(
+                    id = 1,
+                    title = "title $it",
+                    body = "",
+                    createdAt = "",
+                    updatedAt = "",
+                    source = "",
+                    photo = listOf("https://i.pinimg.com/564x/d7/f8/5e/d7f85e8343547676774a4ffdffc96143.jpg"),
+                    author = "",
+                )
+            },
             onClickArticle = { }
         )
     }
