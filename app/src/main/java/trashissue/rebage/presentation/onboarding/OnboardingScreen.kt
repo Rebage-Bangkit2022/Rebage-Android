@@ -55,6 +55,7 @@ fun OnboardingScreen(
     ) {
         TopBar(
             onClickSkip = {
+                onboarding(true)
                 navController.navigate(Route.SignIn())
             },
             text = stringResource(R.string.text_skip)
