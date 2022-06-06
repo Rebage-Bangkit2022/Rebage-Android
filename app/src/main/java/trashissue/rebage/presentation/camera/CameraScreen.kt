@@ -30,7 +30,7 @@ import timber.log.Timber
 import trashissue.rebage.R
 import trashissue.rebage.presentation.camera.component.CameraCapture
 import trashissue.rebage.presentation.camera.component.rememberCameraState
-import trashissue.rebage.presentation.common.component.toast
+import trashissue.rebage.presentation.common.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
