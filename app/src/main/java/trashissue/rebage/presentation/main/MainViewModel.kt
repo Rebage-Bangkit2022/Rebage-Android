@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import trashissue.rebage.domain.usecase.GetUserUseCase
 import trashissue.rebage.domain.usecase.OnboardingUseCase
 import javax.inject.Inject
@@ -16,8 +16,8 @@ class MainViewModel @Inject constructor(
     getUserUseCase: GetUserUseCase
 ) : ViewModel() {
     val isAlreadyOnboarding = onboardingUseCase.invoke()
-        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
     val isLoggedIn = getUserUseCase()
         .map { it != null }
-        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 }

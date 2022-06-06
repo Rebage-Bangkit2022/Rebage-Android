@@ -23,7 +23,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
 import trashissue.rebage.R
 
@@ -36,8 +36,8 @@ val BotNavMenus = listOf(
 
 @Composable
 fun Main(
-    isAlreadyOnboardingFlow: SharedFlow<Boolean>,
-    isLoggedInFlow: SharedFlow<Boolean?>
+    isAlreadyOnboardingFlow: StateFlow<Boolean?>,
+    isLoggedInFlow: StateFlow<Boolean?>
 ) {
     Column(
         modifier = Modifier
@@ -59,8 +59,8 @@ fun Main(
 
         Box(modifier = Modifier.weight(1F)) {
             CompositionLocalProvider(LocalNavController provides navController) {
-                val isAlreadyOnboarding by isAlreadyOnboardingFlow.collectAsState(null)
-                val isLoggedIn by isLoggedInFlow.collectAsState(null)
+                val isAlreadyOnboarding by isAlreadyOnboardingFlow.collectAsState()
+                val isLoggedIn by isLoggedInFlow.collectAsState()
 
                 SideEffect {
                     Timber.i("IS LOGGED IN $isLoggedIn")
