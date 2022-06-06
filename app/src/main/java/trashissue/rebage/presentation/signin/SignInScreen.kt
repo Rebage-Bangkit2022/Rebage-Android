@@ -20,16 +20,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import trashissue.rebage.R
-import trashissue.rebage.domain.model.Result
-import trashissue.rebage.domain.model.User
-import trashissue.rebage.domain.model.isLoading
-import trashissue.rebage.domain.model.error
 import trashissue.rebage.presentation.common.component.*
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.signin.component.NavigateToSignUpButton
@@ -40,45 +36,49 @@ fun SignInScreen(
     navController: NavHostController,
     viewModel: SignInViewModel = hiltViewModel()
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.snackbar.collectLatest(snackbarHostState::showSnackbar)
+    }
+
     SignInScreen(
-        navController = navController,
-        formStateFlow = viewModel.formState,
-        isEnabledFlow = viewModel.isEnabled,
-        onEmailChange = viewModel::onEmailChange,
-        onPasswordChange = viewModel::onPasswordChange,
-        signInResultFlow = viewModel.signInResult,
-        signIn = viewModel::signIn,
-        authGoogle = viewModel::authGoogle
+        snackbarHostState = snackbarHostState,
+        onChangeEmail = viewModel::changeEmail,
+        onChangePassword = viewModel::changePassword,
+        emailFieldState = viewModel.emailField,
+        passwordFieldState = viewModel.passwordField,
+        fulfilledState = viewModel.fulfilled,
+        loadingState = viewModel.loading,
+        onClickButtonSignIn = viewModel::signIn,
+        onAuthGoogle = viewModel::authGoogle,
+        onNavigateToSignUpScreen = {
+            navController.navigate(Route.SignUp()) {
+                popUpTo(Route.SignIn()) { inclusive = true }
+            }
+        },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    navController: NavHostController,
-    formStateFlow: StateFlow<FormState>,
-    isEnabledFlow: StateFlow<Boolean>,
-    onEmailChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
-    signInResultFlow: StateFlow<Result<User>>,
-    signIn: () -> Unit,
-    authGoogle: (String) -> Unit
+    snackbarHostState: SnackbarHostState,
+    onChangeEmail: (String) -> Unit,
+    onChangePassword: (String) -> Unit,
+    emailFieldState: StateFlow<Pair<String, Int?>>,
+    passwordFieldState: StateFlow<Pair<String, Int?>>,
+    fulfilledState: StateFlow<Boolean>,
+    loadingState: StateFlow<Boolean>,
+    onClickButtonSignIn: () -> Unit,
+    onAuthGoogle: (String?) -> Unit,
+    onNavigateToSignUpScreen: () -> Unit
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val signInResult by signInResultFlow.collectAsState()
-    val context = LocalContext.current
-
-    LaunchedEffect(snackbarHostState, signInResult) {
-        Timber.i("RESULT $signInResult")
-        signInResult.error { error ->
-            val message = error.message ?: context.getString(R.string.text_unknown_error)
-            snackbarHostState.showSnackbar(message)
-        }
-    }
-
     Scaffold(
         modifier = Modifier.systemBarsPadding(),
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -86,6 +86,7 @@ fun SignInScreen(
                 .fillMaxSize()
         ) {
             val scrollState = rememberScrollState()
+            val isLoading by loadingState.collectAsState()
 
             Column(
                 modifier = Modifier
@@ -95,26 +96,27 @@ fun SignInScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
+                    modifier = Modifier.size(64.dp),
                     painter = painterResource(R.drawable.ic_rebage),
                     contentDescription = null,
-                    modifier = Modifier.size(64.dp)
                 )
                 Text(
+                    modifier = Modifier.padding(vertical = 12.dp),
                     text = stringResource(R.string.text_welcome),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(vertical = 12.dp),
                     color = MaterialTheme.colorScheme.primary
                 )
 
-                val formState by formStateFlow.collectAsState()
+                val emailField by emailFieldState.collectAsState()
+                val (email, emailError) = emailField
 
                 OutlinedTextField(
-                    value = formState.email,
-                    onValueChange = onEmailChange,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
+                    value = email,
+                    onValueChange = onChangeEmail,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     trailingIcon = {
                         Icon(
@@ -127,33 +129,33 @@ fun SignInScreen(
                     }
                 )
                 TextError(
-                    textRes = formState.emailErrorMessage,
+                    textRes = emailError,
                     modifier = Modifier.align(Alignment.Start)
                 )
+
+                val passwordField by passwordFieldState.collectAsState()
+                val (password, passwordError) = passwordField
+
                 OutlinedTextFieldPassword(
-                    value = formState.password,
-                    onValueChange = onPasswordChange,
+                    value = password,
+                    onValueChange = onChangePassword,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp)
                 )
                 TextError(
-                    textRes = formState.passwordErrorMessage,
-                    modifier = Modifier.align(Alignment.Start)
-                )
-                TextError(
-                    textRes = formState.confirmPasswordErrorMessage,
+                    textRes = passwordError,
                     modifier = Modifier.align(Alignment.Start)
                 )
 
-                val isEnabled by isEnabledFlow.collectAsState()
+                val isFulfilled by fulfilledState.collectAsState()
 
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
-                    enabled = isEnabled,
-                    onClick = { signIn() }
+                    enabled = isFulfilled && !isLoading,
+                    onClick = onClickButtonSignIn
                 ) {
                     Text(text = stringResource(R.string.text_sign_in))
                 }
@@ -170,21 +172,17 @@ fun SignInScreen(
                     )
                 }
 
+                val context = LocalContext.current
                 val scope = rememberCoroutineScope()
                 val googleSignInClient = rememberGoogleSignInClient()
                 val googleAuthLauncher = rememberGoogleAuthLauncher(
-                    onResult = { account ->
-                        val idToken = account.idToken
-                        Timber.i("BERHASIL NIH token $idToken" )
-                        if (idToken == null) {
-                            scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.text_unknown_error)) }
-                            return@rememberGoogleAuthLauncher
-                        }
-                        authGoogle(idToken)
+                    onResult = {
+                        onAuthGoogle(it.idToken)
                     },
                     onError = { error ->
-                        Timber.i("BERHASIL NIH error $error" )
-                        val message = error?.message ?: context.getString(R.string.text_unknown_error)
+                        Timber.e(error)
+                        val message =
+                            error?.message ?: context.getString(R.string.text_unknown_error)
                         scope.launch { snackbarHostState.showSnackbar(message) }
                     },
                 )
@@ -197,15 +195,11 @@ fun SignInScreen(
                 )
                 NavigateToSignUpButton(
                     modifier = Modifier.padding(vertical = 32.dp),
-                    onClick = {
-                        navController.navigate(Route.SignUp()) {
-                            popUpTo(Route.SignIn()) { inclusive = true }
-                        }
-                    }
+                    onClick = onNavigateToSignUpScreen
                 )
             }
 
-            if (signInResult.isLoading) {
+            if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
@@ -217,14 +211,16 @@ fun SignInScreen(
 fun SignInScreenPreview() {
     RebageTheme3 {
         SignInScreen(
-            navController = rememberNavController(),
-            formStateFlow = MutableStateFlow(FormState()),
-            isEnabledFlow = MutableStateFlow(true),
-            onEmailChange = { },
-            onPasswordChange = { },
-            signInResultFlow = MutableStateFlow(Result.NoData()),
-            signIn = { },
-            authGoogle = { }
+            snackbarHostState = remember { SnackbarHostState() },
+            onChangeEmail = { },
+            onChangePassword = { },
+            emailFieldState = MutableStateFlow("tubagus@gmail.com" to null),
+            passwordFieldState = MutableStateFlow("secret" to null),
+            fulfilledState = MutableStateFlow(true),
+            loadingState = MutableStateFlow(true),
+            onClickButtonSignIn = { },
+            onAuthGoogle = { },
+            onNavigateToSignUpScreen = { }
         )
     }
 }

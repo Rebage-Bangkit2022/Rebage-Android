@@ -6,8 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import trashissue.rebage.domain.model.Result
-import trashissue.rebage.domain.model.isLoading
+import timber.log.Timber
 import trashissue.rebage.domain.usecase.AuthGoogleUseCase
 import trashissue.rebage.domain.usecase.SignInUseCase
 import trashissue.rebage.domain.usecase.ValidateEmailUseCase
@@ -22,50 +21,61 @@ class SignInViewModel @Inject constructor(
     private val authGoogleUseCase: AuthGoogleUseCase,
     private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    private var _formState = MutableStateFlow(FormState())
-    val formState = _formState.asStateFlow()
-    val signInResult = signInUseCase.result
-    val isEnabled = combine(formState, signInResult) { (_formState, _signInResult) ->
-        val formState = _formState as FormState
-        val signInResult = _signInResult as Result<*>
-        formState.isNotBlank && formState.isNotError && !signInResult.isLoading
-    }
-        .distinctUntilChanged()
-        .catch { emit(false) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+    private val _emailField = MutableStateFlow<Pair<String, Int?>>("" to null)
+    val emailField = _emailField.asStateFlow()
 
-    fun onEmailChange(email: String) = viewModelScope.launch {
-        val errorMessage = validateEmailUseCase(email)
-        val formState = formState.value.copy(
-            email = email,
-            emailErrorMessage = errorMessage
-        )
-        _formState.emit(formState)
+    private val _passwordField = MutableStateFlow<Pair<String, Int?>>("" to null)
+    val passwordField = _passwordField.asStateFlow()
+
+    val fulfilled = combine(_emailField, _passwordField) { (email, password) ->
+        email.first.isNotBlank()
+                && email.second == null
+                && password.first.isNotBlank()
+                && password.second == null
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
+    private val _loading = MutableStateFlow(false)
+    val loading = _loading.asStateFlow()
+
+    private val _snackbar = MutableSharedFlow<String>()
+    val snackbar = _snackbar.asSharedFlow()
+
+    fun changeEmail(email: String) {
+        val error = validateEmailUseCase(email)
+        _emailField.value = email to error
     }
 
-    fun onPasswordChange(password: String) {
-        viewModelScope.launch {
-            val errorMessage = validatePasswordUseCase(password)
-            val formState =
-                formState.value.copy(
-                    password = password,
-                    passwordErrorMessage = errorMessage
-                )
-            _formState.emit(formState)
-        }
+    fun changePassword(password: String) {
+        val error = validatePasswordUseCase(password)
+        _passwordField.value = password to error
     }
 
     fun signIn() {
         viewModelScope.launch(dispatcher) {
-            if (!isEnabled.value) return@launch
-            val formState = formState.value
-            signInUseCase(formState.email, formState.password)
+            if (!fulfilled.value) return@launch
+            _loading.value = true
+            val email = _emailField.value.first
+            val password = _passwordField.value.first
+            signInUseCase.invoke(email, password).onFailure { e ->
+                Timber.e(e)
+                _snackbar.emit(e.message ?: "Failed to sign in. Try again later")
+            }
+            _loading.value = false
         }
     }
 
-    fun authGoogle(idToken: String) {
+    fun authGoogle(token: String?) {
         viewModelScope.launch(dispatcher) {
-            authGoogleUseCase(idToken)
+            if (token.isNullOrBlank()) {
+                _snackbar.emit("Token null is not allowed")
+                return@launch
+            }
+            _loading.value = true
+            authGoogleUseCase(token).onFailure { e ->
+                Timber.e(e)
+                _snackbar.emit(e.message ?: "Failed to sign in. Try again later")
+            }
+            _loading.value = false
         }
     }
 }

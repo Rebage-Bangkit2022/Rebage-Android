@@ -20,15 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import trashissue.rebage.R
-import trashissue.rebage.domain.model.Result
-import trashissue.rebage.domain.model.User
-import trashissue.rebage.domain.model.isLoading
-import trashissue.rebage.domain.model.error
 import trashissue.rebage.presentation.common.component.*
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.signup.component.NavigateToSignInButton
@@ -39,48 +35,57 @@ fun SignUpScreen(
     navController: NavHostController,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.snackbar.collectLatest(snackbarHostState::showSnackbar)
+    }
+
     SignUpScreen(
-        navController = navController,
-        formStateFlow = viewModel.formState,
-        isEnabledFlow = viewModel.isEnabled,
-        onNameChange = viewModel::onNameChange,
-        onEmailChange = viewModel::onEmailChange,
-        onPasswordChange = viewModel::onPasswordChange,
-        onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
-        signUpResultFlow = viewModel.signUpResult,
-        signUp = viewModel::signUp,
-        authGoogle = viewModel::authGoogle
+        snackbarHostState = snackbarHostState,
+        onChangeEmail = viewModel::changeName,
+        onChangeName = viewModel::changeEmail,
+        onChangePassword = viewModel::changePassword,
+        onChangeConfirmPassword = viewModel::changeConfirmPassword,
+        nameFieldState = viewModel.nameField,
+        emailFieldState = viewModel.emailField,
+        passwordFieldState = viewModel.passwordField,
+        confirmPasswordFieldState = viewModel.confirmPasswordField,
+        fulfilledState = viewModel.fulfilled,
+        loadingState = viewModel.loading,
+        onClickButtonSignUp = viewModel::signUp,
+        onAuthGoogle = viewModel::authGoogle,
+        onNavigateToSignInScreen = {
+            navController.navigate(Route.SignUp()) {
+                popUpTo(Route.SignIn()) { inclusive = true }
+            }
+        },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    navController: NavHostController,
-    formStateFlow: StateFlow<FormState>,
-    isEnabledFlow: StateFlow<Boolean>,
-    onNameChange: (String) -> Unit,
-    onEmailChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
-    onConfirmPasswordChange: (String) -> Unit,
-    signUpResultFlow: StateFlow<Result<User>>,
-    signUp: () -> Unit,
-    authGoogle: (String) -> Unit
+    snackbarHostState: SnackbarHostState,
+    onChangeName: (String) -> Unit,
+    onChangeEmail: (String) -> Unit,
+    onChangePassword: (String) -> Unit,
+    onChangeConfirmPassword: (String) -> Unit,
+    nameFieldState: StateFlow<Pair<String, Int?>>,
+    emailFieldState: StateFlow<Pair<String, Int?>>,
+    passwordFieldState: StateFlow<Pair<String, Int?>>,
+    confirmPasswordFieldState: StateFlow<Pair<String, Int?>>,
+    fulfilledState: StateFlow<Boolean>,
+    loadingState: StateFlow<Boolean>,
+    onClickButtonSignUp: () -> Unit,
+    onAuthGoogle: (String?) -> Unit,
+    onNavigateToSignInScreen: () -> Unit
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-    val signUpResult by signUpResultFlow.collectAsState()
-    val context = LocalContext.current
-
-    LaunchedEffect(snackbarHostState, signUpResult) {
-        signUpResult.error { error ->
-            val message = error.message ?: context.getString(R.string.text_unknown_error)
-            snackbarHostState.showSnackbar(message)
-        }
-    }
-
     Scaffold(
         modifier = Modifier.systemBarsPadding(),
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -88,6 +93,8 @@ fun SignUpScreen(
                 .fillMaxSize()
         ) {
             val scrollState = rememberScrollState()
+            val isLoading by loadingState.collectAsState()
+
             Column(
                 modifier = Modifier
                     .verticalScroll(scrollState)
@@ -108,28 +115,34 @@ fun SignUpScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
 
-                val formState by formStateFlow.collectAsState()
+                val nameField by nameFieldState.collectAsState()
+                val (name, nameError) = nameField
 
                 OutlinedTextField(
-                    value = formState.name,
-                    onValueChange = onNameChange,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
+                    value = name,
+                    onValueChange = onChangeName,
                     label = {
                         Text(text = stringResource(R.string.text_name))
-                    }
+                    },
+                    maxLines = 1
                 )
                 TextError(
-                    textRes = formState.nameErrorMessage,
+                    textRes = nameError,
                     modifier = Modifier.align(Alignment.Start)
                 )
+
+                val emailField by emailFieldState.collectAsState()
+                val (email, emailError) = emailField
+
                 OutlinedTextField(
-                    value = formState.email,
-                    onValueChange = onEmailChange,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
+                    value = email,
+                    onValueChange = onChangeEmail,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     trailingIcon = {
                         Icon(
@@ -139,44 +152,53 @@ fun SignUpScreen(
                     },
                     label = {
                         Text(text = stringResource(R.string.text_email))
-                    }
+                    },
+                    maxLines = 1
                 )
                 TextError(
-                    textRes = formState.emailErrorMessage,
+                    textRes = emailError,
                     modifier = Modifier.align(Alignment.Start)
                 )
+
+                val passwordField by passwordFieldState.collectAsState()
+                val (password, passwordError) = passwordField
+
                 OutlinedTextFieldPassword(
-                    value = formState.password,
-                    onValueChange = onPasswordChange,
+                    value = password,
+                    onValueChange = onChangePassword,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp)
                 )
                 TextError(
-                    textRes = formState.passwordErrorMessage,
+                    textRes = passwordError,
                     modifier = Modifier.align(Alignment.Start)
                 )
+
+                val confirmPasswordField by confirmPasswordFieldState.collectAsState()
+                val (confirmPassword, confirmPasswordError) = confirmPasswordField
+
                 OutlinedTextFieldPassword(
-                    value = formState.confirmPassword,
-                    onValueChange = onConfirmPasswordChange,
+                    value = confirmPassword,
+                    onValueChange = onChangeConfirmPassword,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
                     text = stringResource(R.string.text_confirm_password)
                 )
                 TextError(
-                    textRes = formState.confirmPasswordErrorMessage,
+                    textRes = confirmPasswordError,
                     modifier = Modifier.align(Alignment.Start)
                 )
 
-                val isEnabled by isEnabledFlow.collectAsState()
+                val isFulfilled by fulfilledState.collectAsState()
 
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
-                    enabled = isEnabled,
-                    onClick = { signUp() }
+                    enabled = isFulfilled && !isLoading,
+                    onClick = onClickButtonSignUp
                 ) {
                     Text(text = stringResource(R.string.text_sign_up))
                 }
@@ -193,16 +215,12 @@ fun SignUpScreen(
                     )
                 }
 
+                val context = LocalContext.current
                 val scope = rememberCoroutineScope()
                 val googleSignInClient = rememberGoogleSignInClient()
                 val googleAuthLauncher = rememberGoogleAuthLauncher(
                     onResult = { account ->
-                        val idToken = account.idToken
-                        if (idToken == null) {
-                            scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.text_unknown_error)) }
-                            return@rememberGoogleAuthLauncher
-                        }
-                        authGoogle(idToken)
+                        onAuthGoogle(account.idToken)
                     },
                     onError = { error ->
                         val message =
@@ -219,15 +237,11 @@ fun SignUpScreen(
                 )
                 NavigateToSignInButton(
                     modifier = Modifier.padding(vertical = 32.dp),
-                    onClick = {
-                        navController.navigate(Route.SignIn()) {
-                            popUpTo(Route.SignUp()) { inclusive = true }
-                        }
-                    }
+                    onClick = onNavigateToSignInScreen
                 )
             }
 
-            if (signUpResult.isLoading) {
+            if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
@@ -239,16 +253,20 @@ fun SignUpScreen(
 fun SignUpScreenPreview() {
     RebageTheme3 {
         SignUpScreen(
-            navController = rememberNavController(),
-            formStateFlow = MutableStateFlow(FormState()),
-            isEnabledFlow = MutableStateFlow(true),
-            onNameChange = { },
-            onEmailChange = { },
-            onPasswordChange = { },
-            onConfirmPasswordChange = {},
-            signUpResultFlow = MutableStateFlow(Result.NoData()),
-            signUp = { },
-            authGoogle = { }
+            snackbarHostState = remember { SnackbarHostState() },
+            onChangeName = { },
+            onChangeEmail = { },
+            onChangePassword = { },
+            onChangeConfirmPassword = { },
+            nameFieldState = MutableStateFlow("tubagus" to null),
+            emailFieldState = MutableStateFlow("tubagus@gmail.com" to null),
+            passwordFieldState = MutableStateFlow("secret" to null),
+            confirmPasswordFieldState = MutableStateFlow("secret" to null),
+            fulfilledState = MutableStateFlow(true),
+            loadingState = MutableStateFlow(true),
+            onClickButtonSignUp = { },
+            onAuthGoogle = { },
+            onNavigateToSignInScreen = { }
         )
     }
 }
