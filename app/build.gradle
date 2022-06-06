@@ -28,11 +28,13 @@ android {
         debug {
             buildConfigField "String", "BACKEND_BASE_URL", "\"${properties.getProperty('BACKEND_BASE_URL')}\""
             buildConfigField "String", "AUTH_CLIENT_ID", "\"${properties.getProperty('AUTH_CLIENT_ID')}\""
+            buildConfigField "String", "GARBAGE_BANK_MAP_KEY", "\"${properties.getProperty('GARBAGE_BANK_MAP_KEY')}\""
             minifyEnabled false
         }
         release {
             buildConfigField "String", "BACKEND_BASE_URL", "\"${properties.getProperty('BACKEND_BASE_URL')}\""
             buildConfigField "String", "AUTH_CLIENT_ID", "\"${properties.getProperty('AUTH_CLIENT_ID')}\""
+            buildConfigField "String", "GARBAGE_BANK_MAP_KEY", "\"${properties.getProperty('GARBAGE_BANK_MAP_KEY')}\""
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
