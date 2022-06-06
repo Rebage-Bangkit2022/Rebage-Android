@@ -9,154 +9,156 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import trashissue.rebage.R
-import trashissue.rebage.domain.model.Result
-import trashissue.rebage.domain.model.empty
-import trashissue.rebage.domain.model.error
-import trashissue.rebage.domain.model.success
+import trashissue.rebage.domain.model.Detection
 import trashissue.rebage.presentation.camera.CameraActivity
 import trashissue.rebage.presentation.detection.component.AddGarbage
-import trashissue.rebage.presentation.detection.component.BoundingBoxScaffold
+import trashissue.rebage.presentation.detection.component.PreviewDetectionDialog
 import trashissue.rebage.presentation.detection.component.ScannedGarbage
-import trashissue.rebage.presentation.detection.component.rememberDetectionScaffoldState
+import trashissue.rebage.presentation.detection.component.TopAppBar
 import trashissue.rebage.presentation.main.Route
 import java.io.File
-import java.util.*
 
 private val ContentPadding = PaddingValues(16.dp)
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DetectionScreen(
     navController: NavHostController,
-    viewModel: DetectionViewModel = hiltViewModel()
+    viewModel: DetectionViewModel = hiltViewModel(),
 ) {
-    val detectionScaffoldState = rememberDetectionScaffoldState()
     val snackbarHostState = remember { SnackbarHostState() }
-    var firstPreview by rememberSaveable { mutableStateOf(true) }
 
-    BoundingBoxScaffold(
+    LaunchedEffect(Unit) {
+        viewModel.snackbar.collectLatest(snackbarHostState::showSnackbar)
+    }
+
+    DetectionScreen(
+        snackbarHostState = snackbarHostState,
+        detectionsState = viewModel.detections,
+        previewState = viewModel.preview,
+        loadingState = viewModel.loading,
+        onDetect = viewModel::detect,
+        onUpdateDetection = viewModel::update,
+        onDeleteDetection = viewModel::delete,
+        onPreview = viewModel::showPreview,
+        onClosePreview = viewModel::deletePreview,
+        onNavigateToThreeRs = { id ->
+            navController.navigate(Route.ThreeRs(id))
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+fun DetectionScreen(
+    snackbarHostState: SnackbarHostState,
+    detectionsState: StateFlow<List<Detection>>,
+    previewState: StateFlow<List<Detection>>,
+    loadingState: StateFlow<Boolean>,
+    onDetect: (File) -> Unit,
+    onUpdateDetection: (Int, Int) -> Unit,
+    onDeleteDetection: (Int) -> Unit,
+    onPreview: (List<Detection>) -> Unit,
+    onClosePreview: () -> Unit,
+    onNavigateToThreeRs: (Int) -> Unit
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val cameraLauncher = rememberCameraLauncher(
+        onSuccess = onDetect,
+        onFailed = {
+            scope.launch { snackbarHostState.showSnackbar("Failed to take picture") }
+        }
+    )
+
+    Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        state = detectionScaffoldState,
         topBar = {
-            SmallTopAppBar(
-                title = {
-                    Text(text = stringResource(R.string.text_detection))
-                },
-                actions = {
-                    val context = LocalContext.current
-                    val cameraLauncher = rememberCameraLauncher(
-                        onSuccess = { file ->
-                            viewModel.detectGarbage(file)
-                            firstPreview = true
-                        },
-                        onFailed = { }
-                    )
+            val isLoading by loadingState.collectAsState()
 
-                    TextButton(
-                        onClick = {
-                            val intent = Intent(context, CameraActivity::class.java)
-                            cameraLauncher.launch(intent)
-                        },
-                        colors = ButtonDefaults.textButtonColors()
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.CameraAlt,
-                            contentDescription = stringResource(R.string.cd_add_manually)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = stringResource(R.string.text_scan))
-                    }
+            TopAppBar(
+                enabledCameraScan = !isLoading,
+                onClickCameraScan = {
+                    val intent = Intent(context, CameraActivity::class.java)
+                    cameraLauncher.launch(intent)
                 }
             )
         }
     ) { innerPadding ->
-        val context = LocalContext.current
-        val detectGarbageResult by viewModel.detectGarbageResult.collectAsState(Result.Empty)
-        val scope = rememberCoroutineScope()
-
-        LaunchedEffect(detectGarbageResult) {
-            detectGarbageResult.empty { detectionScaffoldState.isLoading = it }
-            detectGarbageResult.success {
-                if (firstPreview) {
-                    detectionScaffoldState.showPreview = Result.Success(it)
-                }
-                detectionScaffoldState.isLoading = false
-                firstPreview = false
-            }
-            detectGarbageResult.error {
-                scope.launch {
-                    val message = it.message ?: context.getString(R.string.text_unknown_error)
-                    snackbarHostState.showSnackbar(message)
-                    detectionScaffoldState.isLoading = false
-                }
-            }
-        }
-
-        Column(
+        Box(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            detectGarbageResult.success { detectedGarbage ->
-                val detectedGarbageItems = remember(detectedGarbage) { detectedGarbage.groupByLabel() }
+            val detections by detectionsState.collectAsState()
 
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = ContentPadding
-                ) {
-                    item {
-                        var addItemMode by rememberSaveable { mutableStateOf(false) }
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = ContentPadding
+            ) {
+                item {
+                    var isAddItemMode by rememberSaveable { mutableStateOf(false) }
 
-                        if (addItemMode) {
-                            AddGarbage(onCancel = { addItemMode = false })
-                        } else {
-                            OutlinedButton(
-                                onClick = { addItemMode = true },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(text = "Add item")
-                            }
+                    if (isAddItemMode) {
+                        AddGarbage(onCancel = { isAddItemMode = false })
+                    } else {
+                        OutlinedButton(
+                            onClick = { isAddItemMode = true },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = "Add item")
                         }
                     }
-
-                    items(items = detectedGarbageItems) { detected ->
-                        ScannedGarbage(
-                            modifier = Modifier.animateItemPlacement(),
-                            onClick = {
-                                val route = Route.ThreeRs(detected.label, detected.image)
-                                navController.navigate(route)
-                            },
-                            image = detected.image,
-                            name = detected.label,
-                            total = detected.total,
-                            date = Date().toString()
-                        )
-                    }
                 }
+                items(items = detections, key = { it.id }) { detection ->
+                    ScannedGarbage(
+                        modifier = Modifier.animateItemPlacement(),
+                        onClickCard = { onNavigateToThreeRs(detection.id) },
+                        onClickButtonSave = { onUpdateDetection(detection.id, it) },
+                        onClickButtonDelete = { onDeleteDetection(detection.id) },
+                        onClickImage = { onPreview(listOf(detection)) },
+                        image = detection.image,
+                        name = detection.label,
+                        total = detection.total,
+                        date = detection.createdAt
+                    )
+                }
+            }
+
+            val preview by previewState.collectAsState()
+            val isLoading by loadingState.collectAsState()
+
+            if (preview.isNotEmpty()) {
+                PreviewDetectionDialog(
+                    onClosePreview = onClosePreview,
+                    detections = preview
+                )
+            }
+
+            if (isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
     }
 }
 
 @Composable
-fun rememberCameraLauncher(
+private fun rememberCameraLauncher(
     onFailed: () -> Unit = { },
     onSuccess: (File) -> Unit = { }
 ): ManagedActivityResultLauncher<Intent, ActivityResult> {
