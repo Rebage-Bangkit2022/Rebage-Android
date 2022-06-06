@@ -14,9 +14,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.User
 import trashissue.rebage.presentation.common.component.rememberGoogleSignInClient
@@ -30,19 +30,27 @@ fun ProfileScreen(
     navController: NavHostController,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.snackbar.collectLatest(snackbarHostState::showSnackbar)
+    }
+
     ProfileScreen(
-        navController = navController,
-        userFlow = viewModel.user,
-        signOut = viewModel::signOut,
+        snackbarHostState = snackbarHostState,
+        userState = viewModel.user,
+        onClickButtonSignOut = viewModel::signOut,
+        onNavigateToFavoriteArticleScreen = { navController.navigate(Route.FavoriteArticle()) }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    navController: NavHostController,
-    userFlow: StateFlow<User?>,
-    signOut: () -> Unit
+    snackbarHostState: SnackbarHostState,
+    userState: StateFlow<User?>,
+    onClickButtonSignOut: () -> Unit,
+    onNavigateToFavoriteArticleScreen: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier
@@ -62,7 +70,7 @@ fun ProfileScreen(
                     IconButton(
                         onClick = {
                             googleSignInClient.signOut()
-                            signOut()
+                            onClickButtonSignOut()
                         }
                     ) {
                         Icon(
@@ -72,6 +80,9 @@ fun ProfileScreen(
                     }
                 }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         }
     ) { innerPadding ->
         Column(
@@ -80,7 +91,7 @@ fun ProfileScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val user by userFlow.collectAsState()
+            val user by userState.collectAsState()
 
             Photo(
                 modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
@@ -118,9 +129,7 @@ fun ProfileScreen(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(),
-                onClick = {
-                    navController.navigate(Route.FavoriteArticle())
-                },
+                onClick = onNavigateToFavoriteArticleScreen,
                 text = "Favorite Article"
             )
             ProfileMenuItem(
@@ -133,9 +142,7 @@ fun ProfileScreen(
                     Switch(
                         modifier = Modifier.height(24.dp),
                         checked = darkTheme,
-                        onCheckedChange = {
-                            darkTheme = !darkTheme
-                        }
+                        onCheckedChange = { darkTheme = !darkTheme }
                     )
                 }
             )
@@ -148,9 +155,10 @@ fun ProfileScreen(
 fun ProfileScreenPreview() {
     RebageTheme3 {
         ProfileScreen(
-            navController = rememberNavController(),
-            userFlow = MutableStateFlow(User(1, "bagus", "bagus@gmail.com", null, "")),
-            signOut = { }
+            snackbarHostState = remember { SnackbarHostState() },
+            userState = MutableStateFlow(User(1, "Tubagus", "tubagus@student.ub.ac.id", null, "")),
+            onClickButtonSignOut = {},
+            onNavigateToFavoriteArticleScreen = {}
         )
     }
 }

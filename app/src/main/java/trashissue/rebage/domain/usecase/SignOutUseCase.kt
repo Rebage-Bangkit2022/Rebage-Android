@@ -6,7 +6,7 @@ class SignOutUseCase(
     private val userRepository: UserRepository
 ) {
 
-    suspend operator fun invoke() {
+    suspend operator fun invoke() = runCatching {
         userRepository.signOut()
     }
 }
