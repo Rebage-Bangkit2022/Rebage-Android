@@ -31,7 +31,7 @@ private enum class SwipingState {
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMotionApi::class)
 @Composable
 fun SwipeableContainer(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     BoxWithConstraints(

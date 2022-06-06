@@ -4,21 +4,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import trashissue.rebage.presentation.common.noRippleClickable
+import trashissue.rebage.presentation.common.component.noRippleClickable
 import trashissue.rebage.presentation.theme3.RebageTheme3
 
 @Composable
 fun MenuActions(
     modifier: Modifier = Modifier,
-    onClickEdit: () -> Unit,
-    onClickDelete: () -> Unit
+    onClickEdit: () -> Unit
 ) {
     Box(modifier = modifier.wrapContentSize(Alignment.TopStart)) {
         var expanded by remember { mutableStateOf(false) }
@@ -45,21 +46,6 @@ fun MenuActions(
                         Icons.Outlined.Edit,
                         contentDescription = null
                     )
-                })
-            MenuDefaults.Divider()
-            DropdownMenuItem(
-                text = {
-                    Text("Delete")
-                },
-                onClick = {
-                    expanded = false
-                    onClickDelete()
-                },
-                leadingIcon = {
-                    Icon(
-                        Icons.Outlined.Delete,
-                        contentDescription = null
-                    )
                 }
             )
         }
@@ -70,6 +56,6 @@ fun MenuActions(
 @Composable
 fun MenuActionsPreview() {
     RebageTheme3 {
-        MenuActions(onClickEdit = { }) {}
+        MenuActions(onClickEdit = { })
     }
 }

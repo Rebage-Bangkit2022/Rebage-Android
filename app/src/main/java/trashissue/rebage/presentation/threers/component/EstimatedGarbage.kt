@@ -1,8 +1,6 @@
 package trashissue.rebage.presentation.threers.component
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -16,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import trashissue.rebage.R
 import trashissue.rebage.presentation.theme3.RebageTheme3
 
@@ -25,22 +24,31 @@ private val DefaultButtonContentPadding = PaddingValues(horizontal = 4.dp, verti
 @Composable
 fun EstimatedGarbage(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    label: String,
+    image: String?,
+    date: String,
+    total: Int,
+    price: Int,
+    onClickButtonSave: (Int) -> Unit,
 ) {
     var editMode by rememberSaveable { mutableStateOf(false) }
 
-    Column(modifier = modifier.animateContentSize()) {
-        Card(modifier = Modifier.clickable(onClick = onClick)) {
+    Column {
+        var totalItem by rememberSaveable { mutableStateOf(total) }
+
+        Card {
             Row(
                 modifier = modifier
                     .fillMaxWidth()
                     .height(120.dp)
 
             ) {
-                Box(
+                AsyncImage(
                     modifier = Modifier
                         .size(height = 120.dp, width = 100.dp)
-                        .background(Color.Gray)
+                        .background(Color.Gray),
+                    model = image,
+                    contentDescription = label
                 )
                 Row(
                     modifier = Modifier
@@ -55,12 +63,12 @@ fun EstimatedGarbage(
                     ) {
                         Column {
                             Text(
-                                text = "Plastic",
+                                text = label,
                                 style = MaterialTheme.typography.titleLarge
                             )
                             Text(
                                 modifier = Modifier.padding(top = 4.dp),
-                                text = "17:05 12 Mei 2019",
+                                text = date,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5F)
                             )
@@ -70,22 +78,21 @@ fun EstimatedGarbage(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             if (editMode) {
-                                var item by rememberSaveable { mutableStateOf(0) }
                                 AnimatedCounter(
-                                    value = item,
-                                    onClickDecrement = { if (item != 0) item-- },
-                                    onClickIncrement = { item++ }
+                                    value = totalItem,
+                                    onClickDecrement = { if (totalItem != 0) totalItem-- },
+                                    onClickIncrement = { totalItem++ }
                                 )
                             } else {
                                 Text(
-                                    text = "3 Items",
+                                    text = "$totalItem Items",
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                             Text(
                                 modifier = Modifier.offset(x = 24.dp),
-                                text = "Rp18,000",
+                                text = "Rp${price * totalItem}",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -93,8 +100,9 @@ fun EstimatedGarbage(
                     }
                     MenuActions(
                         modifier.offset(x = 8.dp),
-                        onClickEdit = { editMode = true },
-                        onClickDelete = {}
+                        onClickEdit = {
+                            editMode = true
+                        },
                     )
                 }
             }
@@ -107,13 +115,19 @@ fun EstimatedGarbage(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 OutlinedButton(
-                    onClick = { editMode = false },
+                    onClick = {
+                        totalItem = total
+                        editMode = false
+                    },
                     contentPadding = DefaultButtonContentPadding
                 ) {
                     Text(text = stringResource(R.string.text_cancel))
                 }
                 Button(
-                    onClick = { editMode = false },
+                    onClick = {
+                        editMode = false
+                        onClickButtonSave(totalItem)
+                    },
                     contentPadding = DefaultButtonContentPadding
                 ) {
                     Text(text = stringResource(R.string.text_save))
@@ -127,6 +141,13 @@ fun EstimatedGarbage(
 @Composable
 fun EstimatedGarbagePreview() {
     RebageTheme3 {
-        EstimatedGarbage(onClick = {})
+        EstimatedGarbage(
+            label = "Plastic",
+            image = "https://nexus.prod.postmedia.digital/wp-content/uploads/2018/07/garbage.jpg?quality=90&strip=all&w=400",
+            total = 3,
+            date = "19 February 2022",
+            price = 3000,
+            onClickButtonSave = {}
+        )
     }
 }

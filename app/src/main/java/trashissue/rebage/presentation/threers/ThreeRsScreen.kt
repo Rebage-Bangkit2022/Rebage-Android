@@ -6,18 +6,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Map
-import androidx.compose.material.icons.rounded.ArrowBackIos
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -25,41 +22,64 @@ import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import trashissue.rebage.R
-import trashissue.rebage.domain.model.success
+import trashissue.rebage.domain.model.Article
+import trashissue.rebage.domain.model.Detection
+import trashissue.rebage.domain.model.Garbage
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.threers.component.*
 
 private val DefaultLazyColumnContentPadding = PaddingValues(16.dp)
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @Composable
 fun ThreeRsScreen(
     navController: NavHostController,
-    viewModel: ThreeRsViewModel = hiltViewModel(),
-    name: String,
-    image: String
+    viewModel: ThreeRsViewModel = hiltViewModel()
+) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.snackbar.collectLatest(snackbarHostState::showSnackbar)
+    }
+
+    ThreeRsScreen(
+        snackbarHostState = snackbarHostState,
+        loadingState = viewModel.loading,
+        detectionState = viewModel.detection,
+        articlesReduceState = viewModel.articlesReduce,
+        articlesReuseState = viewModel.articleReuse,
+        garbageState = viewModel.garbage,
+        onUpdateDetection = viewModel::update,
+        onNavigationBack = navController::popBackStack,
+        onNavigateToDetailArticle = { id ->
+            navController.navigate(Route.Article(id))
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
+@Composable
+fun ThreeRsScreen(
+    snackbarHostState: SnackbarHostState,
+    loadingState: StateFlow<Boolean>,
+    detectionState: StateFlow<Detection?>,
+    articlesReduceState: StateFlow<List<Article>>,
+    articlesReuseState: StateFlow<List<Article>>,
+    garbageState: StateFlow<Garbage?>,
+    onUpdateDetection: (Int, Int) -> Unit,
+    onNavigationBack: () -> Unit,
+    onNavigateToDetailArticle: (Int) -> Unit,
 ) {
     Scaffold(
         modifier = Modifier.systemBarsPadding(),
         topBar = {
-            SmallTopAppBar(
-                title = {
-                    Text(text = name)
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navController.popBackStack()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.ArrowBackIos,
-                            contentDescription = stringResource(R.string.cd_back)
-                        )
-                    }
-                }
+            val detection by detectionState.collectAsState()
+            TopAppBar(
+                title = detection?.label,
+                onClickNavigation = onNavigationBack
             )
         },
         floatingActionButton = {
@@ -68,7 +88,7 @@ fun ThreeRsScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.surface,
                 text = {
-                    Text(text = "Bank Sampah")
+                    Text(text = "Bank")
                 },
                 icon = {
                     Icon(
@@ -77,93 +97,112 @@ fun ThreeRsScreen(
                     )
                 }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         }
     ) { innerPadding ->
-        SwipeableContainer(modifier = Modifier.padding(innerPadding)) {
-            AsyncImage(
-                modifier = Modifier
-                    .clip(MaterialTheme.shapes.extraLarge)
-                    .background(Color.Gray)
-                    .layoutId("image"),
-                model = image,
-                contentDescription = name,
-                contentScale = ContentScale.Crop
-            )
+        Box(modifier = Modifier.padding(innerPadding)) {
+            SwipeableContainer(modifier = Modifier.fillMaxSize()) {
+                val detection by detectionState.collectAsState()
 
-            val pagerState = rememberPagerState()
-            val scope = rememberCoroutineScope()
+                AsyncImage(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.extraLarge)
+                        .background(Color.Gray)
+                        .layoutId("image"),
+                    model = detection?.image,
+                    contentDescription = detection?.label,
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(R.drawable.ic_rebage),
+                )
 
-            TabRow3R(
-                modifier = Modifier.layoutId("tab3r"),
-                selectedTabIndex = pagerState.currentPage,
-                onClickTab = { index ->
-                    scope.launch {
-                        pagerState.animateScrollToPage(index)
+                val pagerState = rememberPagerState()
+                val scope = rememberCoroutineScope()
+
+                TabRow3R(
+                    modifier = Modifier.layoutId("tab3r"),
+                    selectedTabIndex = pagerState.currentPage,
+                    onClickTab = { index ->
+                        scope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
                     }
-                }
-            )
-            HorizontalPager(
-                count = ArticlesList.size,
-                state = pagerState,
-                modifier = Modifier.layoutId("pager3r"),
-            ) { page ->
-                val reuseResult by viewModel.reuse.collectAsState()
+                )
 
-                if (page == 0) {
-                    reuseResult.success { articles ->
+                val articlesReduce by articlesReduceState.collectAsState()
+                val articlesReuse by articlesReuseState.collectAsState()
+
+                HorizontalPager(
+                    count = ArticlesList.size,
+                    state = pagerState,
+                    modifier = Modifier.layoutId("pager3r"),
+                ) { page ->
+
+                    if (page == 0) {
                         LazyColumn(
                             contentPadding = DefaultLazyColumnContentPadding,
                             verticalArrangement = Arrangement.spacedBy(16.dp),
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            items(items = articles, key = { it.id }) { article ->
+                            items(items = articlesReduce, key = { it.id }) { article ->
                                 Article(
                                     title = article.title,
                                     description = article.body,
-                                    onClick = {
-                                        navController.navigate(Route.Article(article.id))
-                                    },
+                                    onClick = { onNavigateToDetailArticle(article.id) },
                                     photo = article.photo.getOrNull(0)
                                 )
                             }
                         }
                     }
-                }
 
-                val reduceArticle by viewModel.reduce.collectAsState()
-
-                if (page == 1) {
-                    reduceArticle.success { articles ->
+                    if (page == 1) {
                         LazyColumn(
                             contentPadding = DefaultLazyColumnContentPadding,
                             verticalArrangement = Arrangement.spacedBy(16.dp),
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            items(items = articles, key = { it.id }) { article ->
+                            items(items = articlesReuse, key = { it.id }) { article ->
                                 Article(
                                     title = article.title,
                                     description = article.body,
-                                    onClick = {
-                                        navController.navigate(Route.Article(article.id))
-                                    },
+                                    onClick = { onNavigateToDetailArticle(article.id) },
                                     photo = article.photo.getOrNull(0)
                                 )
                             }
                         }
                     }
-                }
-                if (page == 2) {
-                    LazyColumn(
-                        contentPadding = DefaultLazyColumnContentPadding,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        item {
-                            EstimatedGarbage(
-                                onClick = {}
-                            )
+                    if (page == 2) {
+                        detection?.let { detection ->
+                            val garbage by garbageState.collectAsState()
+                            @Suppress("NAME_SHADOWING")
+                            garbage?.let { garbage ->
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(DefaultLazyColumnContentPadding)
+                                ) {
+                                    EstimatedGarbage(
+                                        onClickButtonSave = { total ->
+                                            onUpdateDetection(detection.id, total)
+                                        },
+                                        label = detection.label,
+                                        date = detection.createdAt,
+                                        total = detection.total,
+                                        price = garbage.price,
+                                        image = detection.image
+                                    )
+                                }
+                            }
                         }
                     }
                 }
+            }
+
+            val isLoading by loadingState.collectAsState()
+
+            if (isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
     }
