@@ -43,8 +43,8 @@ fun SignUpScreen(
 
     SignUpScreen(
         snackbarHostState = snackbarHostState,
-        onChangeEmail = viewModel::changeName,
-        onChangeName = viewModel::changeEmail,
+        onChangeName = viewModel::changeName,
+        onChangeEmail = viewModel::changeEmail,
         onChangePassword = viewModel::changePassword,
         onChangeConfirmPassword = viewModel::changeConfirmPassword,
         nameFieldState = viewModel.nameField,
@@ -56,8 +56,8 @@ fun SignUpScreen(
         onClickButtonSignUp = viewModel::signUp,
         onAuthGoogle = viewModel::authGoogle,
         onNavigateToSignInScreen = {
-            navController.navigate(Route.SignUp()) {
-                popUpTo(Route.SignIn()) { inclusive = true }
+            navController.navigate(Route.SignIn()) {
+                popUpTo(Route.SignUp()) { inclusive = true }
             }
         },
     )
