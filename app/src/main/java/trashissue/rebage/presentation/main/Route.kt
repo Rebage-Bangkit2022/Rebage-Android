@@ -1,6 +1,5 @@
 package trashissue.rebage.presentation.main
 
-import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -15,9 +14,6 @@ import trashissue.rebage.presentation.profile.ProfileScreen
 import trashissue.rebage.presentation.signin.SignInScreen
 import trashissue.rebage.presentation.signup.SignUpScreen
 import trashissue.rebage.presentation.threers.ThreeRsScreen
-import java.net.URLDecoder
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 sealed class Route(
     protected val route: String
@@ -102,24 +98,19 @@ sealed class Route(
         operator fun invoke() = route
     }
 
-    object ThreeRs : Route("three_r_s/{$KEY_NAME}/{$KEY_IMAGE}") {
+    object ThreeRs : Route("three_r_s/{$KEY_DETECTION_ID}") {
+        private val arguments = listOf(
+            navArgument(KEY_DETECTION_ID) {
+                type = NavType.IntType
+            }
+        )
 
         context (NavGraphBuilder)
-        fun composable() = composable(route) {
-            val name = it.arguments?.getString(KEY_NAME)
-            val image = it.arguments?.getString(KEY_IMAGE)
-            if (name != null && image != null) {
-                val decodedUrl = remember {
-                    URLDecoder.decode(image, StandardCharsets.UTF_8.toString())
-                }
-                ThreeRsScreen(LocalNavController.current, name = name, image = decodedUrl)
-            }
+        fun composable() = composable(route, arguments) {
+            ThreeRsScreen(LocalNavController.current)
         }
 
-        operator fun invoke(name: String, image: String): String {
-            val encodedUrl = URLEncoder.encode(image, StandardCharsets.UTF_8.toString())
-            return "three_r_s/$name/$encodedUrl"
-        }
+        operator fun invoke(id: Int) = "three_r_s/$id"
     }
 
     object Article : Route("article/{$KEY_ARTICLE_ID}") {
@@ -131,17 +122,14 @@ sealed class Route(
 
         context (NavGraphBuilder)
         fun composable() = composable(route, arguments) {
-            it.arguments?.getInt(KEY_ARTICLE_ID)?.let { articleId ->
-                ArticleScreen(LocalNavController.current, articleId)
-            }
+            ArticleScreen(LocalNavController.current)
         }
 
         operator fun invoke(articleId: Int) = "article/$articleId"
     }
 
     companion object {
-        protected const val KEY_ARTICLE_ID = "articleId"
-        protected const val KEY_NAME = "name"
-        protected const val KEY_IMAGE = "image"
+        const val KEY_ARTICLE_ID = "articleId"
+        const val KEY_DETECTION_ID = "detectionId"
     }
 }
