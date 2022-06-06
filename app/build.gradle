@@ -22,12 +22,17 @@ android {
     }
 
     buildTypes {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
         debug {
-            buildConfigField "String", "BACKEND_BASE_URL", '"https://rebage.uc.r.appspot.com/"'
+            buildConfigField "String", "BACKEND_BASE_URL", "\"${properties.getProperty('API_KEY')}\""
+            buildConfigField "String", "AUTH_CLIENT_ID", "\"${properties.getProperty('AUTH_CLIENT_ID')}\""
             minifyEnabled false
         }
         release {
-            buildConfigField "String", "BACKEND_BASE_URL", '"https://rebage.uc.r.appspot.com/"'
+            buildConfigField "String", "BACKEND_BASE_URL", "\"${properties.getProperty('API_KEY')}\""
+            buildConfigField "String", "AUTH_CLIENT_ID", "\"${properties.getProperty('AUTH_CLIENT_ID')}\""
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
