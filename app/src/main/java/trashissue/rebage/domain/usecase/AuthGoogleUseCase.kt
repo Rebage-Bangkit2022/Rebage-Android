@@ -7,7 +7,7 @@ class AuthGoogleUseCase(
     private val userRepository: UserRepository
 ) {
 
-    suspend operator fun invoke(idToken: String): User {
-        return userRepository.authGoogle(idToken)
+    suspend operator fun invoke(idToken: String): Result<User> = runCatching {
+        userRepository.authGoogle(idToken)
     }
 }
