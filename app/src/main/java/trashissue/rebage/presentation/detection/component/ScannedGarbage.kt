@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import trashissue.rebage.R
+import trashissue.rebage.presentation.common.component.noRippleClickable
 import trashissue.rebage.presentation.theme3.RebageTheme3
 import java.util.*
 
@@ -26,7 +27,10 @@ import java.util.*
 @Composable
 fun ScannedGarbage(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    onClickCard: () -> Unit,
+    onClickButtonSave: (Int) -> Unit,
+    onClickButtonDelete: () -> Unit,
+    onClickImage: () -> Unit,
     image: String,
     name: String,
     date: String,
@@ -35,7 +39,9 @@ fun ScannedGarbage(
     var editMode by rememberSaveable { mutableStateOf(false) }
 
     Column(modifier = modifier.animateContentSize()) {
-        Card(modifier = Modifier.clickable(onClick = onClick)) {
+        var totalItem by rememberSaveable { mutableStateOf(total) }
+
+        Card(modifier = Modifier.clickable(onClick = onClickCard)) {
             Row(
                 modifier = modifier
                     .fillMaxWidth()
@@ -45,7 +51,8 @@ fun ScannedGarbage(
                 AsyncImage(
                     modifier = Modifier
                         .size(height = 120.dp, width = 100.dp)
-                        .background(Color.Gray),
+                        .background(Color.Gray)
+                        .noRippleClickable(onClick = onClickImage),
                     model = image,
                     contentScale = ContentScale.Crop,
                     contentDescription = null
@@ -75,11 +82,10 @@ fun ScannedGarbage(
                         }
 
                         if (editMode) {
-                            var item by rememberSaveable { mutableStateOf(0) }
                             AnimatedCounter(
-                                value = item,
-                                onClickDecrement = { if (item != 0) item-- },
-                                onClickIncrement = { item++ }
+                                value = totalItem,
+                                onClickDecrement = { if (totalItem != 0) totalItem-- },
+                                onClickIncrement = { totalItem++ }
                             )
                         } else {
                             Text(
@@ -91,8 +97,11 @@ fun ScannedGarbage(
 
                     MenuActions(
                         modifier.offset(x = 8.dp),
-                        onClickEdit = { editMode = true },
-                        onClickDelete = {}
+                        onClickEdit = {
+                            totalItem = total
+                            editMode = true
+                        },
+                        onClickDelete = onClickButtonDelete
                     )
                 }
             }
@@ -105,13 +114,19 @@ fun ScannedGarbage(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 OutlinedButton(
-                    onClick = { editMode = false },
+                    onClick = {
+                        totalItem = total
+                        editMode = false
+                    },
                     contentPadding = DefaultButtonContentPadding
                 ) {
                     Text(text = stringResource(R.string.text_cancel))
                 }
                 Button(
-                    onClick = { editMode = false },
+                    onClick = {
+                        editMode = false
+                        onClickButtonSave(totalItem)
+                    },
                     contentPadding = DefaultButtonContentPadding
                 ) {
                     Text(text = stringResource(R.string.text_save))
@@ -126,7 +141,10 @@ fun ScannedGarbage(
 fun ScannedGarbagePreview() {
     RebageTheme3 {
         ScannedGarbage(
-            onClick = {},
+            onClickCard = { },
+            onClickButtonSave = { },
+            onClickButtonDelete = { },
+            onClickImage = { },
             name = "Plastic",
             date = Date().toString(),
             total = 2,
