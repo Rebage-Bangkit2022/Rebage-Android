@@ -1,4 +1,4 @@
-package trashissue.rebage.presentation.common.component
+package trashissue.rebage.presentation.common
 
 import android.content.Context
 import android.widget.Toast
