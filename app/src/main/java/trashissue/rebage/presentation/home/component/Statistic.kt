@@ -45,7 +45,6 @@ fun Statistic(
                         .fillMaxWidth()
                         .aspectRatio(1F)
                 ) {
-
                     Doughnut(
                         width = 16.dp,
                         data = data,

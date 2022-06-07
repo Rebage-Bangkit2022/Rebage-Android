@@ -58,13 +58,15 @@ fun Articles(
                 contentPadding = ContentPadding
             ) {
                 items(items = articles, key = { it.id }) { article ->
-                    Article(
-                        modifier = Modifier.width(240.dp),
-                        id = article.id,
-                        title = article.title,
-                        photo = article.photo.getOrNull(0),
-                        onClick = onClickArticle
-                    )
+                    if (article.photo.isNotEmpty()) {
+                        Article(
+                            modifier = Modifier.width(240.dp),
+                            id = article.id,
+                            title = article.title,
+                            photo = article.photo[0],
+                            onClick = onClickArticle
+                        )
+                    }
                 }
             }
         }
