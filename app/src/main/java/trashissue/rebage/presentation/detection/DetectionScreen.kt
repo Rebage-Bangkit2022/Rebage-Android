@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import trashissue.rebage.domain.model.Detection
+import trashissue.rebage.domain.model.Garbage
 import trashissue.rebage.presentation.camera.CameraActivity
 import trashissue.rebage.presentation.detection.component.AddGarbage
 import trashissue.rebage.presentation.detection.component.PreviewDetectionDialog
@@ -45,6 +46,7 @@ fun DetectionScreen(
 
     DetectionScreen(
         snackbarHostState = snackbarHostState,
+        garbageState = viewModel.garbage,
         detectionsState = viewModel.detections,
         previewState = viewModel.preview,
         loadingState = viewModel.loading,
@@ -63,6 +65,7 @@ fun DetectionScreen(
 @Composable
 fun DetectionScreen(
     snackbarHostState: SnackbarHostState,
+    garbageState: StateFlow<List<Garbage>>,
     detectionsState: StateFlow<List<Detection>>,
     previewState: StateFlow<List<Detection>>,
     loadingState: StateFlow<Boolean>,
@@ -81,6 +84,7 @@ fun DetectionScreen(
             scope.launch { snackbarHostState.showSnackbar("Failed to take picture") }
         }
     )
+    val isLoading by loadingState.collectAsState()
 
     Scaffold(
         modifier = Modifier
@@ -88,8 +92,6 @@ fun DetectionScreen(
             .statusBarsPadding(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            val isLoading by loadingState.collectAsState()
-
             TopAppBar(
                 enabledCameraScan = !isLoading,
                 onClickCameraScan = {
@@ -105,6 +107,7 @@ fun DetectionScreen(
                 .fillMaxSize()
         ) {
             val detections by detectionsState.collectAsState()
+            val garbage by garbageState.collectAsState()
 
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
@@ -115,7 +118,15 @@ fun DetectionScreen(
                     var isAddItemMode by rememberSaveable { mutableStateOf(false) }
 
                     if (isAddItemMode) {
-                        AddGarbage(onCancel = { isAddItemMode = false })
+                        AddGarbage(
+                            onClickButtonSave = { _, _, _ ->
+
+                            },
+                            onClickButtonCancel = {
+                                isAddItemMode = false
+                            },
+                            garbage = garbage
+                        )
                     } else {
                         OutlinedButton(
                             onClick = { isAddItemMode = true },
@@ -141,7 +152,6 @@ fun DetectionScreen(
             }
 
             val preview by previewState.collectAsState()
-            val isLoading by loadingState.collectAsState()
 
             if (preview.isNotEmpty()) {
                 PreviewDetectionDialog(
