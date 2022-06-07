@@ -26,15 +26,17 @@ android {
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
         debug {
-            buildConfigField "String", "BACKEND_BASE_URL", "\"${properties.getProperty('BACKEND_BASE_URL')}\""
-            buildConfigField "String", "AUTH_CLIENT_ID", "\"${properties.getProperty('AUTH_CLIENT_ID')}\""
-            buildConfigField "String", "GARBAGE_BANK_MAP_KEY", "\"${properties.getProperty('GARBAGE_BANK_MAP_KEY')}\""
+            buildConfigField "String", "BACKEND_BASE_URL", "\"${properties.getProperty('backend.base.url')}\""
+            buildConfigField "String", "AUTH_CLIENT_ID", "\"${properties.getProperty('auth.client.id')}\""
+            buildConfigField "String", "GOOGLE_MAPS_SEARCH_KEY", "\"${properties.getProperty('google.maps.search.key')}\""
+            resValue "string", "google_maps_key", "${properties.getProperty('google.maps.key')}"
             minifyEnabled false
         }
         release {
-            buildConfigField "String", "BACKEND_BASE_URL", "\"${properties.getProperty('BACKEND_BASE_URL')}\""
-            buildConfigField "String", "AUTH_CLIENT_ID", "\"${properties.getProperty('AUTH_CLIENT_ID')}\""
-            buildConfigField "String", "GARBAGE_BANK_MAP_KEY", "\"${properties.getProperty('GARBAGE_BANK_MAP_KEY')}\""
+            buildConfigField "String", "BACKEND_BASE_URL", "\"${properties.getProperty('backend.base.url')}\""
+            buildConfigField "String", "AUTH_CLIENT_ID", "\"${properties.getProperty('auth.client.id')}\""
+            buildConfigField "String", "GOOGLE_MAPS_SEARCH_KEY", "\"${properties.getProperty('google.maps.search.key')}\""
+            resValue "string", "google_maps_key", "${properties.getProperty('google.maps.key')}"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -131,6 +133,10 @@ dependencies {
 
     // Play Services Auth
     implementation "com.google.android.gms:play-services-auth:$play_services_auth_version"
+
+    // Maps
+    implementation "com.google.android.gms:play-services-maps:$play_services_maps_version"
+    implementation "com.google.maps.android:maps-compose:$maps_compose_version"
 
     // Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
