@@ -55,7 +55,8 @@ fun FavoriteArticleScreen(
                     description = "Kerajinan Tempat Pensil dari Botol Plastik",
                     onClick = {
                         navController.navigate(Route.Article(1))
-                    }
+                    },
+                    photo = "https://mmc.tirto.id/image/otf/700x0/2020/11/02/ilustrasi-botol-air-kemasan-istock_ratio-16x9.jpg"
                 )
             }
         }
