@@ -25,6 +25,8 @@ fun NavGraph(
         Route.FavoriteArticle.composable()
         Route.ThreeRs.composable()
         Route.Article.composable()
+        Route.GarbageBank.composable()
+        Route.Maps.composable()
     }
 }
 

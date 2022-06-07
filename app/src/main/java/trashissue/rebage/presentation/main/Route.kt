@@ -1,5 +1,6 @@
 package trashissue.rebage.presentation.main
 
+import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -7,7 +8,9 @@ import androidx.navigation.navArgument
 import trashissue.rebage.presentation.article.ArticleScreen
 import trashissue.rebage.presentation.detection.DetectionScreen
 import trashissue.rebage.presentation.favoritearticle.FavoriteArticleScreen
+import trashissue.rebage.presentation.garbagebank.GarbageBankScreen
 import trashissue.rebage.presentation.home.HomeScreen
+import trashissue.rebage.presentation.maps.MapsScreen
 import trashissue.rebage.presentation.onboarding.OnboardingScreen
 import trashissue.rebage.presentation.price.PriceScreen
 import trashissue.rebage.presentation.profile.ProfileScreen
@@ -128,8 +131,44 @@ sealed class Route(
         operator fun invoke(articleId: Int) = "article/$articleId"
     }
 
+    object GarbageBank : Route("garbage_bank") {
+
+        context (NavGraphBuilder)
+        fun composable() = composable(route) {
+            GarbageBankScreen(LocalNavController.current)
+        }
+
+        operator fun invoke() = route
+    }
+
+    object Maps : Route("maps/{$KEY_LAT}/{$KEY_LNG}") {
+        private val arguments = listOf(
+            navArgument(KEY_LAT) {
+                type = NavType.StringType
+            }
+        )
+
+        context (NavGraphBuilder)
+        fun composable() = composable(route, arguments) {
+            val latLng = remember {
+                val lat = it.arguments?.getString(KEY_LAT)?.toDoubleOrNull()
+                val lng = it.arguments?.getString(KEY_LNG)?.toDoubleOrNull()
+                lat to lng
+            }
+            val (lat, lng) = latLng
+
+            if (lat != null && lng != null) {
+                MapsScreen(LocalNavController.current, lat, lng)
+            }
+        }
+
+        operator fun invoke(lat: Double, lng: Double) = "maps/$lat/$lng"
+    }
+
     companion object {
         const val KEY_ARTICLE_ID = "articleId"
         const val KEY_DETECTION_ID = "detectionId"
+        const val KEY_LAT = "lat"
+        const val KEY_LNG = "lng"
     }
 }
