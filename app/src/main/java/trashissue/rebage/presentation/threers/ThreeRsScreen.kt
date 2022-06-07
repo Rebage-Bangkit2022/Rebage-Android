@@ -54,6 +54,9 @@ fun ThreeRsScreen(
         onNavigationBack = navController::popBackStack,
         onNavigateToDetailArticle = { id ->
             navController.navigate(Route.Article(id))
+        },
+        onNavigateToGarbageBank = {
+            navController.navigate(Route.GarbageBank())
         }
     )
 }
@@ -70,6 +73,7 @@ fun ThreeRsScreen(
     onUpdateDetection: (Int, Int) -> Unit,
     onNavigationBack: () -> Unit,
     onNavigateToDetailArticle: (Int) -> Unit,
+    onNavigateToGarbageBank: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.systemBarsPadding(),
@@ -82,7 +86,7 @@ fun ThreeRsScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { },
+                onClick = onNavigateToGarbageBank,
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.surface,
                 text = {
