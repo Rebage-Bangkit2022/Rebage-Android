@@ -4,19 +4,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import trashissue.rebage.data.DefaultArticleRepository
-import trashissue.rebage.data.DefaultDetectionRepository
-import trashissue.rebage.data.DefaultGarbageRepository
-import trashissue.rebage.data.DefaultUserRepository
+import trashissue.rebage.data.*
 import trashissue.rebage.data.local.UserLocalDataSource
-import trashissue.rebage.data.remote.ArticleRemoteDataSource
-import trashissue.rebage.data.remote.DetectionRemoteDataSource
-import trashissue.rebage.data.remote.GarbageRemoteDataSource
-import trashissue.rebage.data.remote.UserRemoteDataSource
-import trashissue.rebage.domain.repository.ArticleRepository
-import trashissue.rebage.domain.repository.DetectionRepository
-import trashissue.rebage.domain.repository.GarbageRepository
-import trashissue.rebage.domain.repository.UserRepository
+import trashissue.rebage.data.remote.*
+import trashissue.rebage.domain.repository.*
 import javax.inject.Singleton
 
 @Module
@@ -51,5 +42,11 @@ object RepositoryModule {
     @Singleton
     fun provideGarbageRepository(garbageRemoteDataSource: GarbageRemoteDataSource): GarbageRepository {
         return DefaultGarbageRepository(garbageRemoteDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGoogleMapRepository(googleMapRemoteDataSource: GoogleMapRemoteDataSource): GoogleMapRepository {
+        return DefaultGoogleMapRepository(googleMapRemoteDataSource)
     }
 }

@@ -12,14 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import trashissue.rebage.BuildConfig
-import trashissue.rebage.data.remote.ArticleRemoteDataSource
-import trashissue.rebage.data.remote.DetectionRemoteDataSource
-import trashissue.rebage.data.remote.GarbageRemoteDataSource
-import trashissue.rebage.data.remote.UserRemoteDataSource
-import trashissue.rebage.data.remote.service.ArticleService
-import trashissue.rebage.data.remote.service.DetectionService
-import trashissue.rebage.data.remote.service.GarbageService
-import trashissue.rebage.data.remote.service.UserService
+import trashissue.rebage.data.remote.*
+import trashissue.rebage.data.remote.service.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -82,5 +76,12 @@ object RemoteModule {
     fun provideGarbageRemoteDataSource(retrofit: Retrofit): GarbageRemoteDataSource {
         val garbageService = retrofit.create<GarbageService>()
         return GarbageRemoteDataSource(garbageService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGarbageBankRemoteDataSource(retrofit: Retrofit): GoogleMapRemoteDataSource {
+        val googleMapService = retrofit.create<GoogleMapService>()
+        return GoogleMapRemoteDataSource(googleMapService)
     }
 }
