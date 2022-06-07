@@ -14,10 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import trashissue.rebage.R
 import trashissue.rebage.presentation.common.component.noRippleClickable
 import trashissue.rebage.presentation.theme3.RebageTheme3
@@ -53,7 +55,10 @@ fun ScannedGarbage(
                         .size(height = 120.dp, width = 100.dp)
                         .background(Color.Gray)
                         .noRippleClickable(onClick = onClickImage),
-                    model = image,
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(image)
+                        .crossfade(500)
+                        .build(),
                     contentScale = ContentScale.Crop,
                     contentDescription = null
                 )

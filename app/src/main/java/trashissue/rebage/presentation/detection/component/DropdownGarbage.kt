@@ -13,11 +13,13 @@ import trashissue.rebage.presentation.theme3.RebageTheme3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropdownGarbage(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    options: List<String>,
+    value: String,
+    onValueChange: (String) -> Unit
 ) {
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
+
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
 
     ExposedDropdownMenuBox(
@@ -29,7 +31,7 @@ fun DropdownGarbage(
     ) {
         TextField(
             readOnly = true,
-            value = selectedOptionText,
+            value = value,
             onValueChange = { },
             label = {
                 Text(stringResource(R.string.text_choose_item))
@@ -49,15 +51,15 @@ fun DropdownGarbage(
                 expanded = false
             }
         ) {
-            options.forEach { selectionOption ->
+            options.forEach { selected ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedOptionText = selectionOption
+                        onValueChange(selected)
                         focusManager.clearFocus()
                         expanded = false
                     },
                     text = {
-                        Text(text = selectionOption)
+                        Text(text = selected)
                     }
                 )
             }
@@ -69,6 +71,10 @@ fun DropdownGarbage(
 @Composable
 fun DropdownGarbagePreview() {
     RebageTheme3 {
-        DropdownGarbage()
+        DropdownGarbage(
+            options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5"),
+            value = "Duck",
+            onValueChange = {}
+        )
     }
 }
