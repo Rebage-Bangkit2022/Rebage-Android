@@ -6,6 +6,23 @@ plugins {
 }
 
 android {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    signingConfigs {
+        debug {
+            storeFile file(properties.getProperty('store.file'))
+            storePassword properties.getProperty('store.password')
+            keyAlias properties.getProperty('store.key.alias')
+            keyPassword properties.getProperty('store.key.password')
+        }
+        release {
+            storeFile file(properties.getProperty('store.file'))
+            storePassword properties.getProperty('store.password')
+            keyAlias properties.getProperty('store.key.alias')
+            keyPassword properties.getProperty('store.key.password')
+        }
+    }
     compileSdk 32
 
     defaultConfig {
@@ -22,9 +39,6 @@ android {
     }
 
     buildTypes {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
         debug {
             buildConfigField "String", "BACKEND_BASE_URL", "\"${properties.getProperty('backend.base.url')}\""
             buildConfigField "String", "AUTH_CLIENT_ID", "\"${properties.getProperty('auth.client.id')}\""
