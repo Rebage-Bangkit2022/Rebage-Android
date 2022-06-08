@@ -35,6 +35,7 @@ fun HomeScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
+        viewModel.loadDetectionsStatistic()
         viewModel.snackbar.collectLatest(snackbarHostState::showSnackbar)
     }
 

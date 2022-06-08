@@ -37,9 +37,6 @@ class HomeViewModel @Inject constructor(
     private val _articleReuse = MutableStateFlow(emptyList<Article>())
     val articleReuse = _articleReuse.asStateFlow()
 
-    private val _loading = MutableStateFlow(false)
-    val loading = _loading.asStateFlow()
-
     private val _snackbar = MutableSharedFlow<String>()
     val snackbar = _snackbar.asSharedFlow()
 
@@ -50,7 +47,7 @@ class HomeViewModel @Inject constructor(
         loadArticlesReuse()
     }
 
-    private fun loadDetectionsStatistic() {
+    fun loadDetectionsStatistic() {
         viewModelScope.launch(dispatcher) {
             getDetectionsStatisticUseCase()
                 .onSuccess { stats ->
