@@ -24,6 +24,7 @@ buildscript {
         play_services_maps_version = '18.0.2'
         maps_compose_version = '2.2.0'
         places_version = '2.6.0'
+        lottie_version = '5.2.0'
         splash_screen_version = '1.0.0-rc01'
         timber_version = '5.0.1'
         constraintlayout_compose_version = '1.0.1'

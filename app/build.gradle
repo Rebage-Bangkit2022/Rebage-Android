@@ -49,7 +49,7 @@ android {
         release {
             buildConfigField "String", "BACKEND_BASE_URL", "\"${properties.getProperty('backend.base.url')}\""
             buildConfigField "String", "AUTH_CLIENT_ID", "\"${properties.getProperty('auth.client.id')}\""
-            buildConfigField "String", "GOOGLE_MAPS_SEARCH_KEY", "\"${properties.getProperty('google.maps.web.key')}\""
+            buildConfigField "String", "GOOGLE_MAPS_WEB_KEY", "\"${properties.getProperty('google.maps.web.key')}\""
             resValue "string", "google_maps_key", "${properties.getProperty('google.maps.android.key')}"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -141,6 +141,9 @@ dependencies {
 
     // Splash Screen
     implementation "androidx.core:core-splashscreen:$splash_screen_version"
+
+    // Lottie
+    implementation "com.airbnb.android:lottie-compose:$lottie_version"
 
     // Permission
     implementation "com.google.accompanist:accompanist-permissions:$permission_version"
