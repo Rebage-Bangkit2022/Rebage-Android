@@ -2,12 +2,12 @@ package trashissue.rebage.data.remote.payload
 
 import com.google.gson.annotations.SerializedName
 
-data class GoogleMapResponse(
+data class NearbySearchResponse(
     @field:SerializedName("results")
-    val results: List<Result>
+    val places: List<Place>
 ) {
 
-    data class Result(
+    data class Place(
         @field:SerializedName("place_id")
         val placeId: String,
         @field:SerializedName("name")
@@ -19,7 +19,7 @@ data class GoogleMapResponse(
         @field:SerializedName("permanently_closed")
         val permanentlyClosed: Boolean,
         @field:SerializedName("rating")
-        val rating: Double,
+        val rating: Float,
         @field:SerializedName("reference")
         val reference: String,
         @field:SerializedName("user_ratings_total")
