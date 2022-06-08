@@ -4,23 +4,37 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import trashissue.rebage.domain.model.GarbageBank
 import trashissue.rebage.domain.usecase.GetGarbageBankUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class GarbageBankViewModel @Inject constructor(
     private val getGarbageBankUseCase: GetGarbageBankUseCase,
-    private val dispatcher: CoroutineDispatcher
+    dispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    private val _garbageBanks = MutableStateFlow(emptyList<GarbageBank>())
-    val garbageBanks = _garbageBanks.asStateFlow()
+    private val location = MutableSharedFlow<Pair<Double, Double>>()
+
+    val places = location
+        .distinctUntilChanged()
+        .map { location ->
+            val (lat, lng) = location
+            getGarbageBankUseCase(lat, lng)
+                .onFailure {
+                    _snackbar.emit("Failed to load")
+                }
+                .getOrNull()
+                ?: return@map emptyList()
+        }
+        .onStart {
+            _loading.value = true
+        }
+        .onCompletion {
+            _loading.value = false
+        }
+        .flowOn(dispatcher)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
@@ -28,17 +42,9 @@ class GarbageBankViewModel @Inject constructor(
     private val _snackbar = MutableSharedFlow<String>()
     val snackbar = _snackbar.asSharedFlow()
 
-    fun loadGarbageBank(lat: Double, lng: Double) {
-        viewModelScope.launch(dispatcher) {
-
-            getGarbageBankUseCase(lat, lng)
-                .onSuccess { garbageBank ->
-                    _garbageBanks.value = garbageBank
-                }
-                .onFailure { e ->
-                    Timber.e(e)
-                    _snackbar.emit("Failed to load garbage bank")
-                }
+    fun loadPlaces(lat: Double, lng: Double) {
+        viewModelScope.launch {
+            location.emit(lat to lng)
         }
     }
 }
