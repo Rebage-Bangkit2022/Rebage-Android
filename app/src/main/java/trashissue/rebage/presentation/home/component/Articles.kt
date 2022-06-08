@@ -17,6 +17,7 @@ import trashissue.rebage.R
 import trashissue.rebage.domain.model.Article
 import trashissue.rebage.presentation.common.component.shimmer
 import trashissue.rebage.presentation.theme3.RebageTheme3
+import java.util.*
 
 private val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 
@@ -114,8 +115,8 @@ fun ArticlesPreview() {
                     id = 1,
                     title = "title $it",
                     body = "",
-                    createdAt = "",
-                    updatedAt = "",
+                    createdAt = Date(),
+                    updatedAt = Date(),
                     source = "",
                     photo = listOf("https://i.pinimg.com/564x/d7/f8/5e/d7f85e8343547676774a4ffdffc96143.jpg"),
                     author = "",

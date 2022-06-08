@@ -48,6 +48,9 @@ fun HomeScreen(
         statsState = viewModel.stats,
         onNavigateToDetailArticle = { id ->
             navController.navigate(Route.Article(id))
+        },
+        onClickShowMore = {
+            navController.navigate(Route.ChartDetail())
         }
     )
 }
@@ -62,6 +65,7 @@ fun HomeScreen(
     articlesReuse: StateFlow<List<Article>>,
     statsState: StateFlow<List<DetectionStatistic>>,
     onNavigateToDetailArticle: (Int) -> Unit,
+    onClickShowMore: () -> Unit
 ) {
 
     Scaffold(
@@ -96,7 +100,8 @@ fun HomeScreen(
                     .statusBarsPadding()
                     .padding(horizontal = 16.dp, vertical = 32.dp),
                 name = username,
-                stats = stats
+                stats = stats,
+                onClickShowMore = onClickShowMore
             )
             Articles(
                 label = stringResource(R.string.text_all_articles),
@@ -131,7 +136,8 @@ fun HomeScreenPreview() {
             articlesReuse = MutableStateFlow(emptyList()),
             articlesReduce = MutableStateFlow(emptyList()),
             statsState = MutableStateFlow(emptyList()),
-            onNavigateToDetailArticle = { }
+            onNavigateToDetailArticle = { },
+            onClickShowMore = { }
         )
     }
 }

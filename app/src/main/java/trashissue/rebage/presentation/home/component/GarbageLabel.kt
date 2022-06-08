@@ -38,7 +38,7 @@ fun GarbageLabel(
         Text(
             modifier = Modifier
                 .weight(1F)
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+                .padding(horizontal = 12.dp, vertical = 6.dp),
             text = name,
             style = MaterialTheme.typography.bodyLarge,
             maxLines = 1,

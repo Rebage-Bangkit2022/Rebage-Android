@@ -1,5 +1,7 @@
 package trashissue.rebage.presentation.home.component
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,22 +12,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import trashissue.rebage.domain.model.DetectionStatistic
-import trashissue.rebage.presentation.theme3.BlueGChart
-import trashissue.rebage.presentation.theme3.PastelChart
-import trashissue.rebage.presentation.theme3.SiennaChart
-import trashissue.rebage.presentation.theme3.TealChart
+import trashissue.rebage.presentation.theme3.ChartColors
 import java.util.*
 
 @Composable
 fun Header(
     modifier: Modifier = Modifier,
     name: String? = null,
-    stats: List<DetectionStatistic>
+    stats: List<DetectionStatistic>,
+    onClickShowMore: () -> Unit
 ) {
     Surface(color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.primary) {
-        Column(modifier = modifier) {
+        Column(modifier = modifier.animateContentSize()) {
             val firstName = remember(name) {
                 name
                     ?.split(" ")
@@ -35,24 +36,20 @@ fun Header(
 
             Text(
                 text = if (firstName == null) " " else "Selamat Datang, $firstName!",
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.surface
             )
             Text(
                 text = "Ini adalah data sampah yang kamu kumpulkan",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.surface
             )
 
             val (data, total) = remember(stats){
-                val colors = mutableListOf(
-                    SiennaChart,
-                    BlueGChart,
-                    PastelChart,
-                    TealChart
-                )
-
                 val statsSorted = stats.sortedByDescending { it.total }
+                val colors = ChartColors.take(3).toMutableList()
 
-                statsSorted
+                var displayed = statsSorted.take(3)
                     .take(colors.size)
                     .map {
                         ChartData(
@@ -60,16 +57,36 @@ fun Header(
                             value = it.total.toDouble(),
                             color = colors.removeFirst()
                         )
-                    } to statsSorted.sumOf { it.total }
+                    }
+
+                displayed = if (displayed.isNotEmpty()) displayed.plus(
+                    ChartData(
+                        name = "Other",
+                        color = Color.Gray.copy(alpha = 0.2F),
+                        value = statsSorted.drop(3).sumOf { it.total }.toDouble()
+                    )
+                ) else emptyList()
+
+                displayed to statsSorted.sumOf { it.total }
             }
 
-            Statistic(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .fillMaxWidth(),
-                data = data,
-                total = "$total"
-            )
+            Crossfade(targetState = data.isNotEmpty()) { isNotEmpty ->
+                when (isNotEmpty) {
+                    true -> Statistic(
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .fillMaxWidth(),
+                        data = data,
+                        total = "$total",
+                        onClickShowMore = onClickShowMore
+                    )
+                    else -> StatisticPlaceHolder(
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .fillMaxWidth()
+                    )
+                }
+            }
         }
     }
 }

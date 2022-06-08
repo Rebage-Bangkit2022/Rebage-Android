@@ -41,7 +41,6 @@ class HomeViewModel @Inject constructor(
     val snackbar = _snackbar.asSharedFlow()
 
     init {
-        loadDetectionsStatistic()
         loadAllArticles()
         loadArticlesReduce()
         loadArticlesReuse()
