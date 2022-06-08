@@ -12,4 +12,8 @@ interface ArticleRepository {
     ): List<Article>
 
     suspend fun getArticle(articleId: Int): Article
+
+    suspend fun like(articleId: Int, userId: Int): Article
+
+    suspend fun unlike(articleId: Int, userId: Int): Article
 }
