@@ -1,5 +1,9 @@
 package trashissue.rebage.presentation.threers
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,6 +28,7 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import trashissue.rebage.domain.model.Article
 import trashissue.rebage.domain.model.Detection
 import trashissue.rebage.domain.model.Garbage
@@ -61,7 +66,10 @@ fun ThreeRsScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalPagerApi::class,
+    ExperimentalAnimationApi::class
+)
 @Composable
 fun ThreeRsScreen(
     snackbarHostState: SnackbarHostState,
@@ -75,6 +83,15 @@ fun ThreeRsScreen(
     onNavigateToDetailArticle: (Int) -> Unit,
     onNavigateToGarbageBank: () -> Unit
 ) {
+    val pagerState = rememberPagerState()
+    val isFabVisible by remember {
+
+        derivedStateOf {
+            Timber.i(pagerState.currentPage.toString())
+            pagerState.currentPage == 2
+        }
+    }
+
     Scaffold(
         modifier = Modifier.systemBarsPadding(),
         topBar = {
@@ -85,20 +102,26 @@ fun ThreeRsScreen(
             )
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = onNavigateToGarbageBank,
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.surface,
-                text = {
-                    Text(text = "Bank")
-                },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Map,
-                        contentDescription = null
-                    )
-                }
-            )
+            AnimatedVisibility(
+                visible = isFabVisible,
+                enter = scaleIn(),
+                exit = scaleOut(),
+            ) {
+                ExtendedFloatingActionButton(
+                    onClick = onNavigateToGarbageBank,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.surface,
+                    text = {
+                        Text(text = "Bank")
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Map,
+                            contentDescription = null
+                        )
+                    }
+                )
+            }
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -120,7 +143,6 @@ fun ThreeRsScreen(
                     contentScale = ContentScale.Crop
                 )
 
-                val pagerState = rememberPagerState()
                 val scope = rememberCoroutineScope()
 
                 TabRow3R(
