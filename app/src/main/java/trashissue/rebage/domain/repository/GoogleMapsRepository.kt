@@ -1,8 +1,8 @@
 package trashissue.rebage.domain.repository
 
-import trashissue.rebage.domain.model.GarbageBank
+import trashissue.rebage.domain.model.Place
 
-interface GoogleMapRepository {
+interface GoogleMapsRepository {
 
     suspend fun getNearby(
         lat: Double,
@@ -10,5 +10,7 @@ interface GoogleMapRepository {
         radius: Double,
         type: String,
         keyword: String
-    ): List<GarbageBank>
+    ): List<Place>
+
+    suspend fun getPlace(placeId: String): Place
 }
