@@ -1,5 +1,7 @@
 package trashissue.rebage.domain.model
 
+import java.util.*
+
 data class Detection(
     val id: Int,
     val image: String,
@@ -7,6 +9,6 @@ data class Detection(
     val boundingBoxes: List<List<Float>>,
     val scores: List<Float>,
     val total: Int,
-    val createdAt: String
+    val createdAt: Date
 )
 
