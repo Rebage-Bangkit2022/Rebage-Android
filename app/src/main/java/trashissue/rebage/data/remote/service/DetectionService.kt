@@ -3,14 +3,19 @@ package trashissue.rebage.data.remote.service
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
-import trashissue.rebage.data.remote.payload.Api
-import trashissue.rebage.data.remote.payload.DetectionResponse
-import trashissue.rebage.data.remote.payload.DetectionStatisticResponse
-import trashissue.rebage.data.remote.payload.UpdateDetectionRequest
+import trashissue.rebage.data.remote.payload.*
 
 interface DetectionService {
 
     @POST("/api/detection")
+    suspend fun save(
+        @Header("Authorization")
+        token: String,
+        @Body
+        req: SaveDetectionRequest
+    ): Response<Api<DetectionResponse>>
+
+    @POST("/api/detection/detect")
     @Multipart
     suspend fun detect(
         @Header("Authorization")
