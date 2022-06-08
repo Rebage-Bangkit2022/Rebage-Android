@@ -1,6 +1,5 @@
 package trashissue.rebage.presentation.main
 
-import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -141,34 +140,24 @@ sealed class Route(
         operator fun invoke() = route
     }
 
-    object Maps : Route("maps/{$KEY_LAT}/{$KEY_LNG}") {
+    object Maps : Route("maps/{$KEY_PLACE_ID}") {
         private val arguments = listOf(
-            navArgument(KEY_LAT) {
+            navArgument(KEY_PLACE_ID) {
                 type = NavType.StringType
             }
         )
 
         context (NavGraphBuilder)
         fun composable() = composable(route, arguments) {
-            val latLng = remember {
-                val lat = it.arguments?.getString(KEY_LAT)?.toDoubleOrNull()
-                val lng = it.arguments?.getString(KEY_LNG)?.toDoubleOrNull()
-                lat to lng
-            }
-            val (lat, lng) = latLng
-
-            if (lat != null && lng != null) {
-                MapsScreen(LocalNavController.current, lat, lng)
-            }
+            MapsScreen(LocalNavController.current)
         }
 
-        operator fun invoke(lat: Double, lng: Double) = "maps/$lat/$lng"
+        operator fun invoke(placeId: String) = "maps/$placeId"
     }
 
     companion object {
-        const val KEY_ARTICLE_ID = "articleId"
-        const val KEY_DETECTION_ID = "detectionId"
-        const val KEY_LAT = "lat"
-        const val KEY_LNG = "lng"
+        const val KEY_ARTICLE_ID = "article_id"
+        const val KEY_DETECTION_ID = "detection_id"
+        const val KEY_PLACE_ID = "place_id"
     }
 }
