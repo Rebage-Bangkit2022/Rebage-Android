@@ -22,6 +22,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -29,6 +33,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import trashissue.rebage.R
 import trashissue.rebage.domain.model.Article
 import trashissue.rebage.domain.model.Detection
 import trashissue.rebage.domain.model.Garbage
@@ -157,46 +162,71 @@ fun ThreeRsScreen(
 
                 val articlesReduce by articlesReduceState.collectAsState()
                 val articlesReuse by articlesReuseState.collectAsState()
+                val composition by rememberLottieComposition(
+                    LottieCompositionSpec.RawRes(R.raw.empty_box)
+                )
 
                 HorizontalPager(
                     count = ArticlesList.size,
                     state = pagerState,
                     modifier = Modifier.layoutId("pager3r"),
                 ) { page ->
-
                     if (page == 0) {
-                        LazyColumn(
-                            contentPadding = DefaultLazyColumnContentPadding,
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            items(items = articlesReduce, key = { it.id }) { article ->
-                                Article(
-                                    title = article.title,
-                                    description = article.body,
-                                    onClick = { onNavigateToDetailArticle(article.id) },
-                                    photo = article.photo.getOrNull(0)
-                                )
+                        if (articlesReduce.isNotEmpty()) {
+                            LazyColumn(
+                                contentPadding = DefaultLazyColumnContentPadding,
+                                verticalArrangement = Arrangement.spacedBy(16.dp),
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                items(items = articlesReduce, key = { it.id }) { article ->
+                                    Article(
+                                        title = article.title,
+                                        description = article.body,
+                                        onClick = { onNavigateToDetailArticle(article.id) },
+                                        photo = article.photo.getOrNull(0)
+                                    )
+                                }
                             }
+                        } else {
+                            LottieAnimation(
+                                modifier = Modifier
+                                    .padding(32.dp)
+                                    .size(164.dp)
+                                    .offset(y = (-24).dp),
+                                composition = composition,
+                                iterations = LottieConstants.IterateForever,
+                            )
                         }
                     }
 
                     if (page == 1) {
-                        LazyColumn(
-                            contentPadding = DefaultLazyColumnContentPadding,
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            items(items = articlesReuse, key = { it.id }) { article ->
-                                Article(
-                                    title = article.title,
-                                    description = article.body,
-                                    onClick = { onNavigateToDetailArticle(article.id) },
-                                    photo = article.photo.getOrNull(0)
-                                )
+                        if (articlesReuse.isNotEmpty()) {
+                            LazyColumn(
+                                contentPadding = DefaultLazyColumnContentPadding,
+                                verticalArrangement = Arrangement.spacedBy(16.dp),
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                items(items = articlesReuse, key = { it.id }) { article ->
+                                    Article(
+                                        title = article.title,
+                                        description = article.body,
+                                        onClick = { onNavigateToDetailArticle(article.id) },
+                                        photo = article.photo.getOrNull(0)
+                                    )
+                                }
                             }
+                        } else {
+                            LottieAnimation(
+                                modifier = Modifier
+                                    .padding(32.dp)
+                                    .size(164.dp)
+                                    .offset(y = (-24).dp),
+                                composition = composition,
+                                iterations = LottieConstants.IterateForever,
+                            )
                         }
                     }
+
                     if (page == 2) {
                         detection?.let { detection ->
                             val garbage by garbageState.collectAsState()
@@ -212,7 +242,7 @@ fun ThreeRsScreen(
                                             onUpdateDetection(detection.id, total)
                                         },
                                         label = detection.label,
-                                        date = detection.createdAt,
+                                        date = detection.createdAt.toString(),
                                         total = detection.total,
                                         price = garbage.price,
                                         image = detection.image
