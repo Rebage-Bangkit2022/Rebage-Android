@@ -46,7 +46,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideGoogleMapRepository(googleMapRemoteDataSource: GoogleMapRemoteDataSource): GoogleMapRepository {
-        return DefaultGoogleMapRepository(googleMapRemoteDataSource)
+    fun provideGoogleMapRepository(googleMapRemoteDataSource: GoogleMapRemoteDataSource): GoogleMapsRepository {
+        return DefaultGoogleMapsRepository(googleMapRemoteDataSource)
     }
 }

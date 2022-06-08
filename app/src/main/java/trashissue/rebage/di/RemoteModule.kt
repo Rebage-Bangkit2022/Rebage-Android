@@ -1,9 +1,12 @@
 package trashissue.rebage.di
 
+import android.content.Context
+import com.google.android.libraries.places.api.Places
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,6 +19,7 @@ import trashissue.rebage.data.remote.*
 import trashissue.rebage.data.remote.service.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -80,8 +84,15 @@ object RemoteModule {
 
     @Provides
     @Singleton
-    fun provideGarbageBankRemoteDataSource(retrofit: Retrofit): GoogleMapRemoteDataSource {
+    fun provideGoogleMapRemoteDataSource(
+        @ApplicationContext context: Context,
+        retrofit: Retrofit
+    ): GoogleMapRemoteDataSource {
         val googleMapService = retrofit.create<GoogleMapService>()
-        return GoogleMapRemoteDataSource(googleMapService)
+
+        Places.initialize(context, BuildConfig.GOOGLE_MAPS_WEB_KEY)
+        val placesClient = Places.createClient(context)
+
+        return GoogleMapRemoteDataSource(googleMapService, placesClient)
     }
 }

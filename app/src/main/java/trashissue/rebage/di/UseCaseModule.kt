@@ -144,7 +144,13 @@ object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun getGarbageBankUseCase(googleMapRepository: GoogleMapRepository): GetGarbageBankUseCase {
-        return GetGarbageBankUseCase(googleMapRepository)
+    fun provideGetGarbageBankUseCase(googleMapsRepository: GoogleMapsRepository): GetGarbageBankUseCase {
+        return GetGarbageBankUseCase(googleMapsRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetPlaceUseCase(googleMapsRepository: GoogleMapsRepository): GetPlaceUseCase {
+        return GetPlaceUseCase(googleMapsRepository)
     }
 }
