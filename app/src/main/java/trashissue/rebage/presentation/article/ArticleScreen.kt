@@ -1,9 +1,12 @@
 package trashissue.rebage.presentation.article
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.rounded.ArrowBackIos
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,6 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Article
 import trashissue.rebage.presentation.article.component.Photos
+import trashissue.rebage.presentation.common.DateFormatter
 import trashissue.rebage.presentation.common.component.shimmer
 
 @Composable
@@ -69,6 +73,25 @@ fun ArticleScreen(
                         )
                     }
                 },
+                actions = {
+                    var toggle by remember {
+                        mutableStateOf(false)
+                    }
+                    IconButton(
+                        onClick = { toggle = !toggle }
+                    ) {
+                        when (toggle) {
+                            true -> Icon(
+                                imageVector = Icons.Outlined.Favorite,
+                                contentDescription = stringResource(R.string.cd_favorite)
+                            )
+                            false -> Icon(
+                                imageVector = Icons.Outlined.FavoriteBorder,
+                                contentDescription = stringResource(R.string.cd_favorite)
+                            )
+                        }
+                    }
+                }
             )
         },
         snackbarHost = {
@@ -110,13 +133,19 @@ fun ArticleScreen(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .shimmer(article == null),
-                text = article?.createdAt ?: "Date Placeholder",
+                text = article?.createdAt?.let { DateFormatter.format(it) } ?: "Date Placeholder",
                 style = MaterialTheme.typography.bodySmall
             )
             article?.body?.let { body ->
                 Text(
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(8.dp)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            shape = MaterialTheme.shapes.small
+                        )
+                        .padding(8.dp)
                         .shimmer(article == null),
                     text = body,
                     style = MaterialTheme.typography.bodyMedium,

@@ -45,16 +45,19 @@ fun Photos(
                 contentScale = ContentScale.Crop
             )
         }
-        HorizontalPagerIndicator(
-            pagerState = pagerState,
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-                .align(Alignment.BottomCenter),
-            indicatorShape = RoundedCornerShape(8.dp),
-            indicatorWidth = 32.dp,
-            indicatorHeight = 6.dp,
-            spacing = 12.dp,
-            activeColor = MaterialTheme.colorScheme.primary
-        )
+        if (photos.size != 1) {
+            HorizontalPagerIndicator(
+                pagerState = pagerState,
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .align(Alignment.BottomCenter),
+                indicatorShape = RoundedCornerShape(8.dp),
+                indicatorWidth = 32.dp,
+                indicatorHeight = 6.dp,
+                spacing = 12.dp,
+                activeColor = MaterialTheme.colorScheme.primary,
+                inactiveColor = MaterialTheme.colorScheme.surface
+            )
+        }
     }
 }
