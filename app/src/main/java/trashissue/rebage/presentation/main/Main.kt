@@ -1,10 +1,11 @@
 package trashissue.rebage.presentation.main
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DocumentScanner
@@ -57,7 +58,7 @@ fun Main(
             }
         }
 
-        Box(modifier = Modifier.weight(1F)) {
+        Column(modifier = Modifier.weight(1F)) {
             CompositionLocalProvider(LocalNavController provides navController) {
                 val isAlreadyOnboarding by isAlreadyOnboardingFlow.collectAsState()
                 val isLoggedIn by isLoggedInFlow.collectAsState()
@@ -67,7 +68,11 @@ fun Main(
                     Timber.i("IS ALREADY ONBOARDING $isAlreadyOnboarding")
                 }
 
-                if (isAlreadyOnboarding != null && isLoggedIn != null) {
+                AnimatedVisibility(
+                    visible = isAlreadyOnboarding != null && isLoggedIn != null,
+                    enter = fadeIn() + slideInVertically(),
+                    exit = fadeOut() + slideOutVertically()
+                ) {
                     NavGraph(
                         startDestination = when (isAlreadyOnboarding) {
                             false -> Route.Onboarding()
@@ -83,8 +88,8 @@ fun Main(
         }
         NavigationBarMain(
             navController = navController,
-            isBotNavVisible = isBotNavVisible,
-            currentBackStack = { currentBackStack }
+            botNavVisible = { isBotNavVisible },
+            currentBackStackProvider = { currentBackStack }
         )
     }
 }
@@ -92,11 +97,11 @@ fun Main(
 @Composable
 fun NavigationBarMain(
     navController: NavHostController,
-    isBotNavVisible: Boolean,
-    currentBackStack: () -> NavBackStackEntry?
+    botNavVisible: () -> Boolean,
+    currentBackStackProvider: () -> NavBackStackEntry?
 ) {
     AnimatedVisibility(
-        visible = isBotNavVisible,
+        visible = botNavVisible(),
         enter = expandVertically(),
         exit = shrinkVertically()
     ) {
@@ -105,7 +110,7 @@ fun NavigationBarMain(
             tonalElevation = 4.dp,
             containerColor = MaterialTheme.colorScheme.surface
         ) {
-            val currentDestination = currentBackStack()?.destination
+            val currentDestination = currentBackStackProvider()?.destination
 
             for (menu in BotNavMenus) {
                 val (title, icons, route) = menu
