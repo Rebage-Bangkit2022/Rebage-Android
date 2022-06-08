@@ -5,6 +5,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import trashissue.rebage.data.remote.payload.DetectionResponse
 import trashissue.rebage.data.remote.payload.DetectionStatisticResponse
+import trashissue.rebage.data.remote.payload.SaveDetectionRequest
 import trashissue.rebage.data.remote.payload.UpdateDetectionRequest
 import trashissue.rebage.data.remote.service.DetectionService
 import java.io.File
@@ -12,6 +13,16 @@ import java.io.File
 class DetectionRemoteDataSource(
     private val detectionService: DetectionService
 ) {
+
+    suspend fun save(token: String, req: SaveDetectionRequest): DetectionResponse {
+        val res = detectionService.save("Bearer $token", req)
+        val data = res.takeIf { it.isSuccessful }?.body()?.data
+        if (data == null) {
+            res.errorBody()?.let { throw RuntimeException(it.getErrorMessage()) }
+        }
+
+        return data ?: throw RuntimeException("Response body is empty")
+    }
 
     suspend fun detect(token: String, file: File): List<DetectionResponse> {
         val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
