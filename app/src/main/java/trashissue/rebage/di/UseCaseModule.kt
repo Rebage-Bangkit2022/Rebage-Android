@@ -90,6 +90,15 @@ object UseCaseModule {
 
     @Provides
     @ViewModelScoped
+    fun provideSaveDetectionUseCase(
+        userRepository: UserRepository,
+        detectionRepository: DetectionRepository
+    ): SaveDetectionUseCase {
+        return SaveDetectionUseCase(userRepository, detectionRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
     fun provideGetDetectionUseCase(
         userRepository: UserRepository,
         detectionRepository: DetectionRepository
