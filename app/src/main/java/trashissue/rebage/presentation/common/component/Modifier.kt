@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -26,7 +27,8 @@ fun Modifier.shimmer(
     shape: Shape? = null,
     startColor: Color = Color.White.copy(0.25F),
     endColor: Color = Color.Gray.copy(0.5F),
-    duration: Int = 1000
+    duration: Int = 1000,
+    drawBehind: Boolean = false
 ): Modifier = composed {
     if (!enabled) return@composed this
 
@@ -40,9 +42,17 @@ fun Modifier.shimmer(
         )
     )
 
-    if (shape == null) {
-        drawWithContent { drawRect(color) }
+    if (drawBehind) {
+        if (shape == null) {
+            drawBehind { drawRect(color) }
+        } else {
+            clip(shape).drawBehind { drawRect(color) }
+        }
     } else {
-        clip(shape).drawWithContent { drawRect(color) }
+        if (shape == null) {
+            drawWithContent { drawRect(color) }
+        } else {
+            clip(shape).drawWithContent { drawRect(color) }
+        }
     }
 }
