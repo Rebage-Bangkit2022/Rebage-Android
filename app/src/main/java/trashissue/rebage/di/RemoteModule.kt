@@ -43,7 +43,10 @@ object RemoteModule {
             .readTimeout(120, TimeUnit.SECONDS)
             .build()
 
-        val gson = GsonBuilder().setLenient().create()
+        val gson = GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+            .setLenient()
+            .create()
 
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_BASE_URL)
