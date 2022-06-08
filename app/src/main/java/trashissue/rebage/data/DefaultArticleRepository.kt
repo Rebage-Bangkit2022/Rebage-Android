@@ -22,4 +22,12 @@ class DefaultArticleRepository(
     override suspend fun getArticle(articleId: Int): Article {
         return articleRemoteDataSource.getArticle(articleId).asModel()
     }
+
+    override suspend fun like(articleId: Int, userId: Int): Article {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun unlike(articleId: Int, userId: Int): Article {
+        TODO("Not yet implemented")
+    }
 }
