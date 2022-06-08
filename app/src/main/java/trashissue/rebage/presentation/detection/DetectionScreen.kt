@@ -15,15 +15,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import trashissue.rebage.R
 import trashissue.rebage.domain.model.Detection
 import trashissue.rebage.domain.model.Garbage
 import trashissue.rebage.presentation.camera.CameraActivity
+import trashissue.rebage.presentation.common.DateFormatter
 import trashissue.rebage.presentation.detection.component.AddGarbage
 import trashissue.rebage.presentation.detection.component.PreviewDetectionDialog
 import trashissue.rebage.presentation.detection.component.ScannedGarbage
@@ -55,6 +62,7 @@ fun DetectionScreen(
         onDeleteDetection = viewModel::delete,
         onPreview = viewModel::showPreview,
         onClosePreview = viewModel::deletePreview,
+        onClickButtonSave = viewModel::save,
         onNavigateToThreeRs = { id ->
             navController.navigate(Route.ThreeRs(id))
         }
@@ -74,6 +82,7 @@ fun DetectionScreen(
     onDeleteDetection: (Int) -> Unit,
     onPreview: (List<Detection>) -> Unit,
     onClosePreview: () -> Unit,
+    onClickButtonSave: (String, String, Int) -> Unit,
     onNavigateToThreeRs: (Int) -> Unit
 ) {
     val context = LocalContext.current
@@ -119,8 +128,9 @@ fun DetectionScreen(
 
                     if (isAddItemMode) {
                         AddGarbage(
-                            onClickButtonSave = { _, _, _ ->
-
+                            onClickButtonSave = { image, label, total ->
+                                isAddItemMode = false
+                                onClickButtonSave(image, label, total)
                             },
                             onClickButtonCancel = {
                                 isAddItemMode = false
@@ -132,7 +142,7 @@ fun DetectionScreen(
                             onClick = { isAddItemMode = true },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(text = "Add item")
+                            Text(text = stringResource(R.string.text_add_item))
                         }
                     }
                 }
@@ -146,7 +156,7 @@ fun DetectionScreen(
                         image = detection.image,
                         name = detection.label,
                         total = detection.total,
-                        date = detection.createdAt
+                        date = DateFormatter.format(detection.createdAt)
                     )
                 }
             }
@@ -157,6 +167,22 @@ fun DetectionScreen(
                 PreviewDetectionDialog(
                     onClosePreview = onClosePreview,
                     detections = preview
+                )
+            }
+
+            val composition by rememberLottieComposition(
+                LottieCompositionSpec.RawRes(R.raw.empty_box)
+            )
+
+            if (detections.isEmpty()) {
+                LottieAnimation(
+                    modifier = Modifier
+                        .padding(32.dp)
+                        .size(164.dp)
+                        .align(Alignment.Center)
+                        .offset(y = (-24).dp),
+                    composition = composition,
+                    iterations = LottieConstants.IterateForever,
                 )
             }
 

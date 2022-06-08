@@ -15,6 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetectionViewModel @Inject constructor(
+    private val saveDetectionUseCase: SaveDetectionUseCase,
     private val getGarbageUseCase: GetGarbageUseCase,
     private val detectGarbageUseCase: DetectGarbageUseCase,
     private val getDetectionUseCase: GetDetectionUseCase,
@@ -46,6 +47,21 @@ class DetectionViewModel @Inject constructor(
     init {
         loadGarbage()
         loadDetections()
+    }
+
+    fun save(image: String, label: String, total: Int) {
+        viewModelScope.launch(dispatcher) {
+            detectionLoading.value = true
+            saveDetectionUseCase(image, label, total)
+                .onSuccess { detection ->
+                    _detections.value = mutableListOf(detection).plus(_detections.value)
+                }
+                .onFailure { e ->
+                    Timber.e(e)
+                    _snackbar.emit(e.message ?: "Failed to save detection")
+                }
+            detectionLoading.value = false
+        }
     }
 
     private fun loadGarbage() {

@@ -64,7 +64,7 @@ fun AddGarbage(
                     onClick = {
                         garbage
                             .find { it.name == selected }
-                            ?.let { onClickButtonSave(it.name, it.image, item) }
+                            ?.let { onClickButtonSave(it.image, it.name, item) }
 
                     },
                     contentPadding = DefaultButtonContentPadding
