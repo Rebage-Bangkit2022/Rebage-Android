@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import java.io.File
 import java.util.concurrent.Executor
@@ -59,18 +60,18 @@ class CameraState(
             File("/dev/null")
         }
 
-        return suspendCoroutine { continuation ->
+        return suspendCancellableCoroutine { cont ->
             val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
             takePicture(outputOptions, executor, object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     Timber.i("Image capture success")
-                    continuation.resume(photoFile)
+                    cont.resume(photoFile)
                 }
 
                 override fun onError(ex: ImageCaptureException) {
                     Timber.e(ex, "Image capture failed")
-                    continuation.resumeWithException(ex)
+                    cont.resumeWithException(ex)
                 }
             })
         }
