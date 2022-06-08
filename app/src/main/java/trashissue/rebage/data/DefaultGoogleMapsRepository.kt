@@ -2,12 +2,12 @@ package trashissue.rebage.data
 
 import trashissue.rebage.data.mapper.asModel
 import trashissue.rebage.data.remote.GoogleMapRemoteDataSource
-import trashissue.rebage.domain.model.GarbageBank
-import trashissue.rebage.domain.repository.GoogleMapRepository
+import trashissue.rebage.domain.model.Place
+import trashissue.rebage.domain.repository.GoogleMapsRepository
 
-class DefaultGoogleMapRepository(
+class DefaultGoogleMapsRepository(
     private val googleMapRemoteDataSource: GoogleMapRemoteDataSource
-) : GoogleMapRepository {
+) : GoogleMapsRepository {
 
     override suspend fun getNearby(
         lat: Double,
@@ -15,8 +15,12 @@ class DefaultGoogleMapRepository(
         radius: Double,
         type: String,
         keyword: String
-    ): List<GarbageBank> {
+    ): List<Place> {
         val res = googleMapRemoteDataSource.getNearby(lat, lng, radius, type, keyword)
         return res.map { it.asModel() }
+    }
+
+    override suspend fun getPlace(placeId: String): Place {
+        return googleMapRemoteDataSource.getPlace(placeId).asModel()
     }
 }
