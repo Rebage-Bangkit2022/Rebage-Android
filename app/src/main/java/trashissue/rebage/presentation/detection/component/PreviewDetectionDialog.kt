@@ -103,8 +103,12 @@ class BoundingBoxTransformation(
                 detectedGarbageByLabels.forEach { detectedGarbage ->
                     detectedGarbage.boundingBoxes.forEach { boundingBox ->
                         val (y1, x1, y2, x2) = boundingBox
-                        val rect =
-                            Rect(left = x1 * w, top = y1 * h, right = x2 * w, bottom = y2 * h)
+                        val rect = Rect(
+                            left = x1 * w,
+                            top = y1 * h,
+                            right = x2 * w,
+                            bottom = y2 * h
+                        )
                         drawRect(rect, paint)
                     }
                 }
