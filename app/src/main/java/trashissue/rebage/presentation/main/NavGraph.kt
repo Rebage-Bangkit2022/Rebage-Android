@@ -27,6 +27,7 @@ fun NavGraph(
         Route.Article.composable()
         Route.GarbageBank.composable()
         Route.Maps.composable()
+        Route.ChartDetail.composable()
     }
 }
 
