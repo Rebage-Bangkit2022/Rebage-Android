@@ -1,17 +1,17 @@
 package trashissue.rebage.domain.usecase
 
-import trashissue.rebage.domain.model.GarbageBank
-import trashissue.rebage.domain.repository.GoogleMapRepository
+import trashissue.rebage.domain.model.Place
+import trashissue.rebage.domain.repository.GoogleMapsRepository
 
 class GetGarbageBankUseCase(
-    private val googleMapRepository: GoogleMapRepository
+    private val googleMapsRepository: GoogleMapsRepository
 ) {
 
     suspend operator fun invoke(
         lat: Double,
         lng: Double,
         radius: Double = 1500.0
-    ): Result<List<GarbageBank>> = runCatching {
-        googleMapRepository.getNearby(lat, lng, radius, "Bank Sampah", "Bank Sampah")
+    ): Result<List<Place>> = runCatching {
+        googleMapsRepository.getNearby(lat, lng, radius, "Bank Sampah", "Bank Sampah")
     }
 }
