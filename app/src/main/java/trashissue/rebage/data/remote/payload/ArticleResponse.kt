@@ -1,6 +1,7 @@
 package trashissue.rebage.data.remote.payload
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 data class ArticleResponse(
     @field:SerializedName("id")
@@ -16,7 +17,7 @@ data class ArticleResponse(
     @field:SerializedName("photo")
     val photo: List<String>,
     @field:SerializedName("createdAt")
-    val createdAt: String,
+    val createdAt: Date,
     @field:SerializedName("updatedAt")
-    val updatedAt: String
+    val updatedAt: Date
 )

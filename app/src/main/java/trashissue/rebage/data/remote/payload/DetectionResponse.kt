@@ -1,6 +1,7 @@
 package trashissue.rebage.data.remote.payload
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 data class DetectionResponse(
     @field:SerializedName("id")
@@ -16,5 +17,5 @@ data class DetectionResponse(
     @field:SerializedName("total")
     val total: Int,
     @field:SerializedName("createdAt")
-    val createdAt: String,
+    val createdAt: Date,
 )
