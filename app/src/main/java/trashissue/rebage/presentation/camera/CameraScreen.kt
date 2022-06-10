@@ -46,11 +46,11 @@ fun CameraScreen(
         val context = LocalContext.current
         val cameraState = rememberCameraState()
         val scope = rememberCoroutineScope()
-        var loading by remember { mutableStateOf(false) }
+        var isLoading by remember { mutableStateOf(false) }
         val permission = rememberPermissionState(permission.CAMERA) { isGranted ->
             if (!isGranted) {
                 context.toast(R.string.camera_permission, Toast.LENGTH_LONG)
-                context.openPermissionSettings()
+                context.launchPermissionSettings()
             }
         }
         val galleryLauncher = rememberGalleryLauncher(
@@ -83,11 +83,11 @@ fun CameraScreen(
                 },
                 onClickCapture = {
                     scope.launch(Dispatchers.IO) {
-                        loading = true
+                        isLoading = true
                         val capturedImage = cameraState.takePicture()
                         val backCamera = cameraState.selector == CameraSelector.DEFAULT_BACK_CAMERA
                         onImageTakenFromCamera(capturedImage, backCamera)
-                        loading = false
+                        isLoading = false
                     }
                 },
                 onClickSwitchCamera = {
@@ -99,13 +99,13 @@ fun CameraScreen(
             )
         }
 
-        if (loading) {
+        if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 }
 
-private fun Context.openPermissionSettings() {
+private fun Context.launchPermissionSettings() {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
     val uri: Uri = Uri.fromParts("package", packageName, null)
     intent.data = uri
