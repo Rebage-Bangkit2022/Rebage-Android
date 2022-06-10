@@ -1,5 +1,6 @@
 package trashissue.rebage.presentation.threers.component
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -13,8 +14,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import trashissue.rebage.R
+import trashissue.rebage.presentation.common.component.AnimatedCounter
 import trashissue.rebage.presentation.theme3.RebageTheme3
 
 private val DefaultButtonContentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp)
@@ -35,7 +38,15 @@ fun EstimatedGarbage(
     Column {
         var totalItem by rememberSaveable { mutableStateOf(total) }
 
-        Card {
+        Card(
+            modifier = Modifier.border(
+                width = 1.dp,
+                color = CardDefaults
+                    .cardColors()
+                    .containerColor(enabled = true).value,
+                shape = MaterialTheme.shapes.medium
+            )
+        ) {
             Row(
                 modifier = modifier
                     .fillMaxWidth()
@@ -62,7 +73,8 @@ fun EstimatedGarbage(
                         Column {
                             Text(
                                 text = label,
-                                style = MaterialTheme.typography.titleLarge
+                                style = MaterialTheme.typography.titleLarge,
+                                fontSize = 20.sp
                             )
                             Text(
                                 modifier = Modifier.padding(top = 4.dp),
@@ -78,20 +90,20 @@ fun EstimatedGarbage(
                             if (editMode) {
                                 AnimatedCounter(
                                     value = totalItem,
-                                    onClickDecrement = { if (totalItem != 0) totalItem-- },
+                                    onClickDecrement = { if (totalItem != 1) totalItem-- },
                                     onClickIncrement = { totalItem++ }
                                 )
                             } else {
                                 Text(
                                     text = "$totalItem Items",
-                                    style = MaterialTheme.typography.titleMedium,
+                                    style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                             Text(
                                 modifier = Modifier.offset(x = 24.dp),
                                 text = "Rp${price * totalItem}",
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
