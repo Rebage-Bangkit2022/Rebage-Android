@@ -1,4 +1,4 @@
-package trashissue.rebage.presentation.detection.component
+package trashissue.rebage.presentation.common.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.*
@@ -12,7 +12,7 @@ import trashissue.rebage.presentation.theme3.RebageTheme3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropdownGarbage(
+fun Dropdown(
     modifier: Modifier = Modifier,
     options: List<String>,
     value: String,
@@ -71,7 +71,7 @@ fun DropdownGarbage(
 @Composable
 fun DropdownGarbagePreview() {
     RebageTheme3 {
-        DropdownGarbage(
+        Dropdown(
             options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5"),
             value = "Duck",
             onValueChange = {}

@@ -1,4 +1,4 @@
-package trashissue.rebage.presentation.threers.component
+package trashissue.rebage.presentation.common.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
