@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import trashissue.rebage.domain.usecase.GetGarbageBankUseCase
 import javax.inject.Inject
 
@@ -20,18 +21,15 @@ class GarbageBankViewModel @Inject constructor(
         .distinctUntilChanged()
         .map { location ->
             val (lat, lng) = location
-            getGarbageBankUseCase(lat, lng)
-                .onFailure {
-                    _snackbar.emit("Failed to load")
+            _loading.value = true
+            val places = getGarbageBankUseCase(lat, lng)
+                .onFailure { e ->
+                    Timber.e(e)
+                    _snackbar.emit("Failed to load garbage bank")
                 }
                 .getOrNull()
-                ?: return@map emptyList()
-        }
-        .onStart {
-            _loading.value = true
-        }
-        .onCompletion {
             _loading.value = false
+            places ?: emptyList()
         }
         .flowOn(dispatcher)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
