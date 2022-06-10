@@ -1,5 +1,6 @@
 package trashissue.rebage.presentation.maps.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +18,8 @@ fun InfoWindow(
     name: String,
     phoneNumber: String?,
     vicinity: String,
-    onClickButtonCheckLocation: () -> Unit
+    onClickButtonCheckLocation: () -> Unit,
+    onClickCard: () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -36,7 +38,8 @@ fun InfoWindow(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .clickable(onClick = onClickCard)
+                    .padding(16.dp)
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
