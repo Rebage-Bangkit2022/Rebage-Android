@@ -8,12 +8,12 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 @RequiresPermission(anyOf = ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"])
-suspend fun FusedLocationProviderClient.awaitLastLocation(): Location =
-    suspendCancellableCoroutine { continuation ->
-        lastLocation.addOnSuccessListener { location ->
-            continuation.resume(location)
+suspend fun FusedLocationProviderClient.awaitLastLocation(): Location? =
+    suspendCancellableCoroutine { cont ->
+        lastLocation.addOnSuccessListener { location: Location? ->
+            cont.resume(location)
         }.addOnFailureListener { e ->
-            continuation.resumeWithException(e)
+            cont.resumeWithException(e)
         }
     }
 
