@@ -1,22 +1,22 @@
 <resources>
     <string name="app_name">Rebage</string>
-    <string name="text_welcome">Welcome to Rebage</string>
+    <string name="text_welcome_to_rebage">Welcome to Rebage</string>
     <string name="text_help_save_the_earth">Ready to help save the earth today?</string>
     <string name="text_sign_in">Sign In</string>
     <string name="error_name_is_required">Name is required</string>
-    <string name="error_name_min_char">Minimum character is 5</string>
+    <string name="error_name_min_char">Minimum character is 6</string>
     <string name="error_name_max_char">Maximum character is 50</string>
     <string name="error_invalid_email">Email is invalid</string>
     <string name="error_password_is_required">Password is required</string>
     <string name="error_password_min_char">Minimum character is 6</string>
     <string name="error_password_max_char">Maximum character is 50</string>
-    <string name="text_email">Email</string>
-    <string name="text_password">Password</string>
+    <string name="text_email" translatable="false">Email</string>
+    <string name="text_password" translatable="false">Password</string>
     <string name="cd_pass_visible">Password visible</string>
     <string name="text_sign_in_alternative">Or sign in with</string>
     <string name="text_sign_up_alternative">Or sign up with</string>
-    <string name="cd_google_sign_in">Sign in with google</string>
-    <string name="cd_google_sign_up">Sign up with google</string>
+    <string name="cd_google_sign_in">Sign in with Google</string>
+    <string name="cd_google_sign_up">Sign up with Google</string>
     <string name="text_skip">Skip</string>
     <string name="title_onboarding1">Find out what kind of garbage you found</string>
     <string name="subtitle_onboarding1">Use the garbage log to find out the amount that you earn</string>
@@ -25,7 +25,6 @@
     <string name="title_onboarding3">" Estimate the price of the collected garbage"</string>
     <string name="subtitle_onboarding3">Exchange garbage into money through the nearest rongsokan</string>
     <string name="text_next">Next</string>
-    <string name="text_start">Start</string>
     <string name="text_get_started">Get started</string>
     <string name="text_home">Home</string>
     <string name="text_detection">Detection</string>
@@ -35,30 +34,27 @@
         <item quantity="other">%1d Items</item>
     </plurals>
     <string name="text_profile">Profile</string>
-    <string name="text_all_articles">All Articles</string>
+    <string name="text_latest_articles">Latest Articles</string>
     <string name="text_handicraft_product">Handicrafts Product</string>
     <string name="text_see_more">See More</string>
-    <string name="text_recommendation_subtitle">Recommendations based on your interest</string>
     <string name="text_total_garbage">Total Garbage</string>
     <string name="text_favorite_article">Favorite Article</string>
-    <string name="text_list_title_article">Plastic</string>
     <string name="cd_back">Back</string>
     <string name="camera_permission">You must allow camera permission to use this feature</string>
-    <string name="cd_save_result">Save result</string>
-    <string name="cd_add_manually">Add manually</string>
+    <string name="cd_scan_object">Scan objects</string>
     <string name="text_choose_item">Choose item</string>
     <string name="text_save">Save</string>
     <string name="text_cancel">Cancel</string>
     <string name="cd_sign_out">Sign out</string>
     <string name="cd_edit_profile_photo">Edit profile photo</string>
     <string name="text_scan">Scan</string>
-    <string name="text_recycle">Recycle</string>
-    <string name="text_reduce">Reduce</string>
-    <string name="text_reuse">Reuse</string>
+    <string name="text_recycle" translatable="false">Recycle</string>
+    <string name="text_reduce" translatable="false">Reduce</string>
+    <string name="text_reuse" translatable="false">Reuse</string>
     <string name="error_password_not_match">Password doesn\'t match</string>
     <string name="error_email_is_required">Email is required</string>
     <string name="text_name">Name</string>
-    <string name="text_already_have_account">Already have an account</string>
+    <string name="text_already_have_account">Already have an account?</string>
     <string name="text_sign_in_now">Sign in now</string>
     <string name="text_dont_have_account">Don\'t have an account?</string>
     <string name="text_sign_up_now">Sign up now</string>
@@ -68,4 +64,12 @@
     <string name="text_garbage_bank">Garbage Bank</string>
     <string name="text_add_item">Add Item</string>
     <string name="cd_favorite">Favorite</string>
+    <string name="text_collected_garbage">This is the garbage data you collected</string>
+    <string name="text_welcome">Welcome, %1$s!</string>
+    <string name="text_others">Others</string>
+    <string name="text_dont_have_garbage">You don\'t have garbage data at this time</string>
+    <string name="text_use_detection_feature">Use the detection feature to save your garbage data</string>
+    <string name="text_open_google_maps">Open Via Google Maps</string>
+    <string name="text_edit_profile">Edit Profile</string>
+    <string name="text_tema">Theme</string>
 </resources>

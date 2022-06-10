@@ -123,20 +123,20 @@ fun ProfileScreen(
                     .padding(start = 16.dp, top = 32.dp, end = 16.dp, bottom = 16.dp)
                     .fillMaxWidth(),
                 onClick = {},
-                text = "Edit Profile"
+                text = stringResource(R.string.text_edit_profile)
             )
             ProfileMenuItem(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(),
                 onClick = onNavigateToFavoriteArticleScreen,
-                text = "Favorite Article"
+                text = stringResource(R.string.text_favorite_article)
             )
             ProfileMenuItem(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(),
-                text = "Theme",
+                text = stringResource(R.string.text_tema),
                 icon = {
                     var darkTheme by remember { mutableStateOf(false) }
                     Switch(

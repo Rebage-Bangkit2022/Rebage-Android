@@ -30,7 +30,7 @@ fun TopAppBar(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.CameraAlt,
-                    contentDescription = stringResource(R.string.cd_add_manually)
+                    contentDescription = stringResource(R.string.cd_scan_object)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(text = stringResource(R.string.text_scan))

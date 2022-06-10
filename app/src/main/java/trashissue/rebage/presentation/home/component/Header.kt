@@ -13,7 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import trashissue.rebage.R
 import trashissue.rebage.domain.model.DetectionStatistic
 import trashissue.rebage.presentation.theme3.ChartColors
 import java.util.*
@@ -35,16 +38,17 @@ fun Header(
             }
 
             Text(
-                text = if (firstName == null) " " else "Selamat Datang, $firstName!",
+                text = if (firstName == null) " " else stringResource(R.string.text_welcome, firstName),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.surface
             )
             Text(
-                text = "Ini adalah data sampah yang kamu kumpulkan",
+                text = stringResource(R.string.text_collected_garbage),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.surface
             )
 
+            val context = LocalContext.current
             val (data, total) = remember(stats){
                 val statsSorted = stats.sortedByDescending { it.total }
                 val colors = ChartColors.take(3).toMutableList()
@@ -61,7 +65,7 @@ fun Header(
 
                 displayed = if (statsSorted.size > 3) displayed.plus(
                     ChartData(
-                        name = "Other",
+                        name = context.getString(R.string.text_others),
                         color = Color.Gray.copy(alpha = 0.2F),
                         value = statsSorted.drop(3).sumOf { it.total }.toDouble()
                     )

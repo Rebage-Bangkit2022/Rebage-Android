@@ -109,7 +109,7 @@ fun ArticlesPlaceholder(
 fun ArticlesPreview() {
     RebageTheme3 {
         Articles(
-            label = stringResource(R.string.text_all_articles),
+            label = stringResource(R.string.text_latest_articles),
             articles = (0..10).map {
                 Article(
                     id = 1,

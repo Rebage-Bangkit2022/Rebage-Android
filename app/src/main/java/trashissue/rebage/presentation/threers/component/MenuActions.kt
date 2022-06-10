@@ -3,8 +3,8 @@ package trashissue.rebage.presentation.threers.component
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -25,7 +25,7 @@ fun MenuActions(
         var expanded by remember { mutableStateOf(false) }
 
         Icon(
-            Icons.Default.MoreVert,
+            Icons.Outlined.MoreVert,
             contentDescription = "More options",
             modifier = Modifier.noRippleClickable { expanded = true }
         )

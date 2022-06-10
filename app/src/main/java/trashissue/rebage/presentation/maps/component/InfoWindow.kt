@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import trashissue.rebage.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +74,7 @@ fun InfoWindow(
             modifier = Modifier.fillMaxWidth(),
             onClick = onClickButtonCheckLocation
         ) {
-            Text(text = "Open  Via Google Maps")
+            Text(text = stringResource(R.string.text_open_google_maps))
         }
     }
 }

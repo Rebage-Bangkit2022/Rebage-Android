@@ -102,7 +102,7 @@ fun SignInScreen(
                 )
                 Text(
                     modifier = Modifier.padding(vertical = 12.dp),
-                    text = stringResource(R.string.text_welcome),
+                    text = stringResource(R.string.text_welcome_to_rebage),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary

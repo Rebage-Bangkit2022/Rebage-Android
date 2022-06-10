@@ -28,8 +28,8 @@ class HomeViewModel @Inject constructor(
     private val _stats = MutableStateFlow(emptyList<DetectionStatistic>())
     val stats = _stats.asStateFlow()
 
-    private val _allArticles = MutableStateFlow(emptyList<Article>())
-    val allArticles = _allArticles.asStateFlow()
+    private val _latestArticles = MutableStateFlow(emptyList<Article>())
+    val latestArticles = _latestArticles.asStateFlow()
 
     private val _articlesReduce = MutableStateFlow(emptyList<Article>())
     val articlesReduce = _articlesReduce.asStateFlow()
@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             getArticlesUseCase()
                 .onSuccess { articles ->
-                    _allArticles.value = articles
+                    _latestArticles.value = articles
                 }
                 .onFailure { e ->
                     Timber.e(e)

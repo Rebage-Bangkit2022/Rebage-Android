@@ -42,7 +42,7 @@ fun HomeScreen(
     HomeScreen(
         snackbarHostState = snackbarHostState,
         usernameState = viewModel.username,
-        allArticlesState = viewModel.allArticles,
+        latestArticlesState = viewModel.latestArticles,
         articlesReduce = viewModel.articlesReduce,
         articlesReuse = viewModel.articleReuse,
         statsState = viewModel.stats,
@@ -60,7 +60,7 @@ fun HomeScreen(
 fun HomeScreen(
     snackbarHostState: SnackbarHostState,
     usernameState: StateFlow<String?>,
-    allArticlesState: StateFlow<List<Article>>,
+    latestArticlesState: StateFlow<List<Article>>,
     articlesReduce: StateFlow<List<Article>>,
     articlesReuse: StateFlow<List<Article>>,
     statsState: StateFlow<List<DetectionStatistic>>,
@@ -91,7 +91,7 @@ fun HomeScreen(
 
             val username by usernameState.collectAsState()
             val stats by statsState.collectAsState()
-            val allArticles by allArticlesState.collectAsState()
+            val latestArticles by latestArticlesState.collectAsState()
             val reuse by articlesReuse.collectAsState()
             val reduce by articlesReduce.collectAsState()
 
@@ -104,8 +104,8 @@ fun HomeScreen(
                 onClickShowMore = onClickShowMore
             )
             Articles(
-                label = stringResource(R.string.text_all_articles),
-                articles = allArticles,
+                label = stringResource(R.string.text_latest_articles),
+                articles = latestArticles,
                 onClickArticle = onNavigateToDetailArticle
             )
             Articles(
@@ -129,7 +129,7 @@ fun HomeScreenPreview() {
         HomeScreen(
             snackbarHostState = remember { SnackbarHostState() },
             usernameState = MutableStateFlow("Tubagus"),
-            allArticlesState = MutableStateFlow(emptyList()),
+            latestArticlesState = MutableStateFlow(emptyList()),
             articlesReuse = MutableStateFlow(emptyList()),
             articlesReduce = MutableStateFlow(emptyList()),
             statsState = MutableStateFlow(emptyList()),

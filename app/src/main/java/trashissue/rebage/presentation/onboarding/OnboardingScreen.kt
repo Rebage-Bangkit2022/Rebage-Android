@@ -15,7 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
@@ -33,16 +32,19 @@ fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel()
 ) {
     OnboardingScreen(
-        navController = navController,
-        onboarding = viewModel::onboarding
+        onboarding = viewModel::onboarding,
+        onNavigateToSignInScreen = {
+            viewModel.onboarding(true)
+            navController.navigate(Route.SignIn())
+        }
     )
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun OnboardingScreen(
-    navController: NavHostController,
-    onboarding: (Boolean) -> Unit
+    onboarding: (Boolean) -> Unit,
+    onNavigateToSignInScreen: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -54,10 +56,7 @@ fun OnboardingScreen(
         verticalArrangement = Arrangement.Top
     ) {
         TopBar(
-            onClickSkip = {
-                onboarding(true)
-                navController.navigate(Route.SignIn())
-            },
+            onClickSkip = onNavigateToSignInScreen,
             text = stringResource(R.string.text_skip)
         )
 
@@ -103,6 +102,9 @@ fun OnboardingScreen(
 @Composable
 fun OnboardingScreenPreview() {
     RebageTheme3 {
-        OnboardingScreen(navController = rememberNavController())
+        OnboardingScreen(
+            onNavigateToSignInScreen = {},
+            onboarding = { }
+        )
     }
 }
