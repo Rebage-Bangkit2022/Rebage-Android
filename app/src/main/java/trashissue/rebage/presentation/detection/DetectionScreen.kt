@@ -174,7 +174,7 @@ fun DetectionScreen(
                 LottieCompositionSpec.RawRes(R.raw.empty_box)
             )
 
-            if (detections.isEmpty()) {
+            if (detections.isEmpty() && !isLoading) {
                 LottieAnimation(
                     modifier = Modifier
                         .padding(32.dp)
