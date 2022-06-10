@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -37,6 +38,7 @@ import trashissue.rebage.R
 import trashissue.rebage.domain.model.Article
 import trashissue.rebage.domain.model.Detection
 import trashissue.rebage.domain.model.Garbage
+import trashissue.rebage.presentation.common.DateFormatter
 import trashissue.rebage.presentation.main.Route
 import trashissue.rebage.presentation.threers.component.*
 
@@ -90,7 +92,6 @@ fun ThreeRsScreen(
 ) {
     val pagerState = rememberPagerState()
     val isFabVisible by remember {
-
         derivedStateOf {
             Timber.i(pagerState.currentPage.toString())
             pagerState.currentPage == 2
@@ -117,7 +118,7 @@ fun ThreeRsScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.surface,
                     text = {
-                        Text(text = "Bank")
+                        Text(text = stringResource(R.string.text_garbage_bank))
                     },
                     icon = {
                         Icon(
@@ -226,11 +227,10 @@ fun ThreeRsScreen(
                             )
                         }
                     }
-
                     if (page == 2) {
+                        val garbage by garbageState.collectAsState()
+
                         detection?.let { detection ->
-                            val garbage by garbageState.collectAsState()
-                            @Suppress("NAME_SHADOWING")
                             garbage?.let { garbage ->
                                 Column(
                                     modifier = Modifier
@@ -242,7 +242,7 @@ fun ThreeRsScreen(
                                             onUpdateDetection(detection.id, total)
                                         },
                                         label = detection.label,
-                                        date = detection.createdAt.toString(),
+                                        date = DateFormatter.format(detection.createdAt),
                                         total = detection.total,
                                         price = garbage.price,
                                         image = detection.image
