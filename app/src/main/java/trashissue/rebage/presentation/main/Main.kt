@@ -2,10 +2,7 @@ package trashissue.rebage.presentation.main
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DocumentScanner
@@ -18,6 +15,7 @@ import androidx.compose.material.icons.outlined.Paid
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
@@ -105,44 +103,57 @@ fun NavigationBarMain(
         enter = expandVertically(),
         exit = shrinkVertically()
     ) {
-        NavigationBar(
-            modifier = Modifier.navigationBarsPadding(),
-            tonalElevation = 4.dp,
-            containerColor = MaterialTheme.colorScheme.surface
-        ) {
-            val currentDestination = currentBackStackProvider()?.destination
+        Column {
+            NavigationBar(
+                tonalElevation = 4.dp,
+                containerColor = MaterialTheme.colorScheme.surface
+            ) {
+                val currentDestination = currentBackStackProvider()?.destination
 
-            for (menu in BotNavMenus) {
-                val (title, icons, route) = menu
-                val (outlined, filled) = icons
+                for (menu in BotNavMenus) {
+                    val (title, icons, route) = menu
+                    val (outlined, filled) = icons
 
-                val selected = currentDestination?.hierarchy?.any { it.route == route } == true
+                    val selected = currentDestination?.hierarchy?.any { it.route == route } == true
 
-                NavigationBarItem(
-                    selected = selected,
-                    onClick = {
-                        navController.navigate(route) {
-                            // Pop up to the start destination of the graph to
-                            // avoid building up a large stack of destinations
-                            // on the back stack as users select items
-                            popUpTo(Route.Home()) { saveState = true }
-                            // Avoid multiple copies of the same destination when
-                            // reselecting the same item
-                            launchSingleTop = true
-                            // Restore state when reselecting a previously selected item
-                            restoreState = true
+                    NavigationBarItem(
+                        selected = selected,
+                        onClick = {
+                            navController.navigate(route) {
+                                // Pop up to the start destination of the graph to
+                                // avoid building up a large stack of destinations
+                                // on the back stack as users select items
+                                popUpTo(Route.Home()) { saveState = true }
+                                // Avoid multiple copies of the same destination when
+                                // reselecting the same item
+                                launchSingleTop = true
+                                // Restore state when reselecting a previously selected item
+                                restoreState = true
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = if (selected) filled else outlined,
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        },
+                        label = {
+                            Text(text = stringResource(title))
                         }
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = if (selected) filled else outlined,
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    },
-                    label = {
-                        Text(text = stringResource(title))
-                    }
+                    )
+                }
+            }
+            Surface(tonalElevation = 4.dp) {
+                val density = LocalDensity.current
+                val navigationBarHeight = with(density) {
+                    WindowInsets.navigationBars.getBottom(density).toDp()
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(navigationBarHeight)
                 )
             }
         }
