@@ -62,4 +62,6 @@
     <string name="text_sign_up">Sign Up</string>
     <string name="text_confirm_password">Confirm Password</string>
     <string name="text_garbage_bank">Garbage Bank</string>
+    <string name="text_add_item">Add Item</string>
+    <string name="cd_favorite">Favorite</string>
 </resources>
