@@ -30,6 +30,10 @@
     <string name="text_home">Home</string>
     <string name="text_detection">Detection</string>
     <string name="text_price">Price</string>
+    <plurals name="text_items">
+        <item quantity="one">%1d Item</item>
+        <item quantity="other">%1d Items</item>
+    </plurals>
     <string name="text_profile">Profile</string>
     <string name="text_all_articles">All Articles</string>
     <string name="text_handicraft_product">Handicrafts Product</string>

@@ -12,11 +12,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,7 +31,7 @@ import trashissue.rebage.presentation.common.component.noRippleClickable
 import trashissue.rebage.presentation.theme3.RebageTheme3
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ScannedGarbage(
     modifier: Modifier = Modifier,
@@ -109,7 +111,7 @@ fun ScannedGarbage(
                             )
                         } else {
                             Text(
-                                text = "$total Items",
+                                text = pluralStringResource(R.plurals.text_items, total, total),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         }

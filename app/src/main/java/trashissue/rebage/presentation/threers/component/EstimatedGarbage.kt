@@ -9,8 +9,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,7 +24,7 @@ import trashissue.rebage.presentation.theme3.RebageTheme3
 
 private val DefaultButtonContentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp)
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun EstimatedGarbage(
     modifier: Modifier = Modifier,
@@ -95,7 +97,7 @@ fun EstimatedGarbage(
                                 )
                             } else {
                                 Text(
-                                    text = "$totalItem Items",
+                                    text = pluralStringResource(R.plurals.text_items, totalItem, totalItem),
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
