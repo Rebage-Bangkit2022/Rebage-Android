@@ -40,13 +40,13 @@ fun GarbageLabel(
                 .weight(1F)
                 .padding(horizontal = 12.dp, vertical = 6.dp),
             text = name,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.labelLarge,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.labelLarge
         )
     }
 }

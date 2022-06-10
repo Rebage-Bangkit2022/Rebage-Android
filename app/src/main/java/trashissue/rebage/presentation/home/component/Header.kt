@@ -59,13 +59,13 @@ fun Header(
                         )
                     }
 
-                displayed = if (displayed.isNotEmpty()) displayed.plus(
+                displayed = if (statsSorted.size > 3) displayed.plus(
                     ChartData(
                         name = "Other",
                         color = Color.Gray.copy(alpha = 0.2F),
                         value = statsSorted.drop(3).sumOf { it.total }.toDouble()
                     )
-                ) else emptyList()
+                ) else displayed
 
                 displayed to statsSorted.sumOf { it.total }
             }

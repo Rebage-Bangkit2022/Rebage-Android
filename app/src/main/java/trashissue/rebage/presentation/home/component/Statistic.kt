@@ -162,13 +162,13 @@ fun StatisticPlaceHolder(
             ) {
                 Text(
                     text = "Kamu belum mempunyai data sampah saat ini.",
-                    style = MaterialTheme.typography.titleSmall,
+                    style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Gunakan fitur deteksi agar data sampah mu dapat tersimpan",
-                    style = MaterialTheme.typography.titleSmall
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }
