@@ -1,4 +1,4 @@
-package trashissue.rebage.presentation.detection.component
+package trashissue.rebage.presentation.common.component
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.padding
@@ -14,12 +14,14 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedCounter(
+    modifier: Modifier = Modifier,
     value: Int,
     onClickDecrement: () -> Unit,
     onClickIncrement: () -> Unit
 ) {
 
     CounterButton(
+        modifier = modifier,
         onClickDecrement = onClickDecrement,
         onClickIncrement = onClickIncrement
     ) {
