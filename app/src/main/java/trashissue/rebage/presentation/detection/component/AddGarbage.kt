@@ -10,6 +10,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Garbage
+import trashissue.rebage.presentation.common.component.AnimatedCounter
+import trashissue.rebage.presentation.common.component.Dropdown
 import trashissue.rebage.presentation.theme3.RebageTheme3
 
 val DefaultButtonContentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp)
@@ -31,7 +33,7 @@ fun AddGarbage(
             val options = remember { garbage.map { it.name } }
             var selected by remember { mutableStateOf("") }
 
-            DropdownGarbage(
+            Dropdown(
                 options = options,
                 value = selected,
                 onValueChange = { value ->
@@ -43,11 +45,11 @@ fun AddGarbage(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.align(Alignment.End)
             ) {
-                var item by remember { mutableStateOf(0) }
+                var item by remember { mutableStateOf(1) }
 
                 AnimatedCounter(
                     value = item,
-                    onClickDecrement = { if (item != 0) item-- },
+                    onClickDecrement = { if (item != 1) item-- },
                     onClickIncrement = { item++ }
                 )
                 Spacer(modifier = Modifier.weight(1F))
