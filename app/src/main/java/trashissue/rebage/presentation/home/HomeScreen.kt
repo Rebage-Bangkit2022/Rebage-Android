@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.collectLatest
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Article
 import trashissue.rebage.domain.model.DetectionStatistic
+import trashissue.rebage.presentation.common.component.isLight
 import trashissue.rebage.presentation.home.component.Articles
 import trashissue.rebage.presentation.home.component.Header
 import trashissue.rebage.presentation.main.Route
@@ -79,7 +79,7 @@ fun HomeScreen(
                 .padding(innerPadding)
         ) {
 
-            val isLight = MaterialTheme.colorScheme.isLight()
+            val isLight = MaterialTheme.colorScheme.isLight
             val systemUiController = rememberSystemUiController()
 
             DisposableEffect(isLight) {
@@ -121,9 +121,6 @@ fun HomeScreen(
         }
     }
 }
-
-@Composable
-fun ColorScheme.isLight() = this.background.luminance() > 0.5
 
 @Preview
 @Composable
