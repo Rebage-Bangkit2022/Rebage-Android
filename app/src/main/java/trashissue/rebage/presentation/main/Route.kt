@@ -75,7 +75,7 @@ sealed class Route(
 
         context(NavGraphBuilder)
         fun composable() = composable(route) {
-            PriceScreen()
+            PriceScreen(LocalNavController.current)
         }
 
         operator fun invoke() = route
