@@ -37,7 +37,7 @@ class ChartDetailViewModel @Inject constructor(
             _loading.value = true
             getDetectionsStatisticUseCase()
                 .onSuccess { stats ->
-                    _stats.value = stats
+                    _stats.value = stats.sortedBy { it.total }
                 }
                 .onFailure { e ->
                     Timber.e(e)
