@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import trashissue.rebage.data.*
+import trashissue.rebage.data.local.DetectionLocalDataSource
 import trashissue.rebage.data.local.UserLocalDataSource
 import trashissue.rebage.data.remote.*
 import trashissue.rebage.domain.repository.*
@@ -28,8 +29,14 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideDetectionRepository(detectionRemoteDataSource: DetectionRemoteDataSource): DetectionRepository {
-        return DefaultDetectionRepository(detectionRemoteDataSource)
+    fun provideDetectionRepository(
+        detectionLocalDataSource: DetectionLocalDataSource,
+        detectionRemoteDataSource: DetectionRemoteDataSource
+    ): DetectionRepository {
+        return DefaultDetectionRepository(
+            detectionLocalDataSource,
+            detectionRemoteDataSource
+        )
     }
 
     @Provides

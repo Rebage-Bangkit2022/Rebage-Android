@@ -54,7 +54,7 @@ class HomeViewModel @Inject constructor(
                 }
                 .onFailure { e ->
                     Timber.e(e)
-                    _snackbar.emit("Failed to load articles about reduce")
+                    _snackbar.emit("Failed to statistics")
                 }
         }
     }

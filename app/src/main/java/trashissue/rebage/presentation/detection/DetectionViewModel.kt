@@ -15,10 +15,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetectionViewModel @Inject constructor(
+    getDetectionUseCase: GetDetectionUseCase,
     private val saveDetectionUseCase: SaveDetectionUseCase,
     private val getGarbageUseCase: GetGarbageUseCase,
     private val detectGarbageUseCase: DetectGarbageUseCase,
-    private val getDetectionUseCase: GetDetectionUseCase,
     private val updateDetectionUseCase: UpdateDetectionUseCase,
     private val deleteDetectionUseCase: DeleteDetectionUseCase,
     private val dispatcher: CoroutineDispatcher
@@ -26,8 +26,20 @@ class DetectionViewModel @Inject constructor(
     private val _garbage = MutableStateFlow<List<Garbage>>(emptyList())
     val garbage = _garbage.asStateFlow()
 
-    private val _detections = MutableStateFlow<List<Detection>>(emptyList())
-    val detections = _detections.asStateFlow()
+    val detections = getDetectionUseCase()
+        .onStart {
+            detectionLoading.value = true
+        }
+        .onEach {
+            detectionLoading.value = false
+        }
+        .catch { e ->
+            Timber.e(e)
+            detectionLoading.value = false
+            _snackbar.emit("Failed to load detections")
+        }
+        .flowOn(dispatcher)
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _preview = MutableStateFlow<List<Detection>>(emptyList())
     val preview = _preview.asStateFlow()
@@ -46,20 +58,15 @@ class DetectionViewModel @Inject constructor(
 
     init {
         loadGarbage()
-        loadDetections()
     }
 
     fun save(image: String, label: String, total: Int) {
         viewModelScope.launch(dispatcher) {
             detectionLoading.value = true
-            saveDetectionUseCase(image, label, total)
-                .onSuccess { detection ->
-                    _detections.value = mutableListOf(detection).plus(_detections.value)
-                }
-                .onFailure { e ->
-                    Timber.e(e)
-                    _snackbar.emit(e.message ?: "Failed to save detection")
-                }
+            saveDetectionUseCase(image, label, total).onFailure { e ->
+                Timber.e(e)
+                _snackbar.emit(e.message ?: "Failed to save detection")
+            }
             detectionLoading.value = false
         }
     }
@@ -85,7 +92,6 @@ class DetectionViewModel @Inject constructor(
             detectGarbageUseCase(image)
                 .onSuccess { detections ->
                     _preview.value = detections
-                    _detections.value = detections.plus(_detections.value)
                 }
                 .onFailure { e ->
                     Timber.e(e)
@@ -95,39 +101,13 @@ class DetectionViewModel @Inject constructor(
         }
     }
 
-    private fun loadDetections() {
-        viewModelScope.launch(dispatcher) {
-            detectionLoading.value = true
-            getDetectionUseCase()
-                .onSuccess { detections ->
-                    _detections.value = detections
-                }
-                .onFailure { e ->
-                    Timber.e(e)
-                    _snackbar.emit(e.message ?: "Failed to load detections")
-                }
-            detectionLoading.value = false
-        }
-    }
-
     fun update(id: Int, total: Int) {
         viewModelScope.launch(dispatcher) {
             detectionLoading.value = true
-            updateDetectionUseCase(id, total)
-                .onSuccess { detection ->
-                    val index = _detections.value.indexOfFirst { it.id == id }
-                    if (index == -1) {
-                        _snackbar.emit("Failed to update detection")
-                        return@onSuccess
-                    }
-                    _detections.value = _detections.value
-                        .toMutableList()
-                        .apply { this[index] = detection }
-                }
-                .onFailure { e ->
-                    Timber.e(e)
-                    _snackbar.emit(e.message ?: "Failed to update detection")
-                }
+            updateDetectionUseCase(id, total).onFailure { e ->
+                Timber.e(e)
+                _snackbar.emit(e.message ?: "Failed to update detection")
+            }
             detectionLoading.value = false
         }
     }
@@ -135,21 +115,10 @@ class DetectionViewModel @Inject constructor(
     fun delete(id: Int) {
         viewModelScope.launch(dispatcher) {
             detectionLoading.value = true
-            deleteDetectionUseCase(id)
-                .onSuccess { detection ->
-                    val index = _detections.value.indexOfFirst { it.id == id }
-                    if (index == -1) {
-                        _snackbar.emit("Failed to delete detection")
-                        return@onSuccess
-                    }
-                    _detections.value = _detections.value
-                        .toMutableList()
-                        .apply { remove(detection) }
-                }
-                .onFailure { e ->
-                    Timber.e(e)
-                    _snackbar.emit(e.message ?: "Failed to delete detection")
-                }
+            deleteDetectionUseCase(id).onFailure { e ->
+                Timber.e(e)
+                _snackbar.emit(e.message ?: "Failed to delete detection")
+            }
             detectionLoading.value = false
         }
     }

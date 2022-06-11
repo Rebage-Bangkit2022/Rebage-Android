@@ -1,5 +1,9 @@
 package trashissue.rebage.data
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import trashissue.rebage.data.local.DetectionLocalDataSource
+import trashissue.rebage.data.mapper.asEntity
 import trashissue.rebage.data.mapper.asModel
 import trashissue.rebage.data.remote.DetectionRemoteDataSource
 import trashissue.rebage.data.remote.payload.SaveDetectionRequest
@@ -10,6 +14,7 @@ import trashissue.rebage.domain.repository.DetectionRepository
 import java.io.File
 
 class DefaultDetectionRepository(
+    private val detectionLocalDataSource: DetectionLocalDataSource,
     private val detectionRemoteDataSource: DetectionRemoteDataSource
 ) : DetectionRepository {
 
@@ -20,17 +25,22 @@ class DefaultDetectionRepository(
             total = total
         )
         val res = detectionRemoteDataSource.save(token, req)
+        detectionLocalDataSource.saveDetection(res.asEntity())
         return res.asModel()
     }
 
     override suspend fun detect(token: String, file: File): List<Detection> {
         val res = detectionRemoteDataSource.detect(token, file)
+        detectionLocalDataSource.saveDetections(res.map { it.asEntity() })
         return res.map { it.asModel() }
     }
 
-    override suspend fun getDetections(token: String): List<Detection> {
+    override suspend fun getDetections(token: String): Flow<List<Detection>> {
         val res = detectionRemoteDataSource.getDetections(token)
-        return res.map { it.asModel() }
+        detectionLocalDataSource.saveDetections(res.map { it.asEntity() })
+        return detectionLocalDataSource
+            .getDetections()
+            .map { it.map { entity -> entity.asModel() } }
     }
 
     override suspend fun getDetection(token: String, detectionId: Int): Detection {
@@ -46,11 +56,13 @@ class DefaultDetectionRepository(
     override suspend fun update(token: String, detectionId: Int, total: Int): Detection {
         val req = UpdateDetectionRequest(id = detectionId, total = total)
         val res = detectionRemoteDataSource.update(token, req)
+        detectionLocalDataSource.saveDetection(res.asEntity())
         return res.asModel()
     }
 
     override suspend fun delete(token: String, detectionId: Int): Detection {
         val res = detectionRemoteDataSource.delete(token, detectionId)
+        detectionLocalDataSource.deleteDetection(res.asEntity())
         return res.asModel()
     }
 }
