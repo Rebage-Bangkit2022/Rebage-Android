@@ -12,50 +12,65 @@ class UserPreferences(
 
     suspend fun saveUser(user: UserEntity) {
         dataStore.edit { preferences ->
-            preferences[KEY_USER_ID] = user.id
-            preferences[KEY_USER_EMAIL] = user.email
-            preferences[KEY_USER_NAME] = user.name
-            if (user.photo != null) preferences[KEY_USER_PHOTO] = user.photo
-            preferences[KEY_USER_TOKEN] = user.token
+            preferences[KeyUserId] = user.id
+            preferences[KeyUserEmail] = user.email
+            preferences[KeyUsername] = user.name
+            if (user.photo != null) preferences[KeyUserPhoto] = user.photo
+            preferences[KeyUserToken] = user.token
         }
     }
 
     fun getUser(): Flow<UserEntity?> {
         return dataStore.data.map { preferences ->
             UserEntity(
-                id = preferences[KEY_USER_ID] ?: return@map null,
-                name = preferences[KEY_USER_NAME] ?: return@map null,
-                email = preferences[KEY_USER_EMAIL] ?: return@map null,
-                photo = preferences[KEY_USER_PHOTO],
-                token = preferences[KEY_USER_TOKEN] ?: return@map null
+                id = preferences[KeyUserId] ?: return@map null,
+                name = preferences[KeyUsername] ?: return@map null,
+                email = preferences[KeyUserEmail] ?: return@map null,
+                photo = preferences[KeyUserPhoto],
+                token = preferences[KeyUserToken] ?: return@map null
             )
         }
     }
 
     suspend fun deleteUser() {
         dataStore.edit { mutablePreferences ->
-            mutablePreferences.remove(KEY_USER_ID)
-            mutablePreferences.remove(KEY_USER_NAME)
-            mutablePreferences.remove(KEY_USER_NAME)
-            mutablePreferences.remove(KEY_USER_PHOTO)
-            mutablePreferences.remove(KEY_USER_TOKEN)
+            mutablePreferences.remove(KeyUserId)
+            mutablePreferences.remove(KeyUsername)
+            mutablePreferences.remove(KeyUsername)
+            mutablePreferences.remove(KeyUserPhoto)
+            mutablePreferences.remove(KeyUserToken)
         }
     }
 
     suspend fun onboarding(isAlreadyOnboarding: Boolean) {
-        dataStore.edit { it[KEY_ONBOARDING] = isAlreadyOnboarding }
+        dataStore.edit { it[KeyOnboarding] = isAlreadyOnboarding }
     }
 
     fun onboarding(): Flow<Boolean> {
-        return dataStore.data.map { it[KEY_ONBOARDING] ?: false }
+        return dataStore.data.map { it[KeyOnboarding] ?: false }
+    }
+
+    suspend fun darkTheme(isDarkTheme: Boolean?) {
+        dataStore.edit { mutablePreferences ->
+            if (isDarkTheme != null) {
+                mutablePreferences[KeyDarkTheme] = isDarkTheme
+                return@edit
+            }
+            mutablePreferences.remove(KeyDarkTheme)
+        }
+    }
+
+    fun darkTheme(): Flow<Boolean?> {
+        return dataStore.data.map { it[KeyDarkTheme] }
     }
 
     companion object {
-        private val KEY_USER_ID = intPreferencesKey("user_id")
-        private val KEY_USER_NAME = stringPreferencesKey("user_name")
-        private val KEY_USER_EMAIL = stringPreferencesKey("user_email")
-        private val KEY_USER_PHOTO = stringPreferencesKey("user_photo")
-        private val KEY_USER_TOKEN = stringPreferencesKey("user_token")
-        private val KEY_ONBOARDING = booleanPreferencesKey("onboarding")
+        private val KeyUserId = intPreferencesKey("user_id")
+        private val KeyUsername = stringPreferencesKey("user_name")
+        private val KeyUserEmail = stringPreferencesKey("user_email")
+        private val KeyUserPhoto = stringPreferencesKey("user_photo")
+        private val KeyUserToken = stringPreferencesKey("user_token")
+        private val KeyOnboarding = booleanPreferencesKey("onboarding")
+        private val KeyDarkTheme = booleanPreferencesKey("dark_theme")
     }
 }
