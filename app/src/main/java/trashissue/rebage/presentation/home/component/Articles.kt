@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Article
+import trashissue.rebage.presentation.common.component.noRippleClickable
 import trashissue.rebage.presentation.common.component.shimmer
 import trashissue.rebage.presentation.theme3.RebageTheme3
 import java.util.*
@@ -26,6 +27,7 @@ fun Articles(
     modifier: Modifier = Modifier,
     label: String,
     articles: List<Article>,
+    onClickShowMore: () -> Unit,
     onClickArticle: (Int) -> Unit
 ) {
     Column(
@@ -46,6 +48,7 @@ fun Articles(
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
+                modifier = Modifier.noRippleClickable(onClick = onClickShowMore),
                 style = MaterialTheme.typography.labelLarge,
                 text = stringResource(R.string.text_see_more),
                 color = MaterialTheme.colorScheme.primary,
@@ -120,8 +123,10 @@ fun ArticlesPreview() {
                     source = "",
                     photo = listOf("https://i.pinimg.com/564x/d7/f8/5e/d7f85e8343547676774a4ffdffc96143.jpg"),
                     author = "",
+                    liked = false
                 )
             },
+            onClickShowMore = { },
             onClickArticle = { }
         )
     }

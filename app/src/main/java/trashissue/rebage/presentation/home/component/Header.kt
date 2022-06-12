@@ -2,7 +2,6 @@ package trashissue.rebage.presentation.home.component
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.DetectionStatistic
+import trashissue.rebage.presentation.common.component.isDark
 import trashissue.rebage.presentation.theme3.ChartColors
+import trashissue.rebage.presentation.theme3.LightSurface
 import java.util.*
 
 @Composable
@@ -28,7 +29,7 @@ fun Header(
     stats: List<DetectionStatistic>,
     onClickShowMore: () -> Unit
 ) {
-    Surface(color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.primary) {
+    Surface(color = if (MaterialTheme.colorScheme.isDark) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.primary) {
         Column(modifier = modifier.animateContentSize()) {
             val firstName = remember(name) {
                 name
@@ -40,21 +41,20 @@ fun Header(
             Text(
                 text = if (firstName == null) " " else stringResource(R.string.text_welcome, firstName),
                 style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.surface
+                color = LightSurface
             )
             Text(
                 text = stringResource(R.string.text_collected_garbage),
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.surface
+                color = LightSurface
             )
 
             val context = LocalContext.current
             val (data, total) = remember(stats){
                 val statsSorted = stats.sortedByDescending { it.total }
-                val colors = ChartColors.take(3).toMutableList()
+                val colors = ChartColors.toMutableList()
 
                 var displayed = statsSorted.take(3)
-                    .take(colors.size)
                     .map {
                         ChartData(
                             name = it.label,
