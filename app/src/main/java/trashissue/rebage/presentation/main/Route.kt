@@ -5,11 +5,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import trashissue.rebage.presentation.article.ArticleScreen
-import trashissue.rebage.presentation.chartdetail.ChartDetailScreen
+import trashissue.rebage.presentation.detailchart.DetailChartScreen
 import trashissue.rebage.presentation.detection.DetectionScreen
-import trashissue.rebage.presentation.favoritearticle.FavoriteArticleScreen
+import trashissue.rebage.presentation.editprofile.EditProfileScreen
 import trashissue.rebage.presentation.garbagebank.GarbageBankScreen
 import trashissue.rebage.presentation.home.HomeScreen
+import trashissue.rebage.presentation.listarticle.ListArticleScreen
+import trashissue.rebage.presentation.listarticle.ListArticleType
 import trashissue.rebage.presentation.maps.MapsScreen
 import trashissue.rebage.presentation.onboarding.OnboardingScreen
 import trashissue.rebage.presentation.price.PriceScreen
@@ -91,14 +93,29 @@ sealed class Route(
         operator fun invoke() = route
     }
 
-    object FavoriteArticle : Route("favorite_article") {
+    object EditProfile : Route("edit_profile") {
 
-        context (NavGraphBuilder)
+        context(NavGraphBuilder)
         fun composable() = composable(route) {
-            FavoriteArticleScreen(LocalNavController.current)
+            EditProfileScreen(LocalNavController.current)
         }
 
         operator fun invoke() = route
+    }
+
+    object ListArticle : Route("list_article/{$LIST_ARTICLE_TYPE}") {
+        private val arguments = listOf(
+            navArgument(LIST_ARTICLE_TYPE) {
+                type = NavType.StringType
+            }
+        )
+
+        context (NavGraphBuilder)
+        fun composable() = composable(route, arguments) {
+            ListArticleScreen(LocalNavController.current)
+        }
+
+        operator fun invoke(listArticle: ListArticleType) = "list_article/${listArticle.name}"
     }
 
     object ThreeRs : Route("three_r_s/{$KEY_DETECTION_ID}") {
@@ -160,7 +177,7 @@ sealed class Route(
 
         context (NavGraphBuilder)
         fun composable() = composable(route) {
-            ChartDetailScreen(LocalNavController.current)
+            DetailChartScreen(LocalNavController.current)
         }
 
         operator fun invoke() = route
@@ -170,5 +187,6 @@ sealed class Route(
         const val KEY_ARTICLE_ID = "article_id"
         const val KEY_DETECTION_ID = "detection_id"
         const val KEY_PLACE_ID = "place_id"
+        const val LIST_ARTICLE_TYPE = "list_article_type"
     }
 }

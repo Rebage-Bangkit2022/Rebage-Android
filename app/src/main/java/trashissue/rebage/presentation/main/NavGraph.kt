@@ -22,12 +22,13 @@ fun NavGraph(
         Route.Price.composable()
         Route.Profile.composable()
         Route.ThreeRs.composable()
-        Route.FavoriteArticle.composable()
+        Route.ListArticle.composable()
         Route.ThreeRs.composable()
         Route.Article.composable()
         Route.GarbageBank.composable()
         Route.Maps.composable()
         Route.ChartDetail.composable()
+        Route.EditProfile.composable()
     }
 }
 
