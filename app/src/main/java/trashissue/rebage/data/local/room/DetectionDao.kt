@@ -8,14 +8,17 @@ import trashissue.rebage.data.local.entity.DetectionEntity
 interface DetectionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveDetection(detection: DetectionEntity)
+    suspend fun save(detection: DetectionEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveDetections(detections: List<DetectionEntity>)
+    suspend fun save(detections: List<DetectionEntity>)
 
     @Query("SELECT * FROM detection ORDER BY created_at DESC")
     fun getDetections(): Flow<List<DetectionEntity>>
 
     @Delete
-    suspend fun deleteDetection(detection: DetectionEntity)
+    suspend fun delete(detection: DetectionEntity)
+
+    @Query("DELETE FROM detection")
+    suspend fun delete()
 }
