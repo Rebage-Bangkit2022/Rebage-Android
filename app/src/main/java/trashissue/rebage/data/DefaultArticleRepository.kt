@@ -15,19 +15,27 @@ class DefaultArticleRepository(
         page: Int,
         size: Int
     ): List<Article> {
-        return articleRemoteDataSource.getArticles(category, garbageCategory, page, size)
-            .map { it.asModel() }
+        val res = articleRemoteDataSource.getArticles(category, garbageCategory, page, size)
+        return res.map { it.asModel() }
     }
 
-    override suspend fun getArticle(articleId: Int): Article {
-        return articleRemoteDataSource.getArticle(articleId).asModel()
+    override suspend fun getArticle(token: String, articleId: Int): Article {
+        val res = articleRemoteDataSource.getArticle(token, articleId)
+        return res.asModel()
     }
 
-    override suspend fun like(articleId: Int, userId: Int): Article {
-        TODO("Not yet implemented")
+    override suspend fun getFavoriteArticle(token: String): List<Article> {
+        val res = articleRemoteDataSource.getFavoriteArticles(token)
+        return res.map { it.asModel() }
     }
 
-    override suspend fun unlike(articleId: Int, userId: Int): Article {
-        TODO("Not yet implemented")
+    override suspend fun like(token: String, articleId: Int): Article {
+        val res = articleRemoteDataSource.like(token, articleId)
+        return res.asModel()
+    }
+
+    override suspend fun unlike(token: String, articleId: Int): Article {
+        val res = articleRemoteDataSource.unlike(token, articleId)
+        return res.asModel()
     }
 }
