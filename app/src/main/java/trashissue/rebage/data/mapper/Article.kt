@@ -11,6 +11,7 @@ fun ArticleResponse.asModel(): Article {
         title = title,
         body = body,
         photo = photo,
+        liked = liked,
         createdAt = createdAt,
         updatedAt = updatedAt
     )

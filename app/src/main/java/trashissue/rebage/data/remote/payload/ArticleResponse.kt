@@ -16,6 +16,8 @@ data class ArticleResponse(
     val body: String,
     @field:SerializedName("photo")
     val photo: List<String>,
+    @field:SerializedName("liked")
+    val liked: Boolean = false,
     @field:SerializedName("createdAt")
     val createdAt: Date,
     @field:SerializedName("updatedAt")
