@@ -9,6 +9,7 @@ data class Article(
     val title: String,
     val body: String,
     val photo: List<String>,
+    val liked: Boolean,
     val createdAt: Date,
     val updatedAt: Date
 )
