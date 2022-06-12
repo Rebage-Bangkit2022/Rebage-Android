@@ -1,17 +1,17 @@
 package trashissue.rebage.presentation.common.component
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -24,7 +24,13 @@ fun OutlinedTextFieldPassword(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    text: String = stringResource(R.string.text_password)
+    label: String = stringResource(R.string.text_password),
+    isError: Boolean = false,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    singleLine: Boolean = true,
+    maxLines: Int = 1,
 ) {
     var visible by remember { mutableStateOf(false) }
 
@@ -32,10 +38,13 @@ fun OutlinedTextFieldPassword(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        visualTransformation = if (visible) VisualTransformation.None else PasswordVisualTransformation(),
+        keyboardOptions = keyboardOptions.copy(keyboardType = KeyboardType.Password),
+        keyboardActions = keyboardActions,
+        visualTransformation = if (visible) visualTransformation else PasswordVisualTransformation(),
+        maxLines = maxLines,
+        singleLine = singleLine,
         label = {
-            Text(text = text)
+            Text(text = label)
         },
         trailingIcon = {
             IconButton(
@@ -55,7 +64,8 @@ fun OutlinedTextFieldPassword(
                     contentDescription = stringResource(R.string.cd_pass_visible)
                 )
             }
-        }
+        },
+        isError = isError
     )
 }
 
