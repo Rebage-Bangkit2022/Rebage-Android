@@ -1,4 +1,4 @@
-package trashissue.rebage.presentation.chartdetail
+package trashissue.rebage.presentation.detailchart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +15,7 @@ import trashissue.rebage.domain.usecase.GetDetectionsStatisticUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class ChartDetailViewModel @Inject constructor(
+class DetailChart @Inject constructor(
     private val getDetectionsStatisticUseCase: GetDetectionsStatisticUseCase,
     private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {

@@ -1,4 +1,4 @@
-package trashissue.rebage.presentation.chartdetail
+package trashissue.rebage.presentation.detailchart
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,18 +20,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.DetectionStatistic
 import trashissue.rebage.presentation.home.component.ChartData
-import trashissue.rebage.presentation.theme3.*
+import trashissue.rebage.presentation.theme3.ChartColors
 
 private val DefaultLazyColumnPadding = PaddingValues(16.dp)
 
 @Composable
-fun ChartDetailScreen(
+fun DetailChartScreen(
     navController: NavHostController,
-    viewModel: ChartDetailViewModel = hiltViewModel()
+    viewModel: DetailChart = hiltViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -39,7 +38,7 @@ fun ChartDetailScreen(
         viewModel.snackbar.collectLatest(snackbarHostState::showSnackbar)
     }
 
-    ChartDetailScreen(
+    DetailChartScreen(
         snackbarHostState = snackbarHostState,
         statsState = viewModel.stats,
         loadingState = viewModel.loading,
@@ -49,7 +48,7 @@ fun ChartDetailScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChartDetailScreen(
+fun DetailChartScreen(
     snackbarHostState: SnackbarHostState,
     statsState: StateFlow<List<DetectionStatistic>>,
     loadingState: StateFlow<Boolean>,
@@ -83,7 +82,7 @@ fun ChartDetailScreen(
         val stats by statsState.collectAsState()
         val chartData = remember(stats) {
             stats
-                .sortedBy { it.total }
+                .sortedByDescending { it.total }
                 .take(ChartColors.size)
                 .mapIndexed { index, stat ->
                     ChartData(
@@ -93,8 +92,6 @@ fun ChartDetailScreen(
                     )
                 }
         }
-
-        Timber.i("HASIL $chartData $stats")
 
         Box(modifier = Modifier.padding(innerPadding)) {
             LazyColumn(
