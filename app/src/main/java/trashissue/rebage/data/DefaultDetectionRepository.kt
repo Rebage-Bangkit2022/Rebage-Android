@@ -25,19 +25,20 @@ class DefaultDetectionRepository(
             total = total
         )
         val res = detectionRemoteDataSource.save(token, req)
-        detectionLocalDataSource.saveDetection(res.asEntity())
+        detectionLocalDataSource.save(res.asEntity())
         return res.asModel()
     }
 
     override suspend fun detect(token: String, file: File): List<Detection> {
         val res = detectionRemoteDataSource.detect(token, file)
-        detectionLocalDataSource.saveDetections(res.map { it.asEntity() })
+        detectionLocalDataSource.save(res.map { it.asEntity() })
         return res.map { it.asModel() }
     }
 
     override suspend fun getDetections(token: String): Flow<List<Detection>> {
         val res = detectionRemoteDataSource.getDetections(token)
-        detectionLocalDataSource.saveDetections(res.map { it.asEntity() })
+        detectionLocalDataSource.delete()
+        detectionLocalDataSource.save(res.map { it.asEntity() })
         return detectionLocalDataSource
             .getDetections()
             .map { it.map { entity -> entity.asModel() } }
@@ -56,13 +57,13 @@ class DefaultDetectionRepository(
     override suspend fun update(token: String, detectionId: Int, total: Int): Detection {
         val req = UpdateDetectionRequest(id = detectionId, total = total)
         val res = detectionRemoteDataSource.update(token, req)
-        detectionLocalDataSource.saveDetection(res.asEntity())
+        detectionLocalDataSource.save(res.asEntity())
         return res.asModel()
     }
 
     override suspend fun delete(token: String, detectionId: Int): Detection {
         val res = detectionRemoteDataSource.delete(token, detectionId)
-        detectionLocalDataSource.deleteDetection(res.asEntity())
+        detectionLocalDataSource.delete(res.asEntity())
         return res.asModel()
     }
 }
