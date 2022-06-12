@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
     val snackbar = _snackbar.asSharedFlow()
 
     init {
-        loadAllArticles()
+        loadLatestArticles()
         loadArticlesReduce()
         loadArticlesReuse()
     }
@@ -59,7 +59,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun loadAllArticles() {
+    private fun loadLatestArticles() {
         viewModelScope.launch(dispatcher) {
             getArticlesUseCase()
                 .onSuccess { articles ->
