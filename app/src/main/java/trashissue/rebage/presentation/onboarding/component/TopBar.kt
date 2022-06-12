@@ -36,7 +36,8 @@ fun TopBar(
         Text(
             modifier = Modifier.noRippleClickable(onClick = onClickSkip),
             text = text,
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
