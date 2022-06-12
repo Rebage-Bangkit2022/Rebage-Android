@@ -10,7 +10,7 @@ class GetGarbageBankUseCase(
     suspend operator fun invoke(
         lat: Double,
         lng: Double,
-        radius: Double = 1500.0
+        radius: Double = 5 * 1500.0
     ): Result<List<Place>> = runCatching {
         googleMapsRepository.getNearby(lat, lng, radius, "Bank Sampah", "Bank Sampah")
     }
