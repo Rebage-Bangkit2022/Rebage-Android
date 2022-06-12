@@ -14,13 +14,20 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Psychology
+import androidx.compose.material.icons.outlined.QuestionMark
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -31,6 +38,8 @@ import trashissue.rebage.R
 import trashissue.rebage.presentation.camera.component.CameraCapture
 import trashissue.rebage.presentation.camera.component.rememberCameraState
 import trashissue.rebage.presentation.common.toast
+import trashissue.rebage.presentation.theme3.LightPrimary
+import trashissue.rebage.presentation.theme3.LightSurface
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -60,7 +69,6 @@ fun CameraScreen(
                 context.toast(R.string.text_unknown_error)
             }
         )
-
 
         LaunchedEffect(Unit) {
             if (!permission.status.isGranted) {
@@ -99,6 +107,60 @@ fun CameraScreen(
             )
         }
 
+        var isHelperDialogOpen by remember { mutableStateOf(false) }
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 16.dp)
+        ) {
+            Spacer(modifier = Modifier.weight(1F))
+            IconButton(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(LightSurface),
+                onClick = {
+                    isHelperDialogOpen = true
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.QuestionMark,
+                    contentDescription = "Help",
+                    tint = LightPrimary
+                )
+            }
+        }
+
+        if (isHelperDialogOpen) {
+            AlertDialog(
+                onDismissRequest = {
+                    isHelperDialogOpen = false
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            isHelperDialogOpen = false
+                        }
+                    ) {
+                        Text(text = "Ok")
+                    }
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Psychology,
+                        contentDescription = null
+                    )
+                },
+                text = {
+                    Text(
+                        text = "Karena masih dalam tahap pengembangan, saat ini saya hanya bisa mendeteksi Botol Kaca, Botol Plastik, Kaleng, Kardus, Karet, Plastik, Sedotan saja",
+                        textAlign = TextAlign.Center
+                    )
+                }
+            )
+        }
+
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
@@ -113,7 +175,7 @@ private fun Context.launchPermissionSettings() {
 }
 
 @Composable
-fun rememberGalleryLauncher(
+private fun rememberGalleryLauncher(
     onSuccess: (File) -> Unit,
     onError: (Exception?) -> Unit
 ): ManagedActivityResultLauncher<Intent, ActivityResult> {
