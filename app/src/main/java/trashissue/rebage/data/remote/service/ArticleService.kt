@@ -22,29 +22,31 @@ interface ArticleService {
 
     @GET("/api/article/{id}")
     suspend fun getArticle(
+        @Header("Authorization")
+        token: String,
         @Path("id")
-        id: Int
+        articleId: Int
     ): Response<Api<ArticleResponse>>
 
-    @GET("/api/articles")
+    @GET("/api/article/user/like")
     suspend fun getFavoriteArticles(
         @Header("Authorization")
         token: String
     ): Response<Api<List<ArticleResponse>>>
 
-    @POST("/api/article/like")
+    @POST("/api/article/{articleId}/like")
     suspend fun like(
         @Header("Authorization")
         token: String,
-        @Body
-        req: LikeArticleRequest
+        @Path("articleId")
+        articleId: Int
     ): Response<Api<ArticleResponse>>
 
-    @DELETE("/api/article/like")
+    @DELETE("/api/article/{articleId}/unlike")
     suspend fun unlike(
         @Header("Authorization")
         token: String,
-        @Body
-        req: LikeArticleRequest
+        @Path("articleId")
+        articleId: Int
     ): Response<Api<ArticleResponse>>
 }
