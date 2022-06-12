@@ -92,6 +92,9 @@ class DetectionViewModel @Inject constructor(
             detectGarbageUseCase(image)
                 .onSuccess { detections ->
                     _preview.value = detections
+                    if (detections.isEmpty()) {
+                        _snackbar.emit("No object detected")
+                    }
                 }
                 .onFailure { e ->
                     Timber.e(e)
