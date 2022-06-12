@@ -57,14 +57,14 @@ object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun provideOnBoardingUseCase(userRepository: UserRepository): OnboardingUseCase {
-        return OnboardingUseCase(userRepository)
+    fun provideGetUserUseCase(userRepository: UserRepository): GetUserUseCase {
+        return GetUserUseCase(userRepository)
     }
 
     @Provides
     @ViewModelScoped
-    fun provideGetUserUseCase(userRepository: UserRepository): GetUserUseCase {
-        return GetUserUseCase(userRepository)
+    fun provideEditUserUseCase(userRepository: UserRepository): EditUserUseCase {
+        return EditUserUseCase(userRepository)
     }
 
     @Provides
@@ -77,6 +77,18 @@ object UseCaseModule {
     @ViewModelScoped
     fun provideAuthGoogleUseCase(userRepository: UserRepository): AuthGoogleUseCase {
         return AuthGoogleUseCase(userRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideOnboardingUseCase(userRepository: UserRepository): OnboardingUseCase {
+        return OnboardingUseCase(userRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideDarkThemeUseCase(userRepository: UserRepository): DarkThemeUseCase {
+        return DarkThemeUseCase(userRepository)
     }
 
     @Provides
@@ -141,8 +153,29 @@ object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun provideGetArticleUseCase(articleRepository: ArticleRepository): GetArticleUseCase {
-        return GetArticleUseCase(articleRepository)
+    fun provideGetArticleUseCase(
+        userRepository: UserRepository,
+        articleRepository: ArticleRepository
+    ): GetArticleUseCase {
+        return GetArticleUseCase(userRepository, articleRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetFavoriteArticleUseCase(
+        userRepository: UserRepository,
+        articleRepository: ArticleRepository
+    ): GetFavoriteArticlesUseCase {
+        return GetFavoriteArticlesUseCase(userRepository, articleRepository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideToggleLikeArticleUseCase(
+        userRepository: UserRepository,
+        articleRepository: ArticleRepository
+    ): ToggleLikeArticleUseCase {
+        return ToggleLikeArticleUseCase(userRepository, articleRepository)
     }
 
     @Provides
