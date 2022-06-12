@@ -3,6 +3,7 @@ package trashissue.rebage.presentation.signup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -11,10 +12,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,7 +25,7 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import timber.log.Timber
 import trashissue.rebage.R
 import trashissue.rebage.presentation.common.component.*
 import trashissue.rebage.presentation.main.Route
@@ -92,6 +94,7 @@ fun SignUpScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
+            val focusManager = LocalFocusManager.current
             val scrollState = rememberScrollState()
             val isLoading by loadingState.collectAsState()
 
@@ -127,7 +130,10 @@ fun SignUpScreen(
                     label = {
                         Text(text = stringResource(R.string.text_name))
                     },
-                    maxLines = 1
+                    maxLines = 1,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                    isError = nameError != null
                 )
                 TextError(
                     textRes = nameError,
@@ -143,7 +149,10 @@ fun SignUpScreen(
                         .padding(top = 8.dp),
                     value = email,
                     onValueChange = onChangeEmail,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    ),
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Outlined.Email,
@@ -153,7 +162,9 @@ fun SignUpScreen(
                     label = {
                         Text(text = stringResource(R.string.text_email))
                     },
-                    maxLines = 1
+                    maxLines = 1,
+                    singleLine = true,
+                    isError = emailError != null
                 )
                 TextError(
                     textRes = emailError,
@@ -168,7 +179,9 @@ fun SignUpScreen(
                     onValueChange = onChangePassword,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
+                        .padding(top = 8.dp),
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                    isError = passwordError != null
                 )
                 TextError(
                     textRes = passwordError,
@@ -184,7 +197,10 @@ fun SignUpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
-                    text = stringResource(R.string.text_confirm_password)
+                    label = stringResource(R.string.text_confirm_password),
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                    isError = confirmPasswordError != null
                 )
                 TextError(
                     textRes = confirmPasswordError,
@@ -215,18 +231,12 @@ fun SignUpScreen(
                     )
                 }
 
-                val context = LocalContext.current
-                val scope = rememberCoroutineScope()
                 val googleSignInClient = rememberGoogleSignInClient()
                 val googleAuthLauncher = rememberGoogleAuthLauncher(
                     onResult = { account ->
                         onAuthGoogle(account.idToken)
                     },
-                    onError = { error ->
-                        val message =
-                            error?.message ?: context.getString(R.string.text_unknown_error)
-                        scope.launch { snackbarHostState.showSnackbar(message) }
-                    },
+                    onError = Timber::e,
                 )
 
                 GoogleOauth(

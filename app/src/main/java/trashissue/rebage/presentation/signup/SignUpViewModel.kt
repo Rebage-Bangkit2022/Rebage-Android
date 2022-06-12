@@ -65,15 +65,13 @@ class SignUpViewModel @Inject constructor(
 
     fun changePassword(password: String) {
         val error = validatePasswordUseCase(password)
-        val error2 = validatePasswordUseCase(_passwordField.value.first, password)
+        val error2 = validatePasswordUseCase(password, _confirmPasswordField.value.first)
         _passwordField.value = password to error
         _confirmPasswordField.value = _confirmPasswordField.value.first to error2
     }
 
     fun changeConfirmPassword(password: String) {
-        val error = validatePasswordUseCase(password)
         val error2 = validatePasswordUseCase(_passwordField.value.first, password)
-        _passwordField.value = _passwordField.value.first to error
         _confirmPasswordField.value = password to error2
     }
 
