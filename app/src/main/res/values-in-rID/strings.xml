@@ -6,7 +6,7 @@
     <string name="error_name_is_required">Nama wajib diisi</string>
     <string name="error_name_min_char">Minimum karakter adalah 6</string>
     <string name="error_name_max_char">Maximum karakter adalah 50</string>
-    <string name="error_invalid_email">Format email salaha</string>
+    <string name="error_invalid_email">Format email salah</string>
     <string name="error_password_is_required">Password wajib diisi</string>
     <string name="error_password_min_char">Minimum karakter adalah 6</string>
     <string name="error_password_max_char">Maximum karakter adalah 50</string>
@@ -65,5 +65,15 @@
     <string name="text_use_detection_feature">Gunakan fitur deteksi untuk menyimpan data sampah</string>
     <string name="text_open_google_maps">Bukai Melalui Google Maps</string>
     <string name="text_edit_profile">Sunting Profil</string>
-    <string name="text_tema">Tema</string>
+    <string name="text_appearance">Tampilan</string>
+    <string name="text_gps_disabled">GPS Anda tampaknya dinonaktifkan, apakah Anda ingin mengaktifkannya?</string>
+    <string name="text_open_settings">Buka pengaturan</string>
+    <string name="text_allow_access">Ijinkan akses</string>
+    <string name="text_dialog_sign_out">Apakah kamu yakin kamu ingin keluar?</string>
+    <string name="text_logout">Ya, keluar</string>
+    <string name="text_dark_theme">Tema dark</string>
+    <string name="text_light_theme">Tema light</string>
+    <string name="text_default">Sesuai perangkat</string>
+    <string name="text_confirm">Konfirmasi</string>
+    <string name="text_dismiss">Buang Perubahan</string>
 </resources>
