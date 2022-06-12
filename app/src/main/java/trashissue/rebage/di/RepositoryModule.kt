@@ -21,10 +21,7 @@ object RepositoryModule {
         userLocalDataSource: UserLocalDataSource,
         userRemoteDataSource: UserRemoteDataSource
     ): UserRepository {
-        return DefaultUserRepository(
-            userLocalDataSource = userLocalDataSource,
-            userRemoteDataSource = userRemoteDataSource
-        )
+        return DefaultUserRepository(userLocalDataSource, userRemoteDataSource)
     }
 
     @Provides
@@ -33,10 +30,7 @@ object RepositoryModule {
         detectionLocalDataSource: DetectionLocalDataSource,
         detectionRemoteDataSource: DetectionRemoteDataSource
     ): DetectionRepository {
-        return DefaultDetectionRepository(
-            detectionLocalDataSource,
-            detectionRemoteDataSource
-        )
+        return DefaultDetectionRepository(detectionLocalDataSource, detectionRemoteDataSource)
     }
 
     @Provides
