@@ -1,38 +1,46 @@
 package trashissue.rebage.presentation.garbagebank
 
+import androidx.core.location.component1
+import androidx.core.location.component2
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import trashissue.rebage.domain.usecase.GetGarbageBankUseCase
+import trashissue.rebage.presentation.common.locationFlow
 import javax.inject.Inject
 
 @HiltViewModel
+@OptIn(ExperimentalCoroutinesApi::class)
 class GarbageBankViewModel @Inject constructor(
+    fusedLocationProviderClient: FusedLocationProviderClient,
+    dispatcher: CoroutineDispatcher,
     private val getGarbageBankUseCase: GetGarbageBankUseCase,
-    dispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    private val location = MutableSharedFlow<Pair<Double, Double>>()
+    private val locationFlow = fusedLocationProviderClient
+        .locationFlow()
+        .shareIn(viewModelScope, SharingStarted.Lazily)
 
-    val places = location
-        .distinctUntilChanged()
-        .map { location ->
-            val (lat, lng) = location
+    private val permissionGranted = MutableStateFlow(false)
+    val places = permissionGranted
+        .flatMapLatest {
+            if (it) locationFlow else throw RuntimeException("Permission is needed")
+        }
+        .map { (lat, lng) ->
             _loading.value = true
-            val places = getGarbageBankUseCase(lat, lng)
-                .onFailure { e ->
-                    Timber.e(e)
-                    _snackbar.emit("Failed to load garbage bank")
-                }
-                .getOrNull()
+            val places = getGarbageBankUseCase(lat, lng).getOrThrow()
             _loading.value = false
-            places ?: emptyList()
+            places
+        }
+        .catch { e ->
+            Timber.e(e)
         }
         .flowOn(dispatcher)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
@@ -40,9 +48,7 @@ class GarbageBankViewModel @Inject constructor(
     private val _snackbar = MutableSharedFlow<String>()
     val snackbar = _snackbar.asSharedFlow()
 
-    fun loadPlaces(lat: Double, lng: Double) {
-        viewModelScope.launch {
-            location.emit(lat to lng)
-        }
+    fun loadPlacesIfPermissionGranted(granted: Boolean) {
+        permissionGranted.value = granted
     }
 }

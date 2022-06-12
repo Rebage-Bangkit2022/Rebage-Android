@@ -1,10 +1,9 @@
 package trashissue.rebage.presentation.garbagebank
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.layout.*
@@ -17,8 +16,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.LottieAnimation
@@ -28,14 +27,10 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 import trashissue.rebage.R
 import trashissue.rebage.domain.model.Place
-import trashissue.rebage.presentation.common.awaitLastLocation
-import trashissue.rebage.presentation.common.toast
 import trashissue.rebage.presentation.garbagebank.component.GarbageBankCard
 import trashissue.rebage.presentation.garbagebank.component.TopAppBar
 import trashissue.rebage.presentation.main.Route
@@ -53,55 +48,12 @@ fun GarbageBankScreen(
     val locationPermissionState = rememberPermissionState(
         permission = Manifest.permission.ACCESS_FINE_LOCATION
     )
-    var isDialogOpen by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.snackbar.collectLatest(snackbarHostState::showSnackbar)
     }
 
-    LaunchedEffect(locationPermissionState.status) {
-        if (context.isLocationPermissionNotGranted) {
-            return@LaunchedEffect
-        }
-        try {
-            val locationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-
-            @SuppressLint("MissingPermission")
-            val location = locationProviderClient.awaitLastLocation()
-            if (location != null) {
-                viewModel.loadPlaces(location.latitude, location.longitude)
-            } else {
-                isDialogOpen = true
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
-            toast(context, R.string.text_unknown_error)
-            navController.popBackStack()
-        }
-    }
-
-    when (locationPermissionState.status) {
-        PermissionStatus.Granted -> {
-            GarbageBankScreen(
-                snackbarHostState = snackbarHostState,
-                placesState = viewModel.places,
-                loadingState = viewModel.loading,
-                onClickNavigation = navController::popBackStack,
-                onClickCheckLocation = { placeId ->
-                    navController.navigate(Route.Maps(placeId))
-                }
-            )
-        }
-        is PermissionStatus.Denied -> {
-            GarbageBankScreen(
-                onClickAllowAccess = locationPermissionState::launchPermissionRequest,
-                onClickOpenSettings = context::launchPermissionSettings,
-                onClickNavigation = navController::popBackStack
-            )
-        }
-    }
-
-    if (isDialogOpen) {
+    if (context.isGpsNotEnabled) {
         AlertDialog(
             icon = {
                 Icon(
@@ -110,33 +62,49 @@ fun GarbageBankScreen(
                 )
             },
             text = {
-                Text(text = "Your GPS seems to be disabled, do you want to enable it?")
+                Text(text = stringResource(R.string.text_gps_disabled))
             },
-            onDismissRequest = {
-                isDialogOpen = false
-            },
+            onDismissRequest = navController::popBackStack,
             dismissButton = {
                 TextButton(
-                    onClick = {
-                        isDialogOpen = false
-                        navController.popBackStack()
-                    }
+                    onClick = navController::popBackStack
                 ) {
-                    Text(text = "Dismiss")
+                    Text(text = stringResource(R.string.text_cancel))
                 }
             },
             confirmButton = {
                 TextButton(
-                    onClick = {
-                        context.launchLocationSourceSettings()
-                        isDialogOpen = false
-                        navController.popBackStack()
-                    }
+                    onClick = context::launchLocationSourceSettings
                 ) {
-                    Text(text = "Open Settings")
+                    Text(text = stringResource(R.string.text_open_settings))
                 }
             }
         )
+    } else {
+        when (locationPermissionState.status) {
+            PermissionStatus.Granted -> {
+                LaunchedEffect(Unit){
+                    viewModel.loadPlacesIfPermissionGranted(true)
+                }
+
+                GarbageBankScreen(
+                    snackbarHostState = snackbarHostState,
+                    placesState = viewModel.places,
+                    loadingState = viewModel.loading,
+                    onClickNavigation = navController::popBackStack,
+                    onClickCheckLocation = { placeId ->
+                        navController.navigate(Route.Maps(placeId))
+                    }
+                )
+            }
+            is PermissionStatus.Denied -> {
+                GarbageBankScreen(
+                    onClickAllowAccess = locationPermissionState::launchPermissionRequest,
+                    onClickOpenSettings = context::launchPermissionSettings,
+                    onClickNavigation = navController::popBackStack
+                )
+            }
+        }
     }
 }
 
@@ -176,6 +144,23 @@ fun GarbageBankScreen(
             }
 
             val isLoading by loadingState.collectAsState()
+            val composition by rememberLottieComposition(
+                LottieCompositionSpec.RawRes(R.raw.empty_box)
+            )
+
+            if (places.isEmpty() && !isLoading) {
+                if (places.isEmpty() && !isLoading) {
+                    LottieAnimation(
+                        modifier = Modifier
+                            .padding(32.dp)
+                            .size(164.dp)
+                            .align(Alignment.Center)
+                            .offset(y = (-24).dp),
+                        composition = composition,
+                        iterations = LottieConstants.IterateForever,
+                    )
+                }
+            }
 
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -219,29 +204,18 @@ fun GarbageBankScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onClickAllowAccess
             ) {
-                Text(text = "Allow Access")
+                Text(text = stringResource(R.string.text_allow_access))
             }
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onClickOpenSettings
             ) {
-                Text(text = "Open Settings")
+                Text(text = stringResource(R.string.text_open_settings))
             }
         }
     }
 }
-
-private val Context.isLocationPermissionNotGranted: Boolean
-    get() {
-        return ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED
-    }
 
 private fun Context.launchLocationSourceSettings() {
     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
@@ -253,3 +227,9 @@ private fun Context.launchPermissionSettings() {
     intent.data = uri
     startActivity(intent)
 }
+
+val Context.isGpsNotEnabled: Boolean
+    get() {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return !locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
