@@ -10,9 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 
 @Composable
 fun Article(
@@ -28,7 +30,10 @@ fun Article(
             .height(100.dp)
     ) {
         AsyncImage(
-            model = photo,
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(photo)
+                .crossfade(500)
+                .build(),
             modifier = Modifier
                 .size(100.dp)
                 .clip(MaterialTheme.shapes.medium)
