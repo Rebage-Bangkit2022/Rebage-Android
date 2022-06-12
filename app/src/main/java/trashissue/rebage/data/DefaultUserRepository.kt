@@ -7,6 +7,7 @@ import trashissue.rebage.data.mapper.asEntity
 import trashissue.rebage.data.mapper.asModel
 import trashissue.rebage.data.remote.UserRemoteDataSource
 import trashissue.rebage.data.remote.payload.AuthGoogleRequest
+import trashissue.rebage.data.remote.payload.EditUserRequest
 import trashissue.rebage.data.remote.payload.SignInRequest
 import trashissue.rebage.data.remote.payload.SignUpRequest
 import trashissue.rebage.domain.model.User
@@ -24,7 +25,7 @@ class DefaultUserRepository(
             password = password
         )
         val res = userRemoteDataSource.signUp(req)
-        userLocalDataSource.saveUser(res.asEntity())
+        userLocalDataSource.save(res.asEntity())
         return res.asModel()
     }
 
@@ -34,23 +35,34 @@ class DefaultUserRepository(
             password = password
         )
         val res = userRemoteDataSource.signIn(req)
-        userLocalDataSource.saveUser(res.asEntity())
+        userLocalDataSource.save(res.asEntity())
         return res.asModel()
     }
 
     override suspend fun authGoogle(idToken: String): User {
         val req = AuthGoogleRequest(idToken = idToken)
         val res = userRemoteDataSource.authGoogle(req)
-        userLocalDataSource.saveUser(res.asEntity())
+        userLocalDataSource.save(res.asEntity())
         return res.asModel()
     }
 
     override suspend fun signOut() {
-        userLocalDataSource.deleteUser()
+        userLocalDataSource.delete()
     }
 
     override fun getUser(): Flow<User?> {
         return userLocalDataSource.getUser().map { it?.asModel() }
+    }
+
+    override suspend fun edit(token: String, name: String, password: String, photo: String?): User {
+        val req = EditUserRequest(
+            name = name,
+            password = password,
+            photo = photo
+        )
+        val res = userRemoteDataSource.edit(token, req)
+        userLocalDataSource.save(res.asEntity())
+        return res.asModel()
     }
 
     override suspend fun onboarding(isAlreadyOnboarding: Boolean) {
@@ -59,5 +71,13 @@ class DefaultUserRepository(
 
     override fun onboarding(): Flow<Boolean> {
         return userLocalDataSource.onboarding()
+    }
+
+    override suspend fun darkTheme(isDarkTheme: Boolean?) {
+        userLocalDataSource.darkTheme(isDarkTheme)
+    }
+
+    override fun darkTheme(): Flow<Boolean?> {
+        return userLocalDataSource.darkTheme()
     }
 }

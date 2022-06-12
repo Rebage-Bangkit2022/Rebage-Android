@@ -8,7 +8,7 @@ class UserLocalDataSource(
     private val userPreferences: UserPreferences
 ) {
 
-    suspend fun saveUser(user: UserEntity) {
+    suspend fun save(user: UserEntity) {
         userPreferences.saveUser(user)
     }
 
@@ -16,7 +16,7 @@ class UserLocalDataSource(
         return userPreferences.getUser()
     }
 
-    suspend fun deleteUser() {
+    suspend fun delete() {
         userPreferences.deleteUser()
     }
 
@@ -26,5 +26,13 @@ class UserLocalDataSource(
 
     fun onboarding(): Flow<Boolean> {
         return userPreferences.onboarding()
+    }
+
+    suspend fun darkTheme(isDarkTheme: Boolean?) {
+        userPreferences.darkTheme(isDarkTheme)
+    }
+
+    fun darkTheme(): Flow<Boolean?> {
+        return userPreferences.darkTheme()
     }
 }
