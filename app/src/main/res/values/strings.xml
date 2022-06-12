@@ -4,12 +4,12 @@
     <string name="text_help_save_the_earth">Ready to help save the earth today?</string>
     <string name="text_sign_in">Sign In</string>
     <string name="error_name_is_required">Name is required</string>
-    <string name="error_name_min_char">Minimum character is 6</string>
-    <string name="error_name_max_char">Maximum character is 50</string>
+    <string name="error_name_min_char">Minimum characters is 6</string>
+    <string name="error_name_max_char">Maximum characters is 50</string>
     <string name="error_invalid_email">Email is invalid</string>
     <string name="error_password_is_required">Password is required</string>
-    <string name="error_password_min_char">Minimum character is 6</string>
-    <string name="error_password_max_char">Maximum character is 50</string>
+    <string name="error_password_min_char">Minimum characters is 6</string>
+    <string name="error_password_max_char">Maximum characters is 50</string>
     <string name="text_email" translatable="false">Email</string>
     <string name="text_password" translatable="false">Password</string>
     <string name="cd_pass_visible">Password visible</string>
@@ -21,9 +21,9 @@
     <string name="title_onboarding1">Find out what kind of garbage you found</string>
     <string name="subtitle_onboarding1">Use the garbage log to find out the amount that you earn</string>
     <string name="title_onboarding2">Reuse garbage what you have</string>
-    <string name="subtitle_onboarding2">Process garbage into new items that can provide benefits"</string>
-    <string name="title_onboarding3">" Estimate the price of the collected garbage"</string>
-    <string name="subtitle_onboarding3">Exchange garbage into money through the nearest rongsokan</string>
+    <string name="subtitle_onboarding2">Process garbage into new items that can provide benefits</string>
+    <string name="title_onboarding3">Estimate the price of the collected garbage</string>
+    <string name="subtitle_onboarding3">Exchange trash into money through the nearest garbage bank</string>
     <string name="text_next">Next</string>
     <string name="text_get_started">Get started</string>
     <string name="text_home">Home</string>
@@ -71,5 +71,15 @@
     <string name="text_use_detection_feature">Use the detection feature to save your garbage data</string>
     <string name="text_open_google_maps">Open Via Google Maps</string>
     <string name="text_edit_profile">Edit Profile</string>
-    <string name="text_tema">Theme</string>
+    <string name="text_appearance">Appearance</string>
+    <string name="text_gps_disabled">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="text_open_settings">Open Settings</string>
+    <string name="text_allow_access">Allow Access</string>
+    <string name="text_dialog_sign_out">Are you sure you want to sign out?</string>
+    <string name="text_logout">Yes, sign out</string>
+    <string name="text_dark_theme">Dark theme</string>
+    <string name="text_light_theme">Light theme</string>
+    <string name="text_default">Default to device theme</string>
+    <string name="text_confirm">Confirm</string>
+    <string name="text_dismiss">Dismiss</string>
 </resources>
