@@ -15,7 +15,13 @@ interface UserRepository {
 
     fun getUser(): Flow<User?>
 
+    suspend fun edit(token: String, name: String, password: String, photo: String?): User
+
     suspend fun onboarding(isAlreadyOnboarding: Boolean)
 
     fun onboarding(): Flow<Boolean>
+
+    suspend fun darkTheme(isDarkTheme: Boolean?)
+
+    fun darkTheme(): Flow<Boolean?>
 }
