@@ -39,6 +39,7 @@ fun ArticleScreen(
     ArticleScreen(
         snackbarHostState = snackbarHostState,
         articleState = viewModel.article,
+        onClickButtonLike = viewModel::toggleLike,
         onNavigationBack = navController::popBackStack
     )
 }
@@ -48,6 +49,7 @@ fun ArticleScreen(
 fun ArticleScreen(
     snackbarHostState: SnackbarHostState,
     articleState: StateFlow<Article?>,
+    onClickButtonLike: (Int) -> Unit,
     onNavigationBack: () -> Unit
 ) {
     val article by articleState.collectAsState()
@@ -74,18 +76,18 @@ fun ArticleScreen(
                     }
                 },
                 actions = {
-                    var toggle by remember {
-                        mutableStateOf(false)
-                    }
                     IconButton(
-                        onClick = { toggle = !toggle }
+                        onClick = {
+                            onClickButtonLike(article?.id ?: return@IconButton)
+                        },
+                        enabled = article != null
                     ) {
-                        when (toggle) {
+                        when (article?.liked) {
                             true -> Icon(
                                 imageVector = Icons.Outlined.Favorite,
                                 contentDescription = stringResource(R.string.cd_favorite)
                             )
-                            false -> Icon(
+                            else -> Icon(
                                 imageVector = Icons.Outlined.FavoriteBorder,
                                 contentDescription = stringResource(R.string.cd_favorite)
                             )
