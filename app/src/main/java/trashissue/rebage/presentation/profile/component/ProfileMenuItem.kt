@@ -2,12 +2,11 @@ package trashissue.rebage.presentation.profile.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowForwardIos
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -16,12 +15,8 @@ fun ProfileMenuItem(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     text: String,
-    icon: @Composable () -> Unit = {
-        Icon(
-            imageVector = Icons.Outlined.ArrowForwardIos,
-            contentDescription = null
-        )
-    }
+    imageVector: ImageVector,
+    contentDescription: String?
 ) {
     Card(modifier = modifier.wrapContentSize()) {
         Row(
@@ -39,7 +34,10 @@ fun ProfileMenuItem(
                 style = MaterialTheme.typography.bodyLarge
             )
             Spacer(modifier = Modifier.width(8.dp))
-            icon()
+            Icon(
+                imageVector = imageVector,
+                contentDescription = contentDescription
+            )
         }
     }
 }
