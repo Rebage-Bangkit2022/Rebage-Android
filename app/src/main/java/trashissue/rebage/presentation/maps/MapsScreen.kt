@@ -91,7 +91,8 @@ fun MapsScreen(
             }
             val properties = remember {
                 MapProperties(
-                    isMyLocationEnabled = true
+                    isMyLocationEnabled = true,
+                    isIndoorEnabled = true
                 )
             }
             val lat = place?.lat
