@@ -1,13 +1,13 @@
 # The android development part required by the Rebage application 
 
 
-## Installation
+## Installation 🔨
 Clone this repository and import into **Android Studio**
 ```bash
 git clone https://github.com/Rebage-Bangkit2022/Rebage-Android.git
 ```
 
-## Configuration
+## Configuration ⚙️
 ### Keystores:
 Create `local.properties` with the following info:
 ```properties
@@ -22,17 +22,17 @@ store.key.alias=<key_alias>
 store.key.password=<key_password>
 ```
 
-## Build variants
+## Build variants 🏗️
 Use the Android Studio *Build Variants* button to choose between debug and release build types
 
 
-## Generating signed APK
+## Generating signed APK 📱
 From Android Studio:
 1. ***Build*** menu
 2. ***Generate Signed APK...***
 3. Fill in the keystore information *(you only need to do this once manually and then let Android Studio remember it)*
 
-## Maintainers
+## Maintainers 🧑‍🤝‍🧑
 This project is mantained by:
 * [Tubagus Saifulloh](https://github.com/bagus2x)
 * [Hafizh Daffa](https://github.com/HafizhDaffa)
