@@ -80,6 +80,6 @@
     <string name="text_delete">Hapus</string>
     <string name="text_help">Bantuan</string>
     <string name="text_available_objects">Berikut beberapa barang yang dapat Rebage deteksi: Botol Plastik, Botol kaca, Kaleng, Kardus, Sedotan, Kertas, Karet ,dan Plastik</string>
-    <string name="text_helper_content">Tekan gambar untuk melihat preview</string>
-    <string name="text_helper_preview">Tekan konten untuk navigasi ke halaman 3R </string>
+    <string name="text_helper_content">Tekan konten untuk navigasi ke halaman 3R</string>
+    <string name="text_helper_preview">Tekan gambar untuk melihat preview</string>
 </resources>
