@@ -33,7 +33,7 @@ fun HelperDialog(
         text = {
             Column {
                 Text(
-                    text = "Click image to see preview",
+                    text = stringResource(R.string.text_helper_preview),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -52,7 +52,7 @@ fun HelperDialog(
                 Image(
                     modifier = Modifier.fillMaxWidth(),
                     painter = painterResource(R.drawable.helper_content),
-                    contentDescription = "Tap image to navigate to 3R screen",
+                    contentDescription = stringResource(R.string.text_helper_content),
                     contentScale = ContentScale.FillWidth
                 )
             }
