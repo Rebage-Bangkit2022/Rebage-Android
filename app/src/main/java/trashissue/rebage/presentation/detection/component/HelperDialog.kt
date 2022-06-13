@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.HelpOutline
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -35,13 +32,23 @@ fun HelperDialog(
         },
         text = {
             Column {
+                Text(
+                    text = "Click image to see preview",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
                 Image(
                     modifier = Modifier.fillMaxWidth(),
                     painter = painterResource(R.drawable.helper_preview),
-                    contentDescription = "Tap image to se preview",
+                    contentDescription = stringResource(R.string.text_helper_preview),
                     contentScale = ContentScale.FillWidth
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.text_helper_content),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
                 Image(
                     modifier = Modifier.fillMaxWidth(),
                     painter = painterResource(R.drawable.helper_content),
