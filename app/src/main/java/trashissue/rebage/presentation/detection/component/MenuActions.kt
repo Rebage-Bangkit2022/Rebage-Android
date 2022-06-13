@@ -10,7 +10,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import trashissue.rebage.R
 import trashissue.rebage.presentation.common.component.noRippleClickable
 import trashissue.rebage.presentation.theme3.RebageTheme3
 
@@ -18,7 +20,8 @@ import trashissue.rebage.presentation.theme3.RebageTheme3
 fun MenuActions(
     modifier: Modifier = Modifier,
     onClickEdit: () -> Unit,
-    onClickDelete: () -> Unit
+    onClickDelete: () -> Unit,
+    onClickHelp: () -> Unit
 ) {
     Box(modifier = modifier.wrapContentSize(Alignment.TopStart)) {
         var expanded by remember { mutableStateOf(false) }
@@ -34,7 +37,7 @@ fun MenuActions(
         ) {
             DropdownMenuItem(
                 text = {
-                    Text("Edit")
+                    Text(stringResource(R.string.text_edit))
                 },
                 onClick = {
                     expanded = false
@@ -46,10 +49,9 @@ fun MenuActions(
                         contentDescription = null
                     )
                 })
-            MenuDefaults.Divider()
             DropdownMenuItem(
                 text = {
-                    Text("Delete")
+                    Text(stringResource(R.string.text_delete))
                 },
                 onClick = {
                     expanded = false
@@ -62,6 +64,16 @@ fun MenuActions(
                     )
                 }
             )
+            MenuDefaults.Divider()
+            DropdownMenuItem(
+                text = {
+                    Text(stringResource(R.string.text_help))
+                },
+                onClick = {
+                    expanded = false
+                    onClickHelp()
+                }
+            )
         }
     }
 }
@@ -70,6 +82,10 @@ fun MenuActions(
 @Composable
 fun MenuActionsPreview() {
     RebageTheme3 {
-        MenuActions(onClickEdit = { }) {}
+        MenuActions(
+            onClickEdit = { },
+            onClickDelete = { },
+            onClickHelp = { }
+        )
     }
 }

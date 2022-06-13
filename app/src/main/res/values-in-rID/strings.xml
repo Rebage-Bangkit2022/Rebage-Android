@@ -76,4 +76,7 @@
     <string name="text_default">Sesuai perangkat</string>
     <string name="text_confirm">Konfirmasi</string>
     <string name="text_dismiss">Buang Perubahan</string>
+    <string name="text_edit">Sunting</string>
+    <string name="text_delete">Hapus</string>
+    <string name="text_help">Bantuan</string>
 </resources>

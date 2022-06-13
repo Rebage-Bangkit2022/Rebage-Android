@@ -82,4 +82,8 @@
     <string name="text_default">Default to device theme</string>
     <string name="text_confirm">Confirm</string>
     <string name="text_dismiss">Dismiss</string>
+    <string name="text_edit">Edit</string>
+    <string name="text_delete">Delete</string>
+    <string name="text_help">Help</string>
+    <string name="text_ok" translatable="false">OK</string>
 </resources>

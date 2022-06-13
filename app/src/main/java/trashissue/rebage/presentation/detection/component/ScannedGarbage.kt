@@ -39,6 +39,7 @@ fun ScannedGarbage(
     onClickButtonSave: (Int) -> Unit,
     onClickButtonDelete: () -> Unit,
     onClickImage: () -> Unit,
+    onClickButtonHelp: () -> Unit,
     image: String,
     name: String,
     date: String,
@@ -123,7 +124,8 @@ fun ScannedGarbage(
                             totalItem = total
                             isModeEdit = true
                         },
-                        onClickDelete = onClickButtonDelete
+                        onClickDelete = onClickButtonDelete,
+                        onClickHelp = onClickButtonHelp
                     )
                 }
             }
@@ -167,6 +169,7 @@ fun ScannedGarbagePreview() {
             onClickButtonSave = { },
             onClickButtonDelete = { },
             onClickImage = { },
+            onClickButtonHelp = { },
             name = "Plastic",
             date = Date().toString(),
             total = 2,

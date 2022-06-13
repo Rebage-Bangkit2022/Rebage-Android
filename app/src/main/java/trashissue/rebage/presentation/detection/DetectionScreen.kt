@@ -31,10 +31,7 @@ import trashissue.rebage.domain.model.Detection
 import trashissue.rebage.domain.model.Garbage
 import trashissue.rebage.presentation.camera.CameraActivity
 import trashissue.rebage.presentation.common.DateFormatter
-import trashissue.rebage.presentation.detection.component.AddGarbage
-import trashissue.rebage.presentation.detection.component.PreviewDetectionDialog
-import trashissue.rebage.presentation.detection.component.ScannedGarbage
-import trashissue.rebage.presentation.detection.component.TopAppBar
+import trashissue.rebage.presentation.detection.component.*
 import trashissue.rebage.presentation.main.Route
 import java.io.File
 
@@ -94,6 +91,7 @@ fun DetectionScreen(
         }
     )
     val isLoading by loadingState.collectAsState()
+    var isHelperDialogVisible by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier
@@ -153,6 +151,7 @@ fun DetectionScreen(
                         onClickButtonSave = { onUpdateDetection(detection.id, it) },
                         onClickButtonDelete = { onDeleteDetection(detection.id) },
                         onClickImage = { onPreview(listOf(detection)) },
+                        onClickButtonHelp = { isHelperDialogVisible = true },
                         image = detection.image,
                         name = detection.label,
                         total = detection.total,
@@ -184,6 +183,10 @@ fun DetectionScreen(
                     composition = composition,
                     iterations = LottieConstants.IterateForever,
                 )
+            }
+
+            if (isHelperDialogVisible) {
+                HelperDialog(onDismiss = { isHelperDialogVisible = false })
             }
 
             if (isLoading) {

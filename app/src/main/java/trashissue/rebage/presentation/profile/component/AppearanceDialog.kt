@@ -32,7 +32,7 @@ fun AppearanceDialog(
         modifier = modifier,
         onDismissRequest = {},
         title = {
-            Text(text = "Appearance")
+            Text(text = stringResource(R.string.text_appearance))
         },
         text = {
             Column {
