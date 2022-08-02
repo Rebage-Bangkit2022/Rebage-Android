@@ -1,5 +1,8 @@
-# The android development part required by the Rebage application 
+# Rebage
 
+<p align="center">
+  <img width="240" src="https://github.com/Rebage-Bangkit2022/Rebage-Android/blob/main/images/Sampel%20Demo%20Rebage.gif">
+</p>
 
 ## Installation 🔨
 Clone this repository and import into **Android Studio**
